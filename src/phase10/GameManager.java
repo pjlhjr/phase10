@@ -6,6 +6,7 @@
 
 package phase10;
 
+import phase10.gui.GuiManager;
 
 /**
  * This class manages the back end functions such as save/load/new game
@@ -13,31 +14,30 @@ package phase10;
  * @author Evan Forbes
  */
 public class GameManager {
-	
-	private Phase10 game;
-	//TODO private Language language;
-	//TODO private GuiManager gui;
-	
-	public void newGame()
-	{
+
+	private static Phase10 game;
+	private static GuiManager gui;
+
+	public static void main(String[] args) {
+		newGame();
+		//TODO call gui method(s)
+	}
+
+	public static void newGame() {
 		game = new Phase10();
 	}
-	
-	public Phase10 getGame()
-	{
+
+	public static Phase10 getGame() {
 		return game;
 	}
-	
-	public boolean loadGame(String fileName)
-	{
-		//TODO not yet implemented
+
+	public static boolean loadGame(String fileName) {
+		// TODO not yet implemented
 		return false;
 	}
-	
-	public void saveGame(String fileName)
-	{
-		//TODO not yet implemented
+
+	public static void saveGame(String fileName) {
+		// TODO not yet implemented
 	}
-	
-	
+
 }

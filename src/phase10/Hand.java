@@ -44,6 +44,16 @@ public class Hand implements Serializable {
 	 * @param card
 	 *            the card to remove
 	 */
+	void removeCard(int card) {
+		cards.remove(card);
+	}
+
+	/**
+	 * Removes a card from the hand
+	 * 
+	 * @param card
+	 *            the card to remove
+	 */
 	void removeCard(Card card) {
 		cards.remove(card);
 	}
@@ -88,12 +98,13 @@ public class Hand implements Serializable {
 		Collections.sort(cards, valueComp);
 	}
 
-	/*
-	 * //For testing public static void main(String[] args) { Hand h = new
-	 * Hand(); h.addCard(new Card(0,1)); h.addCard(new Card(0,1)); h.addCard(new
-	 * Card(1,1)); h.addCard(new Card(2,6)); h.addCard(new Card(2,8));
-	 * h.addCard(new Card(3,2)); h.sortByColor(); for (int i = 0;
-	 * i<h.getNumberOfCards();i++) { System.out.println(h.getCard(i)); } }
-	 */
+	
+	  //For testing 
+//		public static void main(String[] args) { Hand h = new
+//	  Hand(); h.addCard(new Card(0,1)); h.addCard(new Card(0,1)); h.addCard(new
+//	  Card(1,1)); h.addCard(new Card(2,6)); h.addCard(new Card(2,8));
+//	  h.addCard(new Card(3,2)); h.sortByColor(); for (int i = 0;
+//	  i<h.getNumberOfCards();i++) { System.out.println(h.getCard(i)); } }
+	 
 
 }
