@@ -23,6 +23,7 @@ public class Player implements Serializable {
 	private int score;
 	private Hand hand;
 	private int phase;
+	private boolean hasLaidDownPhase;
 	private boolean skipNextTurn;
 	private ArrayList<PhaseGroup> phaseGroups;
 
@@ -36,6 +37,7 @@ public class Player implements Serializable {
 		hand = new Hand();
 		phaseGroups = new ArrayList<PhaseGroup>();
 		skipNextTurn = false;
+		hasLaidDownPhase = false;
 	}
 
 	/**
@@ -51,6 +53,7 @@ public class Player implements Serializable {
 		hand = new Hand();
 		phaseGroups = new ArrayList<PhaseGroup>();
 		skipNextTurn = false;
+		hasLaidDownPhase = false;
 	}
 
 	/**
@@ -104,9 +107,9 @@ public class Player implements Serializable {
 		return hand;
 	}
 
-	public boolean addPhaseGroup(PhaseGroup pg) {
-		phaseGroups.add(pg);
-		// TODO: check validity
+	public boolean addPhaseGroups(PhaseGroup... pg) {
+		//phaseGroups.add(pg);
+		// TODO: not yet implemented- need to check validity
 		return true;
 
 	}
@@ -123,7 +126,28 @@ public class Player implements Serializable {
 		skipNextTurn = state;
 	}
 
+	/**
+	 * 
+	 * @return whether this player's next turn is to be skipped
+	 */
 	public boolean getSkip() {
 		return skipNextTurn;
+	}
+
+	/**
+	 * 
+	 * @return whether this player has laid down a phase during the current
+	 *         round
+	 */
+	public boolean hasLaidDownPhase() {
+		return hasLaidDownPhase;
+	}
+
+	void setLaidDownPhase(boolean state) {
+		hasLaidDownPhase = state;
+	}
+
+	void removePhaseGroup(int pg) {
+		phaseGroups.remove(pg);	
 	}
 }

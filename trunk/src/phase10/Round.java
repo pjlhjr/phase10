@@ -153,11 +153,26 @@ public class Round implements Serializable {
 	private void nextTurn() {
 		// TODO check if the round is over (someone's hand is empty). if so,
 		// call game.nextRound i think
+		
+		if (roundIsComplete())
+		{
+			game.nextRound();
+		}
+		
 		turn++;
 		if (turn >= game.getNumberOfPlayers()) {
 			turn = 0;
 		}
 		// TODO Call method here of GUI, to prompt the player for their turn?
+	}
+
+	private boolean roundIsComplete() {
+		for (int p =0; p<game.getNumberOfPlayers();p++)
+		{
+			if (game.getPlayer(p).getHand().getNumberOfCards()==0)
+				return true;
+		}
+		return false;
 	}
 
 }
