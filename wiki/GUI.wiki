@@ -1,0 +1,19 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+The GUI for the Phase 10 project is composed of six independent frames and one Manager class, called GuiManager. The GuiManager class contains an object for each frame and is linked with the GameManager class doubly so as to allow communication between the managers in both directions. GameManager also contains an object for each Frame. 
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+*GameFrame*
+*SettingsFrame*
+*ScoreFrame*
+*PhaseDescriptionFrame*
+*SkipInputFrame*
+*InvalidMoveFrame*
