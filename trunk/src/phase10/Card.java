@@ -11,6 +11,8 @@ import java.io.Serializable;
  * This class contains all of the information for each playing card for the
  * Phase 10 game.
  * 
+ * CHANGED CHANGED CHANGED
+ * 
  * @author Evan Forbes
  * 
  */
