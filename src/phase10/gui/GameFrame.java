@@ -57,8 +57,7 @@ public class GameFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public GameFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/gui/images/GameIcon.png")));
-		
+
 		setTitle("CurrentPlayer - Phase 10");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,7 +115,6 @@ public class GameFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/gui/cardImages/card back.png")));
 		deckPanel.add(deckButton);
 		
 		JButton discardButton = new JButton("New button");
@@ -136,7 +134,7 @@ public class GameFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		hcardButton1.setIcon(new ImageIcon(GameFrame.class.getResource("/gui/cardImages/Red3.png")));
+		
 		buttonGroup.add(hcardButton1);
 		handPanel.add(hcardButton1);
 		
