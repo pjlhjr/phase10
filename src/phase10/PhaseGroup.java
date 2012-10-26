@@ -48,7 +48,7 @@ public class PhaseGroup implements Serializable {
 	/**
 	 * @return the size of the hand
 	 */
-	public int size() {
+	public int getNumberOfCards() {
 		return cards.size();
 	}
 	
