@@ -174,5 +174,13 @@ public class Round implements Serializable {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Gets the player index of who is currently playing their turn
+	 * @return the current player index
+	 */
+	public int getTurn()
+	{
+		return turn;
+	}
 }

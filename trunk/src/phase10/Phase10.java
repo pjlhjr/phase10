@@ -43,6 +43,14 @@ public class Phase10 implements Serializable {
 	public Player getPlayer(int index) {
 		return players.get(index);
 	}
+	
+	/**
+	 * Gets the Player object of who is currently playing their turn
+	 * @return the current Player object; null if the round has not yet been initialized
+	 */
+	public Player getCurrentPlayer() {
+		return (round==null)? null : getPlayer(round.getTurn());
+	}
 
 	void addPlayer(Player p) {
 		players.add(p);
