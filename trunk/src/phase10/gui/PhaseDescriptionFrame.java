@@ -1,8 +1,6 @@
 package phase10.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +14,10 @@ import java.awt.event.ActionEvent;
 
 public class PhaseDescriptionFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
@@ -25,7 +27,7 @@ public class PhaseDescriptionFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PhaseDescriptionFrame frame = new PhaseDescriptionFrame();
+					PhaseDescriptionFrame frame = new PhaseDescriptionFrame(5);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,13 +42,22 @@ public class PhaseDescriptionFrame extends JFrame {
 	private String title;
 	private String currentPhaseString;
 	private String okayButtonLabel;
-	private String phaseDescription;
+	private String phaseDescriptionString;
 	
 	/**
 	 * Create the frame.
 	 */
-	public PhaseDescriptionFrame() {
-		setTitle("Phase 1 Description");
+	public PhaseDescriptionFrame(int currentPhase) {
+		
+		//TODO change constant String values to language variables
+		
+		
+		title = "Phase " + currentPhase + " Description";
+		currentPhaseString = "Phase " + currentPhase + ":";
+		phaseDescriptionString = this.setPhaseDescriptionString(currentPhase);
+		okayButtonLabel = "Okay";
+		
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 432, 264);
 		contentPane = new JPanel();
@@ -54,15 +65,20 @@ public class PhaseDescriptionFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel phaseLabel = new JLabel("Phase 1:");
+		JLabel phaseLabel = new JLabel(currentPhaseString);
 		phaseLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
 		phaseLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		phaseLabel.setBounds(143, 11, 130, 52);
 		contentPane.add(phaseLabel);
 		
-		JButton btnOkay = new JButton("Okay");
+		JButton btnOkay = new JButton(okayButtonLabel);
 		btnOkay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//TODO close the frame
+				
+				//next two commands cause the window to close
+				setVisible(false);
+				dispose();
 			}
 		});
 		btnOkay.setBounds(163, 180, 89, 23);
@@ -73,9 +89,37 @@ public class PhaseDescriptionFrame extends JFrame {
 		phaseDescription.setLineWrap(true);
 		phaseDescription.setWrapStyleWord(true);
 		phaseDescription.setEditable(false);
-		phaseDescription.setText("2 sets of 3");
+		phaseDescription.setText(phaseDescriptionString);
 		phaseDescription.setBounds(108, 84, 230, 66);
 		contentPane.add(phaseDescription);
+	}
+
+	private String setPhaseDescriptionString(int phaseNum) {
+		switch (phaseNum) {
+		case 1:
+			return "2 sets of 3";
+		case 2:
+			return "1 set of 3 and 1 run of 4";
+		case 3:
+			return "1 set of 4 and 1 run of 4";
+		case 4:
+			return "1 run of 7";
+		case 5:
+			return "1 run of 8";
+		case 6:
+			return "1 run of 9";
+		case 7:
+			return "2 sets of 4";
+		case 8:
+			return "7 cards of 1 color";
+		case 9:
+			return "1 set of 5 and 1 set of 2";
+		case 10:
+			return "1 set of 5 and 1 set of 3";
+		default:
+			System.out.println("Error! Phase number is out of bounds!");
+			return "Internal error occured! Phase number is out of bounds!";
+		}
 	}
 
 }
