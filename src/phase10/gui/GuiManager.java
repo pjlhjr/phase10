@@ -3,7 +3,7 @@ package phase10.gui;
 import phase10.*;
 
 public class GuiManager {
-	private GameManager mainManager;	
+	protected GameManager mainManager;	
 	private SettingsFrame settingsWindow;
 	private GameFrame gameWindow;
 	private ScoreFrame scoreWindow;
@@ -29,7 +29,7 @@ public class GuiManager {
 		mainManager = m; //passes a reference from the game manager into the GUI manager
 		
 		settingsWindow = new SettingsFrame();
-		gameWindow = new GameFrame();
+		gameWindow = new GameFrame(this);
 		scoreWindow = new ScoreFrame();
 		pdWindow = new PhaseDescriptionFrame();
 		siWindow = new SkipInputFrame();
