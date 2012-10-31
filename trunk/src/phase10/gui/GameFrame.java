@@ -21,6 +21,7 @@ import phase10.*;
 
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 
 public class GameFrame extends JFrame {
@@ -48,7 +49,6 @@ public class GameFrame extends JFrame {
 	/*
 	 * begin text field values.
 	 */
-
 	private String playerName; //name of current player
 	private String playerPhase; //phase of current player
 	private String frameTitle;
@@ -72,7 +72,7 @@ public class GameFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GameFrame() {
+	public GameFrame(GuiManager gManage) {
 
 		setTitle("CurrentPlayer - Phase 10");
 		setResizable(false);
@@ -194,6 +194,11 @@ public class GameFrame extends JFrame {
 		playersPanel.setBounds(10, 11, 962, 416);
 		getContentPane().add(playersPanel);
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
+		
+		ArrayList<JPanel> oppPanels = new ArrayList<JPanel>();
+		for(int x = 0; x < GameManager.getGame().getNumberOfPlayers() - 1; x++) {
+			oppPanels.add(new opponentPanel(GameManager.getGame().getPlayer(x)));
+		}
 
 		yourPhasesPanel.setBounds(0, 427, 972, 107);
 		getContentPane().add(yourPhasesPanel);
