@@ -15,28 +15,37 @@ import phase10.gui.GuiManager;
  */
 public class GameManager {
 
-	private static Phase10 game;
-	private static GuiManager gui;
+	private Phase10 game;
+	private GuiManager gui;
 
 	public static void main(String[] args) {
-		newGame();
+		GameManager gm = new GameManager();
+		gm.newGame();
 		//TODO call gui method(s)
 	}
 
-	public static void newGame() {
+	/**
+	 * Create a new Phase10 object
+	 */
+	public void newGame() {
 		game = new Phase10();
 	}
 
-	public static Phase10 getGame() {
+	/**
+	 * 
+	 * @return the current game object
+	 */
+	public Phase10 getGame() {
 		return game;
 	}
 
-	public static boolean loadGame(String fileName) {
+	
+	public boolean loadGame(String fileName) {
 		// TODO not yet implemented
 		return false;
 	}
 
-	public static void saveGame(String fileName) {
+	public void saveGame(String fileName) {
 		// TODO not yet implemented
 	}
 

@@ -28,14 +28,25 @@ public class Phase10 implements Serializable {
 		roundNumber = 0;
 	}
 
+	/**
+	 * @return the current round object
+	 */
 	public Round getRound() {
 		return round;
 	}
 
+	/**
+	 * 
+	 * @return the current round number (the first round is #1)
+	 */
 	public int getRoundNumber() {
 		return roundNumber;
 	}
 
+	/**
+	 * 
+	 * @return the number of players
+	 */
 	public int getNumberOfPlayers() {
 		return players.size();
 	}
@@ -52,14 +63,25 @@ public class Phase10 implements Serializable {
 		return (round==null)? null : getPlayer(round.getTurn());
 	}
 
+	/**
+	 * Adds a player to the game
+	 * @param p the player to add
+	 */
 	void addPlayer(Player p) {
 		players.add(p);
 	}
 
+	/**
+	 * 
+	 * @return the number of the player that is currently dealer
+	 */
 	public int getDealer() {
 		return dealer;
 	}
 
+	/**
+	 * Starts the first round of the game
+	 */
 	public void startGame() {
 		nextRound();
 	}
