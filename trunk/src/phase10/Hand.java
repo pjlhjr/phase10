@@ -15,7 +15,8 @@ import java.util.Collections;
  * 
  * @author Evan Forbes
  */
-public class Hand implements Serializable {
+public class Hand implements Serializable
+{
 
 	private static final long serialVersionUID = 20121L;
 
@@ -24,7 +25,8 @@ public class Hand implements Serializable {
 	/**
 	 * Creates an empty hand object, with no cards
 	 */
-	Hand() {
+	Hand()
+	{
 		cards = new ArrayList<Card>();
 	}
 
@@ -34,7 +36,8 @@ public class Hand implements Serializable {
 	 * @param card
 	 *            the card to add
 	 */
-	void addCard(Card card) {
+	void addCard(Card card)
+	{
 		cards.add(card);
 	}
 
@@ -44,7 +47,8 @@ public class Hand implements Serializable {
 	 * @param card
 	 *            the card to remove
 	 */
-	void removeCard(int card) {
+	void removeCard(int card)
+	{
 		cards.remove(card);
 	}
 
@@ -54,14 +58,16 @@ public class Hand implements Serializable {
 	 * @param card
 	 *            the card to remove
 	 */
-	void removeCard(Card card) {
+	void removeCard(Card card)
+	{
 		cards.remove(card);
 	}
 
 	/**
 	 * @return the number of cards in the hand
 	 */
-	public int getNumberOfCards() {
+	public int getNumberOfCards()
+	{
 		return cards.size();
 	}
 
@@ -72,11 +78,14 @@ public class Hand implements Serializable {
 	 *            the index to get the card at
 	 * @return the card, if it exists (null otherwise)
 	 */
-	public Card getCard(int cardIndex) {
+	public Card getCard(int cardIndex)
+	{
 		Card out = null;
-		try {
+		try
+		{
 			out = cards.get(cardIndex);
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException e)
+		{
 			System.out.println("Invalid hand index: " + cardIndex);
 		}
 		return out;
@@ -85,7 +94,8 @@ public class Hand implements Serializable {
 	/**
 	 * Sorts the hand by color, then value
 	 */
-	public void sortByColor() {
+	public void sortByColor()
+	{
 		CardColorComparator colorComp = new CardColorComparator();
 		Collections.sort(cards, colorComp);
 	}
@@ -93,18 +103,27 @@ public class Hand implements Serializable {
 	/**
 	 * Sorts the hand by value, then color
 	 */
-	public void sortByValue() {
+	public void sortByValue()
+	{
 		CardValueComparator valueComp = new CardValueComparator();
 		Collections.sort(cards, valueComp);
 	}
 
-	
-	  //For testing 
-//		public static void main(String[] args) { Hand h = new
-//	  Hand(); h.addCard(new Card(0,1)); h.addCard(new Card(0,1)); h.addCard(new
-//	  Card(1,1)); h.addCard(new Card(2,6)); h.addCard(new Card(2,8));
-//	  h.addCard(new Card(3,2)); h.sortByColor(); for (int i = 0;
-//	  i<h.getNumberOfCards();i++) { System.out.println(h.getCard(i)); } }
-	 
+	// For testing
+	/*public static void main(String[] args)
+	{
+		Hand h = new Hand();
+		h.addCard(new Card(0, 1));
+		h.addCard(new Card(0, 1));
+		h.addCard(new Card(1, 1));
+		h.addCard(new Card(2, 6));
+		h.addCard(new Card(2, 8));
+		h.addCard(new Card(3, 2));
+		h.sortByColor();
+		for (int i = 0; i < h.getNumberOfCards(); i++)
+		{
+			System.out.println(h.getCard(i));
+		}
+	}*/
 
 }

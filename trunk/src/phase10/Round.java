@@ -151,9 +151,6 @@ public class Round implements Serializable {
 	}
 
 	private void nextTurn() {
-		// TODO check if the round is over (someone's hand is empty). if so,
-		// call game.nextRound i think
-		
 		if (roundIsComplete())
 		{
 			game.nextRound();

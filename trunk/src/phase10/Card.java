@@ -18,6 +18,10 @@ public class Card implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 
+	public static final int WILD_VALUE = 13;
+	public static final int SKIP_VALUE = 14;
+	
+	
 	private int color;
 	private int value;
 
