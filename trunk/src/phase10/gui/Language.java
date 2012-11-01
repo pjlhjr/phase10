@@ -33,8 +33,8 @@ public class Language {
 			while (file.hasNext()) {
 				int id = file.nextInt();
 				String entry = file.nextLine();
-				System.out.println("id: " + id + " entry: " + entry);
-				entries[id] = entry;
+				// System.out.println("id: " + id + " entry: " + entry);
+				entries[id] = entry.substring(1);
 			}
 
 			file.close();
