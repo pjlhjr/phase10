@@ -74,8 +74,6 @@ public class PhaseDescriptionFrame extends JFrame {
 		JButton btnOkay = new JButton(okayButtonLabel);
 		btnOkay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO close the frame
-				
 				//next two commands cause the window to close
 				setVisible(false);
 				dispose();
@@ -95,6 +93,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	}
 
 	private String setPhaseDescriptionString(int phaseNum) {
+		//TODO edit to add compatibility for other languages
 		switch (phaseNum) {
 		case 1:
 			return "2 sets of 3";
@@ -121,5 +120,4 @@ public class PhaseDescriptionFrame extends JFrame {
 			return "Internal error occured! Phase number is out of bounds!";
 		}
 	}
-
 }

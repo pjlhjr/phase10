@@ -14,6 +14,8 @@ import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.Toolkit;
 import javax.swing.ButtonGroup;
 
@@ -37,7 +39,9 @@ public class GameFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GameFrame frame = new GameFrame();
+					GameManager mainManager = new GameManager();
+					mainManager.newGame();
+					GameFrame frame = new GameFrame(new GuiManager(mainManager));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,7 +77,11 @@ public class GameFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public GameFrame(GuiManager gManage) {
+		
+		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
+		final GuiManager guiManage = gManage; //quick fix for ActionListener in Phase Description button
 
+		
 		setTitle("CurrentPlayer - Phase 10");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,17 +103,25 @@ public class GameFrame extends JFrame {
 		lblPhase.setBounds(58, 91, 53, 25);
 		infoPanel.add(lblPhase);
 
+		
 		JTextArea phaseNumber = new JTextArea();
 		phaseNumber.setRows(1);
 		phaseNumber.setColumns(1);
 		phaseNumber.setFont(new Font("Century Gothic", Font.BOLD, 36));
-		phaseNumber.setText("10");
+
+		//TODO fix null pointer exception errors.
+		try {
+			phaseNumber.setText(Integer.toString(currentGame.getCurrentPlayer().getPhase())); //problem targeted! null is returned at Phase10: line 52
+		} catch (NullPointerException e) {
+			phaseNumber.setText("null");
+		}
 		phaseNumber.setEditable(false);
 		phaseNumber.setBounds(58, 120, 53, 53);
 		infoPanel.add(phaseNumber);
 
 		JButton btnPhaseDescription = new JButton("Phase Description");
 		btnPhaseDescription.setBounds(10, 184, 149, 23);
+		btnPhaseDescription.addMouseListener(new pdListener(guiManage));
 		infoPanel.add(btnPhaseDescription);
 
 		JButton btnScoreboard = new JButton("Scoreboard");
@@ -124,14 +140,11 @@ public class GameFrame extends JFrame {
 		getContentPane().add(deckPanel);
 		deckPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JButton deckButton = new JButton("New button");
-		deckButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+		JButton deckButton = new JButton("");
+		deckButton.addMouseListener(new deckListener()); //mouse listener for the deck button
 		deckPanel.add(deckButton);
 
-		JButton discardButton = new JButton("New button");
+		JButton discardButton = new JButton("");
 		deckPanel.add(discardButton);
 
 		handPanel.setBounds(0, 533, 976, 107);
@@ -151,43 +164,43 @@ public class GameFrame extends JFrame {
 		handButtons.add(hcardButton1);
 		handPanel.add(hcardButton1);
 
-		JButton hcardButton2 = new JButton("New button");
+		JButton hcardButton2 = new JButton("");
 		handButtons.add(hcardButton2);
 		handPanel.add(hcardButton2);
 
-		JButton hcardButton3 = new JButton("New button");
+		JButton hcardButton3 = new JButton("");
 		handButtons.add(hcardButton3);
 		handPanel.add(hcardButton3);
 
-		JButton hcardButton4 = new JButton("New button");
+		JButton hcardButton4 = new JButton("");
 		handButtons.add(hcardButton4);
 		handPanel.add(hcardButton4);
 
-		JButton hcardButton5 = new JButton("New button");
+		JButton hcardButton5 = new JButton("");
 		handButtons.add(hcardButton5);
 		handPanel.add(hcardButton5);
 
-		JButton hcardButton6 = new JButton("New button");
+		JButton hcardButton6 = new JButton("");
 		handButtons.add(hcardButton6);
 		handPanel.add(hcardButton6);
 
-		JButton hcardButton7 = new JButton("New button");
+		JButton hcardButton7 = new JButton("");
 		handButtons.add(hcardButton7);
 		handPanel.add(hcardButton7);
 
-		JButton hcardButton8 = new JButton("New button");
+		JButton hcardButton8 = new JButton("");
 		handButtons.add(hcardButton8);
 		handPanel.add(hcardButton8);
 
-		JButton hcardButton9 = new JButton("New button");
+		JButton hcardButton9 = new JButton("");
 		handButtons.add(hcardButton9);
 		handPanel.add(hcardButton9);
 
-		JButton hcardButton10 = new JButton("New button");
+		JButton hcardButton10 = new JButton("");
 		handButtons.add(hcardButton10);
 		handPanel.add(hcardButton10);
 
-		JButton hcardButton11 = new JButton("New button");
+		JButton hcardButton11 = new JButton("");
 		handButtons.add(hcardButton11);
 		handPanel.add(hcardButton11);
 
@@ -196,13 +209,65 @@ public class GameFrame extends JFrame {
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 		
 		ArrayList<JPanel> oppPanels = new ArrayList<JPanel>();
-		for(int x = 0; x < GameManager.getGame().getNumberOfPlayers() - 1; x++) {
-			oppPanels.add(new opponentPanel(GameManager.getGame().getPlayer(x)));
+		try {
+			for(int x = 0; x < currentGame.getNumberOfPlayers() - 1; x++) {
+				oppPanels.add(new opponentPanel(currentGame.getPlayer(x)));
+			}
+		} catch (NullPointerException e) {
+			System.out.println("null pointer exception generated when trying to display opponent Panels");
+			playersPanel.add(new JLabel("Null"));
 		}
 
 		yourPhasesPanel.setBounds(0, 427, 972, 107);
 		getContentPane().add(yourPhasesPanel);
 	}
+	
+	/*
+	 * begin button listeners
+	 */
+	private class pdListener implements MouseListener {
+		private final GuiManager gm;
+		
+		public pdListener(GuiManager guiManage) {
+			gm = guiManage;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			gm.displayPhaseDescriptionFrame();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+		
+	}
+	
+	private class deckListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+		
+	}
+	/*
+	 * end button listeners
+	 */
 
 	/*
 	 * begin functional methods
