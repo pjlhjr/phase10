@@ -109,11 +109,14 @@ public class Player implements Serializable {
 
 	public boolean addPhaseGroups(PhaseGroup... pg) {
 		int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
-		// make sure the right number of phase groups have been passed
-		if (!(pg.length == numPhasesExpected[phase]))
+
+		if (hasLaidDownPhase)
 			return false;
-		
-		
+
+		if (!(pg.length == numPhasesExpected[phase - 1]))
+			return false;
+
+		boolean success = false;
 		switch (phase) {
 			case 1 :
 				if (PhaseGroup.validate(pg[0], 0, 3)
@@ -122,7 +125,7 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 			case 2 :
@@ -132,14 +135,14 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				} else if (PhaseGroup.validate(pg[1], 1, 3)
 						&& PhaseGroup.validate(pg[0], 0, 4)) {
 					pg[0].setLaidDown(0);
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(1);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 			case 3 :
@@ -149,32 +152,35 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				} else if (PhaseGroup.validate(pg[1], 1, 4)
 						&& PhaseGroup.validate(pg[0], 0, 4)) {
 					pg[0].setLaidDown(0);
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(1);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 			case 4 :
 				if (PhaseGroup.validate(pg[0], 1, 7)) {
 					pg[0].setLaidDown(1);
 					phaseGroups.add(pg[0]);
+					success = true;
 				}
 				break;
 			case 5 :
 				if (PhaseGroup.validate(pg[0], 1, 8)) {
 					pg[0].setLaidDown(1);
 					phaseGroups.add(pg[0]);
+					success = true;
 				}
 				break;
 			case 6 :
 				if (PhaseGroup.validate(pg[0], 1, 9)) {
 					pg[0].setLaidDown(1);
 					phaseGroups.add(pg[0]);
+					success = true;
 				}
 				break;
 			case 7 :
@@ -184,13 +190,14 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 			case 8 :
 				if (PhaseGroup.validate(pg[0], 2, 7)) {
 					pg[0].setLaidDown(2);
 					phaseGroups.add(pg[0]);
+					success = true;
 				}
 				break;
 			case 9 :
@@ -200,14 +207,14 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				} else if (PhaseGroup.validate(pg[1], 0, 5)
 						&& PhaseGroup.validate(pg[0], 0, 2)) {
 					pg[0].setLaidDown(0);
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 			case 10 :
@@ -217,18 +224,22 @@ public class Player implements Serializable {
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				} else if (PhaseGroup.validate(pg[1], 0, 5)
 						&& PhaseGroup.validate(pg[0], 0, 3)) {
 					pg[0].setLaidDown(0);
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
-					return true;
+					success = true;
 				}
 				break;
 		}
-		return false;
+		if (success) {
+			setLaidDownPhase(true);
+			return true;
+		} else
+			return false;
 	}
 
 	public int getNumberOfPhaseGroups() {
