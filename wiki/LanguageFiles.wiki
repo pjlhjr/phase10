@@ -46,3 +46,5 @@ skipInputFrame (101 - 120)
 102 = skipPrompt
 103 = skipButtonLabel
 }}}
+
+This format allows for new elements to be added to each panel/frame if necessary.
