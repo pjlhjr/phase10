@@ -29,6 +29,11 @@ public class GameManager {
 		// TODO call gui method(s)
 	}
 
+	GameManager() {
+		//TODO: initialize GUI manager
+		//gui = new GuiManager(this);
+	}
+	
 	/**
 	 * Create a new Phase10 object
 	 */
