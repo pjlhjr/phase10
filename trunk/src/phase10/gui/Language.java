@@ -10,6 +10,9 @@ public class Language {
 	private String name;
 	private String[] entries;
 
+	/**
+	 * Sets up the default language
+	 */
 	Language() {
 		setLanguage(DEFAULT_LANG);
 	}

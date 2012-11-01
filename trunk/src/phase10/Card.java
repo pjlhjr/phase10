@@ -21,7 +21,6 @@ public class Card implements Serializable {
 	public static final int WILD_VALUE = 13;
 	public static final int SKIP_VALUE = 14;
 	
-	
 	private int color;
 	private int value;
 
@@ -34,7 +33,7 @@ public class Card implements Serializable {
 	 * @param i
 	 *            the unique id of this card
 	 */
-	public Card(int c, int v) {
+	Card(int c, int v) {
 		color = c;
 		value = v;
 	}
@@ -75,14 +74,18 @@ public class Card implements Serializable {
 			return 5;
 		if (value >= 10 && value <= 12)
 			return 10;
-		if (value == 13) // Skip
+		if (value == Card.SKIP_VALUE)
 			return 15;
-		if (value == 14) // Wild
+		if (value == Card.WILD_VALUE)
 			return 25;
 
 		return 0; // default, should never happen
 	}
 
+	/**
+	 * 
+	 * @return string representation of the card
+	 */
 	public String toString() {
 		return getColor() + "." + getValue();
 	}
