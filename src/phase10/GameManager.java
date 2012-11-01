@@ -6,6 +6,11 @@
 
 package phase10;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import phase10.gui.GuiManager;
 
 /**
@@ -21,7 +26,7 @@ public class GameManager {
 	public static void main(String[] args) {
 		GameManager gm = new GameManager();
 		gm.newGame();
-		//TODO call gui method(s)
+		// TODO call gui method(s)
 	}
 
 	/**
@@ -39,14 +44,35 @@ public class GameManager {
 		return game;
 	}
 
-	
 	public boolean loadGame(String fileName) {
-		// TODO not yet implemented
-		return false;
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+
+			ObjectInputStream ois = new ObjectInputStream(fis);
+
+			Object obj = ois.readObject();
+
+			if (obj instanceof Phase10) {
+				game = (Phase10) obj;
+				ois.close();
+				return true;
+			}
+			ois.close();
+			return false;
+		} catch (Exception e) {
+			System.out.println("Error loading: " + e.getMessage());
+			return false;
+		}
 	}
 
 	public void saveGame(String fileName) {
-		// TODO not yet implemented
+		try {
+			FileOutputStream fos = new FileOutputStream(fileName);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(game);
+		} catch (Exception e) {
+			System.out.println("Error saving: " + e.getMessage());
+		}
 	}
 
 }
