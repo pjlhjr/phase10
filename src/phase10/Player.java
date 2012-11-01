@@ -82,7 +82,7 @@ public class Player implements Serializable {
 	 * @param points
 	 *            the points to add to this player's score
 	 */
-	public void addToScore(int points) {
+	void addToScore(int points) {
 		score += points;
 	}
 
