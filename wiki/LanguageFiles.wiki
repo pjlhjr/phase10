@@ -6,9 +6,9 @@ A language text file will have a list of Strings that each have an ID associated
 
 {{{
 GameFrame (1 - 20)
-1 *= frameTitle
-2 *= pdButtonLabel
-3 *= sbButtonLabel
+1 = frameTitle
+2 = pdButtonLabel
+3 = sbButtonLabel
 4 = saeButtonLabel
 5 = ewsButtonLabel
 
