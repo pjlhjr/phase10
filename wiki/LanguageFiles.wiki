@@ -4,8 +4,7 @@
 =Summary=
 A language text file will have a list of Strings that each have an ID associated with them. The format for IDs are as follows:
 
-* 1-100 GameFrame
+* 1-100 GameFrame /n
 * 101-200 SettingsFrame
 * 201-300 OpponentPanel
 * 301 - 400 Various Smaller Message Panels
-
