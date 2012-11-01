@@ -15,8 +15,7 @@ public class GuiManager {
 	//use main method only for testing
 	public static void main(String[] args) {
 		GuiManager guiMgr = new GuiManager(new GameManager());
-		guiMgr.displaySettingsFrame();
-		guiMgr.displayScoreFrame();
+		guiMgr.initGame();
 	}
 
 
@@ -31,7 +30,7 @@ public class GuiManager {
 		settingsWindow = new SettingsFrame();
 		gameWindow = new GameFrame(this);
 		scoreWindow = new ScoreFrame();
-		pdWindow = new PhaseDescriptionFrame();
+		pdWindow = new PhaseDescriptionFrame(1);
 		siWindow = new SkipInputFrame();
 	}
 	/*
@@ -75,9 +74,9 @@ public class GuiManager {
 	 * (might place these methods in their respective classes)
 	 */
 	
-	private void updateGameFrame() {
-		gameWindow.updateFrame(mainManager.getGame().getPlayer(index));
-	}
+//	private void updateGameFrame() {
+//		gameWindow.updateFrame(GameManager.getGame().getPlayer(index));
+//	}
 	private void updateSettingsFrame() {}
 	private void updatePhaseDescriptionFrame() {}
 	private void updateSkipInputFrame() {}
