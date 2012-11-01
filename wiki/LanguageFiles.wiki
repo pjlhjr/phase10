@@ -2,7 +2,7 @@
 #labels Phase-Implementation,Phase-Design
 
 =Summary=
-A language text file will have a list of Strings that each have an ID associated with them. The format for IDs are as follows:
+A language text file will have a list of Strings that each have an ID associated with them. The format for IDs are as follows. This is not an acutal block of code. Just take it as a key. I was too lazy to do other formatting stuff:
 
 {{{
 GameFrame (1 - 20)
