@@ -40,11 +40,11 @@ public class PhaseGroup implements Serializable {
 			return true;
 		} else {
 			PhaseGroup temp = new PhaseGroup();
-			for (int i=0;i<getNumberOfCards();i++){
+			for (int i = 0; i < getNumberOfCards(); i++) {
 				temp.addCard(getCard(i));
 			}
 			temp.addCard(c);
-			if (PhaseGroup.validate(temp, type, 1)){
+			if (PhaseGroup.validate(temp, type, 1)) {
 				cards.add(c);
 				return true;
 			}
@@ -82,14 +82,21 @@ public class PhaseGroup implements Serializable {
 		return laidDown;
 	}
 
+	/**
+	 * Validates the given phase group to match the type (set, run, or all1Color) and minimum length
+	 * @param pg the PhaseGroup to check
+	 * @param type The type of phase (0: set, 1: run, 2: all 1 color)
+	 * @param minLength the minimum length the phase must have
+	 * @return true if it is a valid phase group, false otherwise
+	 */
 	public static boolean validate(PhaseGroup pg, int type, int minLength) {
-		//make sure there are enough cards
+		// make sure there are enough cards
 		if (pg.getNumberOfCards() < minLength)
 			return false;
-		//skips can't be in a phase
+		// skips can't be in a phase
 		if (!checkSkips(pg))
 			return false;
-		
+
 		if (type == 0) {
 			return validateSet(pg);
 		} else if (type == 1) {
@@ -110,7 +117,7 @@ public class PhaseGroup implements Serializable {
 	}
 
 	private static boolean validateRun(PhaseGroup pg) {
-		System.out.println("Checking run");
+		// System.out.println("Checking run");
 		ArrayList<Integer> values = new ArrayList<Integer>(
 				pg.getNumberOfCards());
 		int min = pg.getCard(0).getValue();
@@ -118,32 +125,36 @@ public class PhaseGroup implements Serializable {
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
 			int curValue = pg.getCard(i).getValue();
 			if (curValue == Card.WILD_VALUE) {
-				numWilds++;
+				WildCard curWild = (WildCard) pg.getCard(i);
+				if (curWild.getHiddenValue() < 0)
+					numWilds++;
+				else
+					values.add(curWild.getHiddenValue());
 			} else {
 				values.add(curValue);
 			}
 			if (curValue < min)
 				min = curValue;
 		}
-		System.out.println("numWilds: "+numWilds+" min: "+min);
+		System.out.println("numWilds: " + numWilds + " min: " + min);
 		int curValue = min;
-		while(!values.isEmpty()){
+		while (!values.isEmpty()) {
 			boolean found = false;
-			for (int i=0;i<values.size();i++){
-				if (values.get(i)==curValue){
-					System.out.println("Removing "+values.get(i)+" at: "+i);
+			for (int i = 0; i < values.size(); i++) {
+				if (values.get(i) == curValue) {
+					System.out.println("Removing " + values.get(i) + " at: "
+							+ i);
 					values.remove(i);
 					found = true;
 				}
 			}
-			if (!found && numWilds>0){
+			if (!found && numWilds > 0) {
 				numWilds--;
-			}
-			else if (!found && numWilds==0){
+			} else if (!found && numWilds == 0) {
 				return false;
 			}
 			curValue++;
-			
+
 		}
 		return true;
 	}
@@ -179,13 +190,11 @@ public class PhaseGroup implements Serializable {
 		}
 		return true;
 	}
-	
-	/*public static void main(String[] args){
-		PhaseGroup pg = new PhaseGroup();
-		pg.addCard(new Card(1,4));
-		pg.addCard(new Card(1,4));
-		pg.addCard(new Card(2,4));
-		pg.addCard(new Card(3,4));
-		System.out.println(PhaseGroup.validate(pg, 0, 4));
-	}*/
+
+	/*
+	 * public static void main(String[] args){ PhaseGroup pg = new PhaseGroup();
+	 * pg.addCard(new Card(1,4)); pg.addCard(new Card(1,4)); pg.addCard(new
+	 * Card(2,4)); pg.addCard(new Card(3,4));
+	 * System.out.println(PhaseGroup.validate(pg, 0, 4)); }
+	 */
 }

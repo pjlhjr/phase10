@@ -56,7 +56,7 @@ public class Round implements Serializable {
 	 */
 	public boolean drawFromDiscard(Player player) {
 		// cannot pick up a skip
-		if (discardStack.peek().getValue() == 14)
+		if (discardStack.peek().getValue() == Card.SKIP_VALUE)
 			return false;
 
 		player.getHand().addCard(discardStack.pop());
@@ -70,7 +70,7 @@ public class Round implements Serializable {
 	 *            the player to move the card to
 	 */
 	public void drawFromDeck(Player player) {
-		// TODO What if deck is empty?
+		// TODO If deck is empty, reshuffle discard pile
 
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
@@ -89,16 +89,33 @@ public class Round implements Serializable {
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
+		if (card.getValue() == Card.SKIP_VALUE) {
+			int nextPlayer = turn + 1;
+			if (nextPlayer >= game.getNumberOfPlayers()) {
+				nextPlayer = 0;
+			}
+			game.getPlayer(nextPlayer).setSkip(true);
+		}
+
 		nextTurn();
 	}
 
 	/**
-	 * Gets the "showing" card on the discard pile
+	 * Gets the "showing" card on the discard pile Does not change the stack.
 	 * 
 	 * @return the top card from the discard pile
 	 */
-	public Card getTopOfDiscardPile() {
+	public Card getTopOfDiscardStack() {
 		return discardStack.peek();
+	}
+
+	/**
+	 * Gets the player index of who is currently playing their turn
+	 * 
+	 * @return the current player index
+	 */
+	public int getTurn() {
+		return turn;
 	}
 
 	private void initiateRound() {
@@ -116,9 +133,9 @@ public class Round implements Serializable {
 			}
 		}
 		for (int i = 0; i < NUM_WILDS; i++)
-			deck.add(new Card(-1, 13)); // Wilds
+			deck.add(new WildCard(-1, Card.WILD_VALUE)); // Wilds
 		for (int i = 0; i < NUM_SKIPS; i++)
-			deck.add(new Card(-1, 14)); // Skips
+			deck.add(new Card(-1, Card.SKIP_VALUE)); // Skips
 
 	}
 
@@ -151,33 +168,31 @@ public class Round implements Serializable {
 	}
 
 	private void nextTurn() {
-		if (roundIsComplete())
-		{
+		if (roundIsComplete()) {
 			game.nextRound();
 		}
-		
-		turn++;
-		if (turn >= game.getNumberOfPlayers()) {
-			turn = 0;
+
+		advanceTurn();
+		if (game.getPlayer(turn).getSkip()) {
+			game.getPlayer(turn).setSkip(false);
+			advanceTurn();
 		}
 		// TODO Call method here of GUI, to prompt the player for their turn?
 	}
 
+	private void advanceTurn() {
+		turn++;
+		if (turn >= game.getNumberOfPlayers()) {
+			turn = 0;
+		}
+	}
+
 	private boolean roundIsComplete() {
-		for (int p =0; p<game.getNumberOfPlayers();p++)
-		{
-			if (game.getPlayer(p).getHand().getNumberOfCards()==0)
+		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
+			if (game.getPlayer(p).getHand().getNumberOfCards() == 0)
 				return true;
 		}
 		return false;
 	}
-	
-	/**
-	 * Gets the player index of who is currently playing their turn
-	 * @return the current player index
-	 */
-	public int getTurn()
-	{
-		return turn;
-	}
+
 }
