@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import phase10.ai.AIPlayer;
+
 /**
  * This class contains and manages the information for each round
  * 
@@ -64,16 +66,25 @@ public class Round implements Serializable {
 	}
 
 	/**
-	 * Removes the next card from the deck and moves it to the player's hand
+	 * Removes the next card from the deck and moves it to the player's hand. If
+	 * there are no more cards in the deck after this operation, the discard
+	 * stack is reshuffled.
 	 * 
 	 * @param player
 	 *            the player to move the card to
 	 */
 	public void drawFromDeck(Player player) {
-		// TODO If deck is empty, reshuffle discard pile
-
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
+
+		if (deck.size() == 0) {
+			Card topDiscard = discardStack.pop();
+			while (!discardStack.isEmpty()) {
+				deck.add(discardStack.pop());
+			}
+			shuffle();
+			discardStack.push(topDiscard);
+		}
 	}
 
 	/**
@@ -118,6 +129,9 @@ public class Round implements Serializable {
 		return turn;
 	}
 
+	/**
+	 * Creates the deck, shuffles it, and deals 10 cards to all players.
+	 */
 	private void initiateRound() {
 		createDeck();
 		shuffle();
@@ -133,9 +147,9 @@ public class Round implements Serializable {
 			}
 		}
 		for (int i = 0; i < NUM_WILDS; i++)
-			deck.add(new WildCard(-1, Card.WILD_VALUE)); // Wilds
+			deck.add(new WildCard(-1, Card.WILD_VALUE));
 		for (int i = 0; i < NUM_SKIPS; i++)
-			deck.add(new Card(-1, Card.SKIP_VALUE)); // Skips
+			deck.add(new Card(-1, Card.SKIP_VALUE));
 
 	}
 
@@ -150,7 +164,6 @@ public class Round implements Serializable {
 			}
 			deck = newDeck;
 		}
-
 	}
 
 	private void deal() {
@@ -167,19 +180,33 @@ public class Round implements Serializable {
 		deck.remove(deck.size() - 1);
 	}
 
+	/**
+	 * Checks if the round is complete; if not, advances play to the next player
+	 * (skipping if necessary). If it is an AI player, the playTurn() method is
+	 * invoked.
+	 */
 	private void nextTurn() {
 		if (roundIsComplete()) {
 			game.nextRound();
+		} else {
+			advanceTurn();
+			if (game.getPlayer(turn).getSkip()) {
+				game.getPlayer(turn).setSkip(false);
+				advanceTurn();
+			} else if (game.getPlayer(turn) instanceof AIPlayer) {
+				AIPlayer p = (AIPlayer) game.getPlayer(turn);
+				// TODO call gui?
+				p.playTurn();
+			}
+			// TODO Call method here of GUI, to prompt the player for their
+			// turn?
 		}
 
-		advanceTurn();
-		if (game.getPlayer(turn).getSkip()) {
-			game.getPlayer(turn).setSkip(false);
-			advanceTurn();
-		}
-		// TODO Call method here of GUI, to prompt the player for their turn?
 	}
 
+	/**
+	 * Increases the turn counter by 1, or wraps around back to 0
+	 */
 	private void advanceTurn() {
 		turn++;
 		if (turn >= game.getNumberOfPlayers()) {
@@ -187,6 +214,10 @@ public class Round implements Serializable {
 		}
 	}
 
+	/**
+	 * Checks if any players have no cards left in their hand
+	 * @return true if the round is over
+	 */
 	private boolean roundIsComplete() {
 		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
 			if (game.getPlayer(p).getHand().getNumberOfCards() == 0)

@@ -30,14 +30,8 @@ public class Player implements Serializable {
 	/**
 	 * Creates the default player object with no name
 	 */
-	public Player() {
-		name = "";
-		score = 0;
-		phase = 1;
-		hand = new Hand();
-		phaseGroups = new ArrayList<PhaseGroup>();
-		skipNextTurn = false;
-		hasLaidDownPhase = false;
+	public Player() {	
+		this("");
 	}
 
 	/**
