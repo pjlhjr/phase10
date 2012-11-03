@@ -1,0 +1,11 @@
+#summary Information that needs to be shown to the user
+
+  * General error message (shows given text)
+  * Round starting
+  * "It's Player's turn"
+  * Game over-> winner
+
+  * more?
+
+
+  
