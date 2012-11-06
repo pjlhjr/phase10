@@ -112,7 +112,7 @@ public class Round implements Serializable {
 	}
 
 	/**
-	 * Gets the "showing" card on the discard pile Does not change the stack.
+	 * Gets the "showing" card on the discard pile. Does not change the stack.
 	 * 
 	 * @return the top card from the discard pile
 	 */

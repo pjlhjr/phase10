@@ -79,7 +79,7 @@ public class Card implements Serializable {
 		if (value == Card.WILD_VALUE)
 			return 25;
 
-		return 0; // default, should never happen
+		return 0;
 	}
 
 	/**
