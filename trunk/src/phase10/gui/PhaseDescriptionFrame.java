@@ -50,7 +50,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	public PhaseDescriptionFrame(int currentPhase) {
 		
 		//TODO change constant String values to language variables
-		
+		initLanguage();
 		
 		title = "Phase " + currentPhase + " Description";
 		currentPhaseString = "Phase " + currentPhase + ":";
@@ -90,6 +90,16 @@ public class PhaseDescriptionFrame extends JFrame {
 		phaseDescription.setText(phaseDescriptionString);
 		phaseDescription.setBounds(108, 84, 230, 66);
 		contentPane.add(phaseDescription);
+	}
+
+	private void initLanguage() {
+		
+		//TODO GET LANGUAGE FILE STRAIGHTENED UP THEN WORK THIS OUT!!!
+		Language langSetter = new Language();
+		title = langSetter.getEntry(61);
+		currentPhaseString = langSetter.getEntry(62);
+		okayButtonLabel = langSetter.getEntry(id);
+		phaseDescriptionString = langSetter.getEntry(id);
 	}
 
 	private String setPhaseDescriptionString(int phaseNum) {
