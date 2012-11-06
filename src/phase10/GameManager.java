@@ -26,7 +26,7 @@ public class GameManager {
 	public static void main(String[] args) {
 		GameManager gm = new GameManager();
 		gm.newGame();
-		// TODO call gui method(s)
+		// TODO call gui method(s) to initialize frames
 	}
 
 	GameManager() {
@@ -49,14 +49,17 @@ public class GameManager {
 		return game;
 	}
 
+	/**
+	 * Loads a game
+	 * @param fileName the file path to the save file
+	 * @return true if the load was successful, otherwise false
+	 */
 	public boolean loadGame(String fileName) {
 		try {
 			FileInputStream fis = new FileInputStream(fileName);
-
 			ObjectInputStream ois = new ObjectInputStream(fis);
 
 			Object obj = ois.readObject();
-
 			if (obj instanceof Phase10) {
 				game = (Phase10) obj;
 				ois.close();
@@ -70,13 +73,23 @@ public class GameManager {
 		}
 	}
 
-	public void saveGame(String fileName) {
+	/**
+	 * Saves the current game
+	 * @param fileName the path to save to (should be *.dat)
+	 * @return true if the save was successful, otherwise false
+	 */
+	public boolean saveGame(String fileName) {
 		try {
 			FileOutputStream fos = new FileOutputStream(fileName);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			
 			oos.writeObject(game);
+			
+			oos.close();
+			return true;
 		} catch (Exception e) {
 			System.out.println("Error saving: " + e.getMessage());
+			return false;
 		}
 	}
 

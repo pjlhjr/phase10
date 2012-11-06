@@ -21,11 +21,13 @@ public class Phase10 implements Serializable {
 	private Round round;
 	private int roundNumber;
 	private int dealer;
+	private boolean started;
 
 	Phase10() {
 		players = new ArrayList<Player>();
 		dealer = -1;
 		roundNumber = 0;
+		started = false;
 	}
 
 	/**
@@ -54,21 +56,36 @@ public class Phase10 implements Serializable {
 	public Player getPlayer(int index) {
 		return players.get(index);
 	}
-	
+
 	/**
 	 * Gets the Player object of who is currently playing their turn
-	 * @return the current Player object; null if the round has not yet been initialized
+	 * 
+	 * @return the current Player object;
+	 * 
+	 * @throws Phase10Exception
+	 *             if the game has not yet started
 	 */
 	public Player getCurrentPlayer() {
-		return (round==null)? null : getPlayer(round.getTurn());
+		if (!started)
+			throw new Phase10Exception(
+					"Phase10 Has not yet been started. Must call startGame before this action can be done.");
+		return getPlayer(round.getTurn());
 	}
 
 	/**
 	 * Adds a player to the game
-	 * @param p the player to add
+	 * 
+	 * @param p
+	 *            the player to add
+	 * @throws Phase10Exception
+	 *             if the game has already started
 	 */
-	void addPlayer(Player p) {
-		players.add(p);
+	public void addPlayer(Player p) {
+		if (!started)
+			players.add(p);
+		else
+			throw new Phase10Exception(
+					"Cannot add player after game has started");
 	}
 
 	/**
@@ -81,18 +98,57 @@ public class Phase10 implements Serializable {
 
 	/**
 	 * Starts the first round of the game
+	 * 
+	 * @throws Phase10Exception
+	 *             if the game has already started or there are less than 2
+	 *             players added.
 	 */
 	public void startGame() {
-		nextRound();
+		if (!started) {
+			if (!(getNumberOfPlayers() < 2)) {
+				started = true;
+				nextRound();
+			} else
+				throw new Phase10Exception(
+						"Cannot start game with less than 2 players");
+
+		} else
+			throw new Phase10Exception("Game has already started");
 	}
 
 	void nextRound() {
 		finishRound();
 
-		roundNumber++;
-		nextDealer();
-		round = new Round(this);
-		// TODO Call Gui- say new round has started
+		if (checkWinners().size() == 0) {
+			roundNumber++;
+			nextDealer();
+			round = new Round(this);
+			// TODO Call Gui- say new round has started
+		}
+	}
+
+	/**
+	 * Checks to see if someone has completed the tenth phase. If so, the proper
+	 * GUI method will be called.
+	 * 
+	 * @return the list of all winning players. (empty if there are no winning
+	 *         players)
+	 */
+	private ArrayList<Player> checkWinners() {
+		ArrayList<Player> winners = new ArrayList<Player>();
+		int winnerScore = Integer.MAX_VALUE;
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getPhase() == 11) {
+				if (players.get(i).getScore() < winnerScore) {
+					winners = new ArrayList<Player>();
+					winnerScore = players.get(i).getScore();
+					winners.add(players.get(i));
+				} else if (players.get(i).getScore() == winnerScore) {
+					winners.add(players.get(i));
+				}
+			}
+		}
+		return winners;
 	}
 
 	private void nextDealer() {
@@ -103,7 +159,7 @@ public class Phase10 implements Serializable {
 	}
 
 	/**
-	 * This resets the player's hand, phasegroups, and adds the points to their
+	 * This resets the player's hand, phase groups, and adds the points to their
 	 * score.
 	 */
 	private void finishRound() {
@@ -119,7 +175,10 @@ public class Phase10 implements Serializable {
 			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
 				p.removePhaseGroup(pg);
 			}
-			p.setLaidDownPhase(false);
+			if (p.hasLaidDownPhase()) {
+				p.setLaidDownPhase(false);
+				p.incrementPhase();
+			}
 		}
 	}
 
