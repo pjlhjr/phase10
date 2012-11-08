@@ -1,4 +1,4 @@
-package phase10;
+package phase10.exceptions;
 
 public class Phase10Exception extends RuntimeException {
 

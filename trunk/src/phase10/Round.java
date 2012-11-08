@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.Stack;
 
 import phase10.ai.AIPlayer;
+import phase10.card.Card;
+import phase10.card.WildCard;
 
 /**
  * This class contains and manages the information for each round
