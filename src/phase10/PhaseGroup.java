@@ -5,8 +5,12 @@
  */
 package phase10;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import phase10.card.Card;
+import phase10.card.WildCard;
 
 /**
  * This class contains all of the information for each phase group that is laid
@@ -110,7 +114,7 @@ public final class PhaseGroup implements Serializable {
 
 	private static boolean checkSkips(PhaseGroup pg) {
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
-			if (pg.getCard(i).getValue() == Card.SKIP_VALUE)
+			if (pg.getCard(i).getValue() == Configuration.SKIP_VALUE)
 				return false;
 		}
 		return true;
@@ -124,7 +128,7 @@ public final class PhaseGroup implements Serializable {
 		int numWilds = 0;
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
 			int curValue = pg.getCard(i).getValue();
-			if (curValue == Card.WILD_VALUE) {
+			if (curValue == Configuration.WILD_VALUE) {
 				WildCard curWild = (WildCard) pg.getCard(i);
 				if (curWild.getHiddenValue() < 0)
 					numWilds++;
@@ -164,7 +168,7 @@ public final class PhaseGroup implements Serializable {
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
 			int curValue = pg.getCard(i).getValue();
 
-			if (curValue != Card.WILD_VALUE) {
+			if (curValue != Configuration.WILD_VALUE) {
 				if (valueToMatch < 0) {
 					valueToMatch = curValue;
 				} else if (valueToMatch != curValue) {
@@ -176,12 +180,12 @@ public final class PhaseGroup implements Serializable {
 	}
 
 	private static boolean validateAllOneColor(PhaseGroup pg) {
-		int valueToMatch = -1;
+		Color valueToMatch = Color.white;
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
-			int curValue = pg.getCard(i).getColor();
+			Color curValue = pg.getCard(i).getColor();
 
-			if (pg.getCard(i).getValue() != Card.WILD_VALUE) {
-				if (valueToMatch < 0) {
+			if (pg.getCard(i).getValue() != Configuration.WILD_VALUE) {
+				if (valueToMatch == Color.white) {
 					valueToMatch = curValue;
 				} else if (valueToMatch != curValue) {
 					return false;

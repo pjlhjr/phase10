@@ -5,7 +5,10 @@
  */
 package phase10.card;
 
+import java.awt.Color;
 import java.io.Serializable;
+
+import phase10.Configuration;
 
 /**
  * This class contains all of the information for each playing card for the
@@ -17,11 +20,8 @@ import java.io.Serializable;
 public class Card implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
-
-	public static final int WILD_VALUE = 13;
-	public static final int SKIP_VALUE = 14;
 	
-	private int color;
+	private Color color;
 	private int value;
 
 	/**
@@ -30,18 +30,27 @@ public class Card implements Serializable {
 	 *            the color (0 through 3)
 	 * @param v
 	 *            the value (1 through 12, wild = 13, skip = 14)
-	 * @param i
-	 *            the unique id of this card
 	 */
-	public Card(int c, int v) {
+	public Card(Color c, int v) {
 		color = c;
 		value = v;
 	}
-
+	
+	/**
+	 * 
+	 * @param v
+	 *            the value (1 through 12, wild = 13, skip = 14)
+	 */
+	public Card(int v) {
+		color = Color.BLACK;
+		value = v;
+	}
+	
+	
 	/**
 	 * @return the color
 	 */
-	public final int getColor() {
+	public final Color getColor() {
 		return color;
 	}
 
@@ -74,9 +83,9 @@ public class Card implements Serializable {
 			return 5;
 		if (value >= 10 && value <= 12)
 			return 10;
-		if (value == Card.SKIP_VALUE)
+		if (value == Configuration.SKIP_VALUE)
 			return 15;
-		if (value == Card.WILD_VALUE)
+		if (value == Configuration.WILD_VALUE)
 			return 25;
 
 		return 0;

@@ -15,8 +15,8 @@ public class WildCard extends Card {
 	private static final long serialVersionUID = 20121L;
 	private int hiddenValue;
 	
-	public WildCard(int c, int v) {
-		super(c, v);
+	public WildCard(int v) {
+		super(v);
 		hiddenValue=-1;
 	}
 
