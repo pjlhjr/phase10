@@ -3,7 +3,7 @@
  * Paul Harris, Matt Hruz, Evan Forbes
  * 
  */
-package phase10;
+package phase10.card;
 
 import java.util.Comparator;
 

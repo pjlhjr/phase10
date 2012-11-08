@@ -1,14 +1,17 @@
 package phase10.gui;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Scanner;
+
+import phase10.exceptions.Phase10LanguageException;
 
 public class Language {
 
 	public static final String DEFAULT_LANG = "lang/en.txt";
 
 	private String name;
-	private String[] entries;
+	private HashMap<String, String> entries;
 
 	/**
 	 * Sets up the default language
@@ -23,26 +26,24 @@ public class Language {
 	 *            the file (usually something like "lang/en.txt"
 	 * @return true if it was successful, false if there was a problem
 	 */
-	boolean setLanguage(String fileName) {
+	void setLanguage(String fileName) {
 		try {
 			Scanner file = new Scanner(new File(fileName));
 			name = file.next();
-			int max = file.nextInt();
-			entries = new String[max + 1];
+			entries = new HashMap<String, String>();
 
 			while (file.hasNext()) {
-				int id = file.nextInt();
+				String id = file.next();
+				file.next();
 				String entry = file.nextLine();
-				// System.out.println("id: " + id + " entry: " + entry);
-				entries[id] = entry.substring(1);
+				System.out.println("id: " + id + " entry: " + entry);
+				entries.put(id, entry.substring(1));
 			}
 
 			file.close();
 		} catch (Exception e) {
-			System.out.println("Error setting language: " + e.getMessage());
-			return false;
+			throw new Phase10LanguageException("Error setting language: " + e.getMessage());
 		}
-		return true;
 	}
 
 	/**
@@ -52,8 +53,13 @@ public class Language {
 	 *            the id of the entry
 	 * @return the entry
 	 */
-	String getEntry(int id) {
-		return entries[id];
+	String getEntry(String id) {
+		try{
+			return entries.get(id);
+		}
+		catch(Exception e){
+			throw new Phase10LanguageException("Error getting entry: "+id+": "+e.getMessage());
+		}
 	}
 
 	/**

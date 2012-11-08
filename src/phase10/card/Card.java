@@ -3,7 +3,7 @@
  * Paul Harris, Matt Hruz, Evan Forbes
  * 
  */
-package phase10;
+package phase10.card;
 
 import java.io.Serializable;
 
@@ -33,7 +33,7 @@ public class Card implements Serializable {
 	 * @param i
 	 *            the unique id of this card
 	 */
-	Card(int c, int v) {
+	public Card(int c, int v) {
 		color = c;
 		value = v;
 	}

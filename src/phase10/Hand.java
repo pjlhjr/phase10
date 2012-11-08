@@ -10,6 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import phase10.card.Card;
+import phase10.card.CardColorComparator;
+import phase10.card.CardValueComparator;
+
 /**
  * This class contains and manages the cards in each player's hand
  * 

@@ -8,6 +8,8 @@ package phase10;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import phase10.exceptions.Phase10Exception;
+
 /**
  * This class contains and manages the information for each Phase 10 game
  * 
