@@ -6,6 +6,7 @@
 
 package phase10;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,10 +24,6 @@ import phase10.card.WildCard;
 public final class Round implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
-	private static final int TIMES_TO_SHUFFLE = 5;
-	private static final int NUM_WILDS = 8;
-	private static final int NUM_SKIPS = 4;
-	private static final int NUM_CARDS_TO_DEAL = 10;
 
 	private Phase10 game;
 	private ArrayList<Card> deck;
@@ -60,7 +57,7 @@ public final class Round implements Serializable {
 	 */
 	public boolean drawFromDiscard(Player player) {
 		// cannot pick up a skip
-		if (discardStack.peek().getValue() == Card.SKIP_VALUE)
+		if (discardStack.peek().getValue() == Configuration.SKIP_VALUE)
 			return false;
 
 		player.getHand().addCard(discardStack.pop());
@@ -102,7 +99,7 @@ public final class Round implements Serializable {
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
-		if (card.getValue() == Card.SKIP_VALUE) {
+		if (card.getValue() == Configuration.SKIP_VALUE) {
 			int nextPlayer = turn + 1;
 			if (nextPlayer >= game.getNumberOfPlayers()) {
 				nextPlayer = 0;
@@ -145,23 +142,24 @@ public final class Round implements Serializable {
 	 *  Number 1-12, two of each in four different colors
 	 */
 	private void createDeck() {
+		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
 		deck = new ArrayList<Card>();
 		for (int color = 0; color < 4; color++) {
 			for (int value = 1; value < 13; value++) {
-				deck.add(new Card(color, value));
-				deck.add(new Card(color, value));
+				deck.add(new Card(colors[color], value));
+				deck.add(new Card(colors[color], value));
 			}
 		}
-		for (int i = 0; i < NUM_WILDS; i++)
-			deck.add(new WildCard(-1, Card.WILD_VALUE));
-		for (int i = 0; i < NUM_SKIPS; i++)
-			deck.add(new Card(-1, Card.SKIP_VALUE));
+		for (int i = 0; i < Configuration.NUM_WILDS; i++)
+			deck.add(new WildCard(Configuration.WILD_VALUE));
+		for (int i = 0; i < Configuration.NUM_SKIPS; i++)
+			deck.add(new Card(Configuration.SKIP_VALUE));
 
 	}
 
 	private void shuffle() {
 		Random r = new Random();
-		for (int t = 0; t < TIMES_TO_SHUFFLE; t++) {
+		for (int t = 0; t < Configuration.TIMES_TO_SHUFFLE; t++) {
 			ArrayList<Card> newDeck = new ArrayList<Card>();
 			while (!deck.isEmpty()) {
 				int index = r.nextInt(deck.size());
@@ -173,7 +171,7 @@ public final class Round implements Serializable {
 	}
 
 	private void deal() {
-		for (int c = 0; c < NUM_CARDS_TO_DEAL; c++) {
+		for (int c = 0; c < Configuration.NUM_CARDS_TO_DEAL; c++) {
 			for (int p = 0; p < game.getNumberOfPlayers(); p++) {
 				game.getPlayer(p).getHand().addCard(deck.get(deck.size() - 1));
 				deck.remove(deck.size() - 1);
