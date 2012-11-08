@@ -1,0 +1,64 @@
+================================
+General Comments:
+================================
+-Place all constant variables in a separate class like Configuration or Util class.
+Only exception for Language related constants, you can place them in Language class.
+
+-Write comments to explain what you are doing. I think Evan is already writing them in Java-doc format.
+
+-Write the author comment  
+
+
+=========================================
+Game Management Related Comments (Evan):
+=========================================
+-I remember that you developed the language feature. In your language file, use the following format
+variable name = variable value
+For example:
+WELCOME_MESSAGE = Welcome to Phase 10
+NEW_GAME_WINDOW_TITLE = New Phase 10 Game
+
+And the variable names should be same in different language files 
+
+
+-Use the built-in Color class in Card class instead of representing colors with numbers, e.g., Color.BLUE. This way is more elegant.
+
+
+  
+
+
+=========================================
+GUI Comments (Matthew): 
+=========================================
+-Put images folder under project folder as you (or Evan) did with "lang" folder, not under a package (under src)
+
+-Use constant variables that are defined in a separate class, e.g., Util, for the sizes of the windows, font names, titles of windows, names of buttons, text of labels, and more.
+Maybe for Language related constants you can create another class Language to differentiate them from other constant variables. 
+That will be very helpful to develop the Language support feature
+ 
+-The initials of the class names should be capitalized, e.g. pdListener should be PdListener
+
+-Define the available languages in Util class, i.e., put the following line in Util.java or Language.java
+String[] languages = new String[] {"English", "Spanish", "French", "German"}
+
+
+-Instead of that line
+public static final String DEFAULT_LANG = "lang/en.txt";
+
+use different variables for the path to language folder and filenames
+public static final String LANGUAGE_DIRECTORY = "lang/";
+public static final String ENGLISH_LANG = "en.txt";
+......
+ 
+ 
+
+=========================================
+Player Comments (Paul): 
+=========================================
+-Create a package for player classes, e.g., phase10.player, and put Player related classes under this package to separate them from game logic.
+For AI player you create a package ai under player package, i.e., phase10.player.ai.
+
+-I don't know how you will introduce the difficulty levels to user but use a simple representation, e.g., beginner, intermediate, advance. 
+
+
+
