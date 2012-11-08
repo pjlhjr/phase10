@@ -1,7 +1,7 @@
 ================================
 General Comments:
 ================================
--Place all constant variables in a separate class like Configuration or Util class.
+-Place all constant variables in a separate class like Configuration or Util class. DONE
 Only exception for Language related constants, you can place them in Language class.
 
 -Write comments to explain what you are doing. I think Evan is already writing them in Java-doc format.
@@ -18,10 +18,10 @@ For example:
 WELCOME_MESSAGE = Welcome to Phase 10
 NEW_GAME_WINDOW_TITLE = New Phase 10 Game
 
-And the variable names should be same in different language files 
+And the variable names should be same in different language files DONE
 
 
--Use the built-in Color class in Card class instead of representing colors with numbers, e.g., Color.BLUE. This way is more elegant.
+-Use the built-in Color class in Card class instead of representing colors with numbers, e.g., Color.BLUE. This way is more elegant. DONE
 
 
   
@@ -55,10 +55,10 @@ public static final String ENGLISH_LANG = "en.txt";
 =========================================
 Player Comments (Paul): 
 =========================================
--Create a package for player classes, e.g., phase10.player, and put Player related classes under this package to separate them from game logic.
+-Create a package for player classes, e.g., phase10.player, and put Player related classes under this package to separate them from game logic. DONE
 For AI player you create a package ai under player package, i.e., phase10.player.ai.
 
--I don't know how you will introduce the difficulty levels to user but use a simple representation, e.g., beginner, intermediate, advance. 
+-I don't know how you will introduce the difficulty levels to user but use a simple representation, e.g., beginner, intermediate, advance. DONE
 
 
 
