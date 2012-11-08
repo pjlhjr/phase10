@@ -18,7 +18,7 @@ import phase10.ai.AIPlayer;
  * 
  * @author Evan Forbes
  */
-public class Round implements Serializable {
+public final class Round implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 	private static final int TIMES_TO_SHUFFLE = 5;
@@ -138,6 +138,10 @@ public class Round implements Serializable {
 		deal();
 	}
 
+	/**
+	 * Creates a deck:
+	 *  Number 1-12, two of each in four different colors
+	 */
 	private void createDeck() {
 		deck = new ArrayList<Card>();
 		for (int color = 0; color < 4; color++) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author Evan Forbes
  * 
  */
-public class PhaseGroup implements Serializable {
+public final class PhaseGroup implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 

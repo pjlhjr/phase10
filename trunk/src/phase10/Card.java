@@ -41,14 +41,14 @@ public class Card implements Serializable {
 	/**
 	 * @return the color
 	 */
-	public int getColor() {
+	public final int getColor() {
 		return color;
 	}
 
 	/**
 	 * @return the value
 	 */
-	public int getValue() {
+	public final int getValue() {
 		return value;
 	}
 
@@ -69,7 +69,7 @@ public class Card implements Serializable {
 	 * 
 	 * @return the points value
 	 */
-	public int getPointValue() {
+	public final int getPointValue() {
 		if (value >= 1 && value <= 9)
 			return 5;
 		if (value >= 10 && value <= 12)

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * 
  * @author Evan Forbes
  */
-public class Phase10 implements Serializable {
+public final class Phase10 implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 
@@ -53,6 +53,13 @@ public class Phase10 implements Serializable {
 		return players.size();
 	}
 
+	/**
+	 * Gets the player object at the given index
+	 * 
+	 * @param index
+	 *            the player's index
+	 * @return the player object
+	 */
 	public Player getPlayer(int index) {
 		return players.get(index);
 	}
@@ -116,14 +123,20 @@ public class Phase10 implements Serializable {
 			throw new Phase10Exception("Game has already started");
 	}
 
+	/**
+	 * Resets the necessary player data and checks to see if there is a winner
+	 */
 	void nextRound() {
 		finishRound();
 
 		if (checkWinners().size() == 0) {
 			roundNumber++;
 			nextDealer();
-			round = new Round(this);
 			// TODO Call Gui- say new round has started
+			round = new Round(this);
+			
+		} else {
+			// TODO call gui- winner(s)
 		}
 	}
 
@@ -151,6 +164,9 @@ public class Phase10 implements Serializable {
 		return winners;
 	}
 
+	/**
+	 * Increments the dealer counter (resets to zero if it goes out of bounds)
+	 */
 	private void nextDealer() {
 		dealer++;
 		if (dealer >= getNumberOfPlayers()) {
