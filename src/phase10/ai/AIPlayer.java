@@ -7,12 +7,20 @@ package phase10.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import phase10.Card;
+import phase10.Configuration;
 import phase10.Hand;
 import phase10.Phase10;
 import phase10.PhaseGroup;
 import phase10.Player;
+import phase10.card.Card;
 
+/**
+ * @author Paul Harris
+ * @since 10-4-2012
+ *
+ * This class is an AI computer opponent that can play phase 10.
+ * 
+ */
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private int difficulty;
@@ -26,8 +34,22 @@ public class AIPlayer extends Player {
 		this.difficulty = difficulty;
 	}
 	
+	public static void main(String[] args){
+	/*int tot = 0;
+	for(int x = 0; x < 1000000; x++){
+		if(bestChoice(10)){
+			tot++;
+		}
+	}
+	System.out.println((tot/1000000.0*100));*/
+	}
+	
 	public void playTurn(){
-		drawOrPickUp();
+		if(!(drawOrPickUp()^bestChoice(10))){
+			game.getRound().drawFromDeck(this);
+		}else{
+			game.getRound().drawFromDiscard(this);
+		}
 		if(!hasLaidDownPhase())
 			layDownPhase();
 		if(hasLaidDownPhase())
@@ -166,9 +188,8 @@ public class AIPlayer extends Player {
 		difficulty = d;
 	}
 	
-	private static boolean bestChoice(double shape){
+	private boolean bestChoice(double shape){
 		Random g = new Random(System.currentTimeMillis());
-		int difficulty = 50;
 		final double c = 50.0;
 		double 	a = (c-(2*shape))/5000.0,
 				b = ((4*shape)-(3*c))/100.0,
@@ -177,13 +198,6 @@ public class AIPlayer extends Player {
 			return true;
 		else
 			return false;
-	}
-
-	public static void main(String[] args){
-		bestChoice(0);
-		bestChoice(50);
-		bestChoice(75);
-		bestChoice(100);
 	}
 	
 	private class Groups{
@@ -227,12 +241,41 @@ public class AIPlayer extends Player {
 			group();
 		}
 		
-		public int getPointValue(){}
+		public int getPointValue(){
+			boolean[] cardCounted = new boolean[cardValues.length];
+			int val = 0;
+			
+			for(int x = 0; x < cardCounted.length; x++){
+				cardCounted[x] = false;
+			}
+			for(ArrayList<Integer> c : complete){
+				for(int num : c){
+					cardCounted[num] = true;
+				}
+			}
+			for(int x = 0; x < cardCounted.length; x++){
+				if(!cardCounted[x]){
+					if(cardValues[x] < 10){
+						val += 5;
+					}
+					else if(cardValues[x] < Configuration.WILD_VALUE){
+						val += 10;
+					}
+					else if(cardValues[x] == Configuration.WILD_VALUE){
+						val += 25;
+					}
+					else if(cardValues[x] == Configuration.SKIP_VALUE){
+						val += 15;
+					}
+				}
+			}
+			return val;
+		}
 		
 		private void group(){
 			int[] setsNeeded = player.setsNeeded();
 			if(setsNeeded != null){
-				for(int x = 1; x < cardValues.length && cardValues[x] < Card.WILD_VALUE; x++){
+				for(int x = 1; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
 					if(cardValues[x] == cardValues[x-1]){
 						ArrayList<Integer> setGroup = new ArrayList<Integer>();
 						setGroup.add(x-1);
@@ -247,13 +290,13 @@ public class AIPlayer extends Player {
 				}
 			}
 			if(player.numLengthRun() > 0){
-				for(int x = 1; x < cardValues.length && cardValues[x] < Card.WILD_VALUE; x++){
+				for(int x = 1; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
 					if(cardValues[x] == 1 + cardValues[x-1]){
 						ArrayList<Integer> runGroup = new ArrayList<Integer>();
 						runGroup.add(x-1);
 						while(x < cardValues.length 
 								&& (cardValues[x] == 1 + cardValues[x-1] || cardValues[x] == cardValues[x-1]) 
-								&& cardValues[x] < Card.WILD_VALUE){
+								&& cardValues[x] < Configuration.WILD_VALUE){
 							if(cardValues[x] == 1 + cardValues[x-1])
 								runGroup.add(x);
 							x++;
@@ -267,9 +310,9 @@ public class AIPlayer extends Player {
 			}
 			if(player.colorPhase()){
 				int color = 0;
-				for(int x = 0; x < cardValues.length && cardValues[x] < Card.WILD_VALUE; x++){
+				for(int x = 0; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
 					ArrayList<Integer> colorGroup = new ArrayList<Integer>();
-					while(cardValues[x] == color && x < cardValues.length && cardValues[x] < Card.WILD_VALUE){
+					while(cardValues[x] == color && x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE){
 						colorGroup.add(x++);
 					}
 					complete.add(colorGroup);
@@ -277,7 +320,7 @@ public class AIPlayer extends Player {
 				}
 			}
 			
-			
+			//TODO deal with wilds
 		}
 		
 		public int[] cardsForConnectedGroups(){
