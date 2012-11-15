@@ -24,14 +24,13 @@ public class GameManager {
 	private GuiManager gui;
 
 	public static void main(String[] args) {
-		GameManager gm = new GameManager();
-		// TODO call gui method(s) to initialize frames
+		new GameManager();
 	}
 
 	GameManager() {
 		//TODO: initialize GUI manager
 		//gui = new GuiManager(this);
-		
+		// TODO call gui method(s) to initialize frames
 		newGame();
 	}
 	

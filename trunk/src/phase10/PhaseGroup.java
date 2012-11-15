@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import phase10.card.Card;
 import phase10.card.WildCard;
+import phase10.util.Configuration;
 
 /**
  * This class contains all of the information for each phase group that is laid
