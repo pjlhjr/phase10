@@ -25,13 +25,14 @@ public class GameManager {
 
 	public static void main(String[] args) {
 		GameManager gm = new GameManager();
-		gm.newGame();
 		// TODO call gui method(s) to initialize frames
 	}
 
 	GameManager() {
 		//TODO: initialize GUI manager
 		//gui = new GuiManager(this);
+		
+		newGame();
 	}
 	
 	/**

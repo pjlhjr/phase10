@@ -42,8 +42,7 @@ public class Card implements Serializable {
 	 *            the value (1 through 12, wild = 13, skip = 14)
 	 */
 	public Card(int v) {
-		color = Color.BLACK;
-		value = v;
+		this(Color.BLACK, v);
 	}
 	
 	
