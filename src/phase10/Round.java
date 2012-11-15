@@ -14,6 +14,8 @@ import java.util.Stack;
 import phase10.ai.AIPlayer;
 import phase10.card.Card;
 import phase10.card.WildCard;
+import phase10.util.Configuration;
+import phase10.util.LogEntry;
 
 /**
  * This class contains and manages the information for each round
@@ -27,7 +29,10 @@ public final class Round implements Serializable {
 	private Phase10 game;
 	private ArrayList<Card> deck;
 	private Stack<Card> discardStack;
+	
 	private int turn; // what player's turn it is
+	
+	private ArrayList<LogEntry> log;
 
 	/**
 	 * Creates and initializes the round
@@ -40,6 +45,8 @@ public final class Round implements Serializable {
 	Round(Phase10 g) {
 		game = g;
 		turn = game.getDealer();
+		
+		log = new ArrayList<LogEntry>();
 
 		initiateRound();
 
@@ -227,6 +234,14 @@ public final class Round implements Serializable {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Gets the log of actions for the round
+	 * @return the log
+	 */
+	public ArrayList<LogEntry> getLog(){
+		return log;
 	}
 
 }
