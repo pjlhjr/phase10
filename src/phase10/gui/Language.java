@@ -1,3 +1,8 @@
+/**
+ * CS2003 Lab Project Fall 2012
+ * Paul Harris, Matt Hruz, Evan Forbes
+ * 
+ */
 package phase10.gui;
 
 import java.io.File;
@@ -6,6 +11,12 @@ import java.util.Scanner;
 
 import phase10.exceptions.Phase10LanguageException;
 
+/**
+ * This class handles the multi-language support for Phase10 game GUI
+ * 
+ * @author Evan Forbes
+ *
+ */
 public class Language {
 
 	public static final String DEFAULT_LANG = "lang/en.txt";
@@ -14,7 +25,7 @@ public class Language {
 	private HashMap<String, String> entries;
 
 	/**
-	 * Sets up the default language
+	 * Sets up the default language (English)
 	 */
 	Language() {
 		setLanguage(DEFAULT_LANG);
@@ -36,7 +47,7 @@ public class Language {
 				String id = file.next();
 				file.next();
 				String entry = file.nextLine();
-				System.out.println("id: " + id + " entry: " + entry);
+				//System.out.println("id: " + id + " entry: " + entry);
 				entries.put(id, entry.substring(1));
 			}
 

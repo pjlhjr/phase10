@@ -114,7 +114,7 @@ public final class Phase10 implements Serializable {
 	 */
 	public void startGame() {
 		if (!started) {
-			if (!(getNumberOfPlayers() < 2)) {
+			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				nextRound();
 			} else
@@ -130,13 +130,13 @@ public final class Phase10 implements Serializable {
 	 */
 	void nextRound() {
 		finishRound();
-
-		if (checkWinners().size() == 0) {
+		ArrayList<Player> winners = checkWinners();
+		if (winners.size() == 0) {
 			roundNumber++;
 			nextDealer();
 			// TODO Call Gui- say new round has started
 			round = new Round(this);
-			
+
 		} else {
 			// TODO call gui- winner(s)
 		}

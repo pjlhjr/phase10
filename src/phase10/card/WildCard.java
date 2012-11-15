@@ -21,14 +21,14 @@ public class WildCard extends Card {
 	}
 
 	/**
-	 * @return the hiddenValue
+	 * @return the hidden value
 	 */
 	public int getHiddenValue() {
 		return hiddenValue;
 	}
 
 	/**
-	 * @param hiddenValue the hiddenValue to set
+	 * @param hidden value the hiddenValue to set
 	 */
 	public void setHiddenValue(int hiddenValue) {
 		this.hiddenValue = hiddenValue;

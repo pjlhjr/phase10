@@ -26,12 +26,13 @@ public class Player implements Serializable {
 	private boolean hasLaidDownPhase;
 	private boolean skipNextTurn;
 	private ArrayList<PhaseGroup> phaseGroups;
+	protected Phase10 game;
 
 	/**
 	 * Creates the default player object with no name
 	 */
-	public Player() {	
-		this("");
+	public Player(Phase10 g) {
+		this("", g);
 	}
 
 	/**
@@ -40,11 +41,12 @@ public class Player implements Serializable {
 	 * @param n
 	 *            the player's name
 	 */
-	public Player(String n) {
+	public Player(String n, Phase10 g) {
 		name = n;
 		score = 0;
 		phase = 1;
-		hand = new Hand();
+		game = g;
+		hand = new Hand(g, this);
 		phaseGroups = new ArrayList<PhaseGroup>();
 		skipNextTurn = false;
 		hasLaidDownPhase = false;

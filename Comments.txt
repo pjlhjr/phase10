@@ -24,7 +24,7 @@ And the variable names should be same in different language files DONE
 -Use the built-in Color class in Card class instead of representing colors with numbers, e.g., Color.BLUE. This way is more elegant. DONE
 
 
-  
+
 
 
 =========================================

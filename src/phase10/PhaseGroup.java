@@ -140,14 +140,14 @@ public final class PhaseGroup implements Serializable {
 			if (curValue < min)
 				min = curValue;
 		}
-		System.out.println("numWilds: " + numWilds + " min: " + min);
+		//System.out.println("numWilds: " + numWilds + " min: " + min);
 		int curValue = min;
 		while (!values.isEmpty()) {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
-					System.out.println("Removing " + values.get(i) + " at: "
-							+ i);
+					//System.out.println("Removing " + values.get(i) + " at: "
+					//		+ i);
 					values.remove(i);
 					found = true;
 				}

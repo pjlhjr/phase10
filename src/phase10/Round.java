@@ -6,7 +6,6 @@
 
 package phase10;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -142,12 +141,12 @@ public final class Round implements Serializable {
 	 *  Number 1-12, two of each in four different colors
 	 */
 	private void createDeck() {
-		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
+		
 		deck = new ArrayList<Card>();
 		for (int color = 0; color < 4; color++) {
 			for (int value = 1; value < 13; value++) {
-				deck.add(new Card(colors[color], value));
-				deck.add(new Card(colors[color], value));
+				deck.add(new Card(Configuration.COLORS[color], value));
+				deck.add(new Card(Configuration.COLORS[color], value));
 			}
 		}
 		for (int i = 0; i < Configuration.NUM_WILDS; i++)
