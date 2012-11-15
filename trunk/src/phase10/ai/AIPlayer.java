@@ -24,12 +24,11 @@ import phase10.card.Card;
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private int difficulty;
-	private Phase10 game;
 	private ArrayList<Integer> opponentCard;
 	private ArrayList<Integer> discardedCards;
 	
 	public AIPlayer(Phase10 game, int difficulty, String name){
-		super(name);
+		super(name, game);
 		this.game = game;
 		this.difficulty = difficulty;
 	}
@@ -112,7 +111,7 @@ public class AIPlayer extends Player {
 	}
 	
 	private boolean drawOrPickUp(){//true to pick up, false to draw
-
+		// TODO sense your immenant doom,
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(addedPointValue(cardOnTopOfPile.getValue()) < currentPointValue()){
 			if(difficulty < 30)
@@ -142,15 +141,23 @@ public class AIPlayer extends Player {
 	}
 
 	private boolean layDownPhase(){
-		
+
 	}
 	
 	private boolean playOffPhases(){
+		Player current;
 		
+		for(int x = 0; x < game.getNumberOfPlayers(); x++){
+			current = game.getPlayer(x);
+			if(current.hasLaidDownPhase()){
+				
+				
+			}
+		}
 	}
 	
 	private void discardCards(){
-		
+		//use the log
 	}
 	
 	private int currentPointValue(){
@@ -201,41 +208,41 @@ public class AIPlayer extends Player {
 	}
 	
 	private class Groups{
-		private ArrayList<ArrayList<Integer>> complete,
+		private ArrayList<ArrayList<Card>> complete,
 					partial,
 					excess,
 					connected,
 					conflicting;
-		private ArrayList<Integer> single;
-		private int[] cardValues;
+		private ArrayList<Card> single;
+		private Card[] cardValues;
 		private AIPlayer player;
 		
 		private Groups(AIPlayer p){
 			player = p;
-			complete = new ArrayList<ArrayList<Integer>>();
+			complete = new ArrayList<ArrayList<Card>>();
 			if(!p.colorPhase()){
-				partial = new ArrayList<ArrayList<Integer>>();
-				excess = new ArrayList<ArrayList<Integer>>();
-				connected = new ArrayList<ArrayList<Integer>>();
-				conflicting = new ArrayList<ArrayList<Integer>>();
-				single = new ArrayList<Integer>();
+				partial = new ArrayList<ArrayList<Card>>();
+				excess = new ArrayList<ArrayList<Card>>();
+				connected = new ArrayList<ArrayList<Card>>();
+				conflicting = new ArrayList<ArrayList<Card>>();
+				single = new ArrayList<Card>();
 			}
 		}
 		
 		public Groups(Hand h, AIPlayer p){
 			this(p);
-			cardValues = new int[h.getNumberOfCards()];
+			cardValues = new Card[h.getNumberOfCards()];
 			for(int x = 0; x < h.getNumberOfCards(); x++){
-				cardValues[x] = h.getCard(x).getValue();
+				cardValues[x] = h.getCard(x);
 			}
 			group();
 		}
 		
-		public Groups(Hand h, int c, AIPlayer p){
+		public Groups(Hand h, Card c, AIPlayer p){
 			this(p);
-			cardValues = new int[h.getNumberOfCards()+1];
+			cardValues = new Card[h.getNumberOfCards()+1];
 			for(int x = 0; x < h.getNumberOfCards(); x++){
-				cardValues[x] = h.getCard(x).getValue();
+				cardValues[x] = h.getCard(x);
 			}
 			cardValues[h.getNumberOfCards()] = c;
 			group();
@@ -248,25 +255,14 @@ public class AIPlayer extends Player {
 			for(int x = 0; x < cardCounted.length; x++){
 				cardCounted[x] = false;
 			}
-			for(ArrayList<Integer> c : complete){
-				for(int num : c){
-					cardCounted[num] = true;
+			for(ArrayList<Card> c : complete){
+				for(Card num : c){
+					cardCounted[num.getValue()] = true;//TODO
 				}
 			}
 			for(int x = 0; x < cardCounted.length; x++){
 				if(!cardCounted[x]){
-					if(cardValues[x] < 10){
-						val += 5;
-					}
-					else if(cardValues[x] < Configuration.WILD_VALUE){
-						val += 10;
-					}
-					else if(cardValues[x] == Configuration.WILD_VALUE){
-						val += 25;
-					}
-					else if(cardValues[x] == Configuration.SKIP_VALUE){
-						val += 15;
-					}
+					val += cardValues[x].getPointValue();
 				}
 			}
 			return val;
@@ -275,12 +271,12 @@ public class AIPlayer extends Player {
 		private void group(){
 			int[] setsNeeded = player.setsNeeded();
 			if(setsNeeded != null){
-				for(int x = 1; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
-					if(cardValues[x] == cardValues[x-1]){
-						ArrayList<Integer> setGroup = new ArrayList<Integer>();
-						setGroup.add(x-1);
+				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
+					if(cardValues[x].getValue() == cardValues[x-1].getValue()){
+						ArrayList<Card> setGroup = new ArrayList<Card>();
+						setGroup.add(cardValues[x-1]);
 						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
-							setGroup.add(x++);
+							setGroup.add(cardValues[x++]);
 						}
 						if(setGroup.size() >= setsNeeded[setsNeeded.length])
 							complete.add(setGroup);
@@ -290,15 +286,15 @@ public class AIPlayer extends Player {
 				}
 			}
 			if(player.numLengthRun() > 0){
-				for(int x = 1; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
-					if(cardValues[x] == 1 + cardValues[x-1]){
-						ArrayList<Integer> runGroup = new ArrayList<Integer>();
-						runGroup.add(x-1);
+				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
+					if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue()){
+						ArrayList<Card> runGroup = new ArrayList<Card>();
+						runGroup.add(cardValues[x-1]);//TODO look at this
 						while(x < cardValues.length 
-								&& (cardValues[x] == 1 + cardValues[x-1] || cardValues[x] == cardValues[x-1]) 
-								&& cardValues[x] < Configuration.WILD_VALUE){
-							if(cardValues[x] == 1 + cardValues[x-1])
-								runGroup.add(x);
+								&& (cardValues[x].getValue() == 1 + cardValues[x-1].getValue() || cardValues[x].getValue() == cardValues[x-1].getValue()) 
+								&& cardValues[x].getValue() < Configuration.WILD_VALUE){
+							if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue())
+								runGroup.add(cardValues[x]);
 							x++;
 						}
 						if(runGroup.size() >= player.numLengthRun())
@@ -310,10 +306,10 @@ public class AIPlayer extends Player {
 			}
 			if(player.colorPhase()){
 				int color = 0;
-				for(int x = 0; x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE; x++){
-					ArrayList<Integer> colorGroup = new ArrayList<Integer>();
-					while(cardValues[x] == color && x < cardValues.length && cardValues[x] < Configuration.WILD_VALUE){
-						colorGroup.add(x++);
+				for(int x = 0; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
+					ArrayList<Card> colorGroup = new ArrayList<Card>();
+					while(cardValues[x].getValue() == color && x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE){
+						colorGroup.add(cardValues[x++]);
 					}
 					complete.add(colorGroup);
 					color++;
