@@ -1,3 +1,19 @@
 English
 WELCOME_MESSAGE = Welcome to Phase 10
-FRAME_TITLE = Phase 10
+GAME_FRAME_TITLE = Phase 10
+PD_BUTTON_LABEL = Phase Description
+SB_BUTTON_LABEL = Score board
+EWS_BUTTON_LABEL = Exit without Saving
+
+SETTINGS_FRAME_TITLE = Settings
+YOUR_NAME = Your Name
+OPPONENT = opponent
+SETTINGS_FRAME_MESSAGE = Welcome to Phase 10! Select your options for the game and we will begin!
+HUMAN = Human
+COMPUTER = Computer
+ADD_PLAYER = Add Player
+BEGIN = Begin!
+LANGUAGE = Language
+EASY = Easy
+MEDIUM = Medium
+HARD = Hard
