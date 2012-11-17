@@ -41,6 +41,11 @@ public class GameFrame extends JFrame {
 				try {
 					GameManager mainManager = new GameManager();
 					mainManager.newGame();
+					//TODO get test situation to work
+					Phase10 aGame = mainManager.getGame();
+					aGame.addPlayer(new Player());
+					aGame.addPlayer(new Player());
+					aGame.startGame();
 					GameFrame frame = new GameFrame(new GuiManager(mainManager));
 					frame.setVisible(true);
 				} catch (Exception e) {

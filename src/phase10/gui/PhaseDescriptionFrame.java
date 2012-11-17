@@ -9,6 +9,9 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+
+import phase10.GameManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -27,7 +30,7 @@ public class PhaseDescriptionFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PhaseDescriptionFrame frame = new PhaseDescriptionFrame(5);
+					PhaseDescriptionFrame frame = new PhaseDescriptionFrame(5, new GuiManager(new GameManager()));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,16 +47,22 @@ public class PhaseDescriptionFrame extends JFrame {
 	private String okayButtonLabel;
 	private String phaseDescriptionString;
 	
+	GuiManager gManage;
+	Language gLang;
+	
 	/**
 	 * Create the frame.
 	 */
-	public PhaseDescriptionFrame(int currentPhase) {
+	public PhaseDescriptionFrame(int currentPhase, GuiManager gm) {
+		
+		gManage = gm;
+		gLang = gManage.getGameLang();
 		
 		//TODO change constant String values to language variables
-		initLanguage();
+		initLanguage(gManage.getGameLang());
 		
-		title = "Phase " + currentPhase + " Description";
-		currentPhaseString = "Phase " + currentPhase + ":";
+		title = gLang.getEntry("PD_FRAME_TITLE") + " " + currentPhase;
+		currentPhaseString = gLang.getEntry("PHASE") + " " + currentPhase + ":";
 		phaseDescriptionString = this.setPhaseDescriptionString(currentPhase);
 		okayButtonLabel = "Okay";
 		
@@ -92,39 +101,38 @@ public class PhaseDescriptionFrame extends JFrame {
 		contentPane.add(phaseDescription);
 	}
 
-	private void initLanguage() {
+	private void initLanguage(Language langSetter) {
 		
 		//TODO GET LANGUAGE FILE STRAIGHTENED UP THEN WORK THIS OUT!!!
-		Language langSetter = new Language();
-		title = langSetter.getEntry(61);
-		currentPhaseString = langSetter.getEntry(62);
-		okayButtonLabel = langSetter.getEntry(id);
-		phaseDescriptionString = langSetter.getEntry(id);
+		title = langSetter.getEntry("PD_FRAME_TITLE");
+		currentPhaseString = langSetter.getEntry("CURRENT_PHASE");
+		okayButtonLabel = langSetter.getEntry("OKAY");
+		phaseDescriptionString = langSetter.getEntry("PHASE_1_STRING");
 	}
 
 	private String setPhaseDescriptionString(int phaseNum) {
 		//TODO edit to add compatibility for other languages
 		switch (phaseNum) {
 		case 1:
-			return "2 sets of 3";
+			return gLang.getEntry("PHASE_1_STRING");
 		case 2:
-			return "1 set of 3 and 1 run of 4";
+			return gLang.getEntry("PHASE_2_STRING");
 		case 3:
-			return "1 set of 4 and 1 run of 4";
+			return gLang.getEntry("PHASE_3_STRING");
 		case 4:
-			return "1 run of 7";
+			return gLang.getEntry("PHASE_4_STRING");
 		case 5:
-			return "1 run of 8";
+			return gLang.getEntry("PHASE_5_STRING");
 		case 6:
-			return "1 run of 9";
+			return gLang.getEntry("PHASE_6_STRING");
 		case 7:
-			return "2 sets of 4";
+			return gLang.getEntry("PHASE_7_STRING");
 		case 8:
-			return "7 cards of 1 color";
+			return gLang.getEntry("PHASE_8_STRING");
 		case 9:
-			return "1 set of 5 and 1 set of 2";
+			return gLang.getEntry("PHASE_9_STRING");
 		case 10:
-			return "1 set of 5 and 1 set of 3";
+			return gLang.getEntry("PHASE_10_STRING");
 		default:
 			System.out.println("Error! Phase number is out of bounds!");
 			return "Internal error occured! Phase number is out of bounds!";
