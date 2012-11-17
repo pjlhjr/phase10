@@ -1,6 +1,8 @@
 package phase10.gui;
 
-import phase10.*;
+import phase10.GameManager;
+
+
 
 public class GuiManager {
 	protected GameManager mainManager;	
@@ -9,13 +11,16 @@ public class GuiManager {
 	private ScoreFrame scoreWindow;
 	private PhaseDescriptionFrame pdWindow;
 	private SkipInputFrame siWindow;
+	private Language gameLang;
 
 
 	
 	//use main method only for testing
 	public static void main(String[] args) {
 		GuiManager guiMgr = new GuiManager(new GameManager());
-		guiMgr.initGame();
+
+			guiMgr.initGame();
+			//guiMgr.displayGameFrame();
 	}
 
 
@@ -27,17 +32,20 @@ public class GuiManager {
 		super();
 		mainManager = m; //passes a reference from the game manager into the GUI manager
 		
-		settingsWindow = new SettingsFrame();
-		gameWindow = new GameFrame(this);
-		scoreWindow = new ScoreFrame();
-		pdWindow = new PhaseDescriptionFrame(1);
-		siWindow = new SkipInputFrame();
+		gameLang = new Language();
+		
+		settingsWindow = new SettingsFrame(this);
 	}
 	/*
 	 * end constructors
 	 */
 	
 	
+	public Language getGameLang() {
+		return gameLang;
+	}
+
+
 	/*
 	 * Begin display methods
 	 */
@@ -81,6 +89,9 @@ public class GuiManager {
 	private void updatePhaseDescriptionFrame() {}
 	private void updateSkipInputFrame() {}
 	private void updateInvalidMoveFrame() {}
+	protected void updateLanguage(Language l) {
+		this.gameLang = l;
+	}
 	
 	/*
 	 * end update methods
@@ -90,15 +101,16 @@ public class GuiManager {
 	 * begin GUI functional methods
 	 */
 	public void initGame() {
+
 		displaySettingsFrame();
-		//TODO - wait until user enters input
-		initLanguage();
+		gameWindow = new GameFrame(this);
+		scoreWindow = new ScoreFrame();
+		pdWindow = new PhaseDescriptionFrame(1, this);
+		siWindow = new SkipInputFrame();
 	}
 	
-	private void initLanguage() {}
 	
-	
-	public void newTurn() {
+	public void newTurnWindowUpdate() {
 		//TODO - update necessary frames for the next player's turn
 	}
 	
