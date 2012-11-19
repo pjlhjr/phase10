@@ -1,4 +1,4 @@
-package phase10;
+package phase10.util;
 
 import java.awt.Color;
 
