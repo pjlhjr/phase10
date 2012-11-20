@@ -72,7 +72,15 @@ public final class PhaseGroup implements Serializable {
 	public int getNumberOfCards() {
 		return cards.size();
 	}
-
+	
+	/**
+	 * @return The type of phase (0: set, 1: run, 2: all 1 color) 
+	 */
+	public int getType(){
+		return type;
+	}
+	
+	
 	/**
 	 * 
 	 * @param t
