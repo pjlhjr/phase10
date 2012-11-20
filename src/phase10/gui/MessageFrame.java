@@ -9,6 +9,7 @@ import javax.swing.JTextPane;
 import javax.swing.JButton;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.Toolkit;
 
 
 public class MessageFrame extends JFrame {
@@ -39,11 +40,12 @@ public class MessageFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MessageFrame(String message, String title) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MessageFrame.class.getResource("/images/GameIcon.png")));
 		
 		setTitle(title);
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

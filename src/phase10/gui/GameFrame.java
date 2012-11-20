@@ -24,6 +24,7 @@ import phase10.*;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
 
 
 public class GameFrame extends JFrame {
@@ -69,7 +70,7 @@ public class GameFrame extends JFrame {
 	/*
 	 * end text field values
 	 */
-	
+
 	//begin components
 	private JPanel infoPanel = new JPanel();
 	private JPanel deckPanel = new JPanel();
@@ -81,14 +82,14 @@ public class GameFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GameFrame(GuiManager gManage) {
-		
+	public GameFrame(final GuiManager gManage) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
+
 		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
 		final GuiManager guiManage = gManage; //quick fix for ActionListener in Phase Description button
 
-		
+
 		setTitle("CurrentPlayer - Phase 10");
-		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
 		getContentPane().setLayout(null);
@@ -108,7 +109,7 @@ public class GameFrame extends JFrame {
 		lblPhase.setBounds(58, 91, 53, 25);
 		infoPanel.add(lblPhase);
 
-		
+
 		JTextArea phaseNumber = new JTextArea();
 		phaseNumber.setRows(1);
 		phaseNumber.setColumns(1);
@@ -130,14 +131,34 @@ public class GameFrame extends JFrame {
 		infoPanel.add(btnPhaseDescription);
 
 		JButton btnScoreboard = new JButton("Scoreboard");
+		btnScoreboard.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				gManage.displayScoreFrame();
+			}
+		});
 		btnScoreboard.setBounds(25, 291, 118, 23);
 		infoPanel.add(btnScoreboard);
 
-		JButton btnSaveAndExit = new JButton("Save and Exit");
+		JButton btnSaveAndExit = new JButton("Save");
+		btnSaveAndExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SaveFileFrame saverWindow = new SaveFileFrame(gManage);
+				saverWindow.setVisible(true);
+				
+			}
+		});
 		btnSaveAndExit.setBounds(22, 347, 124, 23);
 		infoPanel.add(btnSaveAndExit);
 
-		JButton btnExitWithoutSaving = new JButton("Exit without Saving");
+		JButton btnExitWithoutSaving = new JButton("Exit");
+		btnExitWithoutSaving.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		btnExitWithoutSaving.setBounds(5, 392, 154, 25);
 		infoPanel.add(btnExitWithoutSaving);
 
@@ -146,6 +167,7 @@ public class GameFrame extends JFrame {
 		deckPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
 		JButton deckButton = new JButton("");
+		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
 		deckButton.addMouseListener(new deckListener()); //mouse listener for the deck button
 		deckPanel.add(deckButton);
 
@@ -212,7 +234,7 @@ public class GameFrame extends JFrame {
 		playersPanel.setBounds(10, 11, 962, 416);
 		getContentPane().add(playersPanel);
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
-		
+
 		ArrayList<JPanel> oppPanels = new ArrayList<JPanel>();
 		try {
 			for(int x = 0; x < currentGame.getNumberOfPlayers() - 1; x++) {
@@ -226,13 +248,13 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.setBounds(0, 427, 972, 107);
 		getContentPane().add(yourPhasesPanel);
 	}
-	
+
 	/*
 	 * begin button listeners
 	 */
 	private class pdListener implements MouseListener {
 		private final GuiManager gm;
-		
+
 		public pdListener(GuiManager guiManage) {
 			gm = guiManage;
 		}
@@ -250,14 +272,14 @@ public class GameFrame extends JFrame {
 		public void mousePressed(MouseEvent arg0) {}
 		@Override
 		public void mouseReleased(MouseEvent arg0) {}
-		
+
 	}
-	
+
 	private class deckListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			
+
 		}
 
 		@Override
@@ -268,7 +290,7 @@ public class GameFrame extends JFrame {
 		public void mousePressed(MouseEvent arg0) {}
 		@Override
 		public void mouseReleased(MouseEvent arg0) {}
-		
+
 	}
 	/*
 	 * end button listeners
@@ -279,25 +301,25 @@ public class GameFrame extends JFrame {
 	 */
 
 
-//	public void updateFrame(Player c) {
-//		current = c;
-//		Hand currentHand = c.getHand();
-//		
-//		String cardFileName;
-//		String buttonName;
-//		
-//		for(int i = 0; i < 11; i++) {
-//			cardFileName = currentHand.getCard(i).getColor();
-//			cardFileName += currentHand.getCard(0).getValue();
-//			
-//			buttonName = "hcardButton" + currentHand.getCard(i).getValue();
-//			//TODO finish the "update hand" part of this method
-//			
-//		}
-//		
-//		//begin update of infoPanel
-//			//infoPanel.
-//		//end update of infoPanel
-//		
-//	}
+	//	public void updateFrame(Player c) {
+	//		current = c;
+	//		Hand currentHand = c.getHand();
+	//		
+	//		String cardFileName;
+	//		String buttonName;
+	//		
+	//		for(int i = 0; i < 11; i++) {
+	//			cardFileName = currentHand.getCard(i).getColor();
+	//			cardFileName += currentHand.getCard(0).getValue();
+	//			
+	//			buttonName = "hcardButton" + currentHand.getCard(i).getValue();
+	//			//TODO finish the "update hand" part of this method
+	//			
+	//		}
+	//		
+	//		//begin update of infoPanel
+	//			//infoPanel.
+	//		//end update of infoPanel
+	//		
+	//	}
 }

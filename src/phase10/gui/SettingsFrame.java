@@ -26,6 +26,7 @@ import javax.swing.AbstractAction;
 import phase10.GameManager;
 import phase10.Player;
 import java.awt.event.MouseAdapter;
+import java.awt.Toolkit;
 
 public class SettingsFrame extends JFrame {
 
@@ -62,11 +63,12 @@ public class SettingsFrame extends JFrame {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SettingsFrame(GuiManager gManage) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
 		Language lang = gManage.getGameLang();
 		
 		setResizable(false);
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 570, 414);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
