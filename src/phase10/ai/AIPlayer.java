@@ -12,6 +12,7 @@ import phase10.Phase10;
 import phase10.PhaseGroup;
 import phase10.Player;
 import phase10.card.Card;
+import phase10.card.WildCard;
 import phase10.util.Configuration;
 
 /**
@@ -144,16 +145,34 @@ public class AIPlayer extends Player {
 		
 	}
 	
+	/*
+	 * use it in a run if possible, but remember if a person has picked up a card that would be advantagious
+	 * take difficulty into account, a less difficult player takes the first opportunity
+	 */
 	private boolean playOffPhases(){
 		Player current;
+		ArrayList<PhaseGroup> 	setGroups = new ArrayList<PhaseGroup>(),
+								runGroups = new ArrayList<PhaseGroup>(),
+								colorGroups = new ArrayList<PhaseGroup>();
+		PhaseGroup temp;
 		
-		for(int x = 0; x < game.getNumberOfPlayers(); x++){
-			current = game.getPlayer(x);
+		for(int player = 0; player < game.getNumberOfPlayers(); player++){
+			current = game.getPlayer(player);
 			if(current.hasLaidDownPhase()){
-				
-				
+				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
+					temp = current.getPhaseGroup(group);
+					if(temp.getType() == Configuration.RUN_PHASE){
+						runGroups.add(temp);
+					}else if(temp.getType() == Configuration.SET_PHASE){
+						setGroups.add(temp);
+					}else if(temp.getType() == Configuration.COLOR_PHASE){
+						colorGroups.add(temp);
+					}
+				}
 			}
 		}
+		
+		
 	}
 	
 	private void discardCards(){
@@ -168,21 +187,22 @@ public class AIPlayer extends Player {
 	private int[] possiblePointValues(){
 		int[] totalPointValues;
 		if(!colorPhase()){
-			totalPointValues = new int[14];
-			for(int x = 0; x < 12; x++){		
-				totalPointValues[x] = addedPointValue(x);
+			totalPointValues = new int[Configuration.WILD_VALUE];
+			for(int x = 0; x < Configuration.WILD_VALUE - 1; x++){		
+				totalPointValues[x] = addedPointValue(new Card(x));
 			}
-			//TODO wild skip
+			totalPointValues[Configuration.WILD_VALUE] = addedPointValue(new WildCard(Configuration.WILD_VALUE));
 		}else{
-			totalPointValues = new int[6];
-			for(int x = 0; x < 4; x++){
-				totalPointValues[x] = addedPointValue(x);
+			totalPointValues = new int[Configuration.COLORS.length + 1];
+			for(int x = 0; x < Configuration.COLORS.length; x++){
+				totalPointValues[x] = addedPointValue(new Card(Configuration.COLORS[x], 1));
 			}
+			totalPointValues[Configuration.COLORS.length] = addedPointValue(new WildCard(Configuration.WILD_VALUE));
 		}
 		return totalPointValues;
 	}
 	
-	private int addedPointValue(int c) {
+	private int addedPointValue(Card c) {
 		Groups tempGroup = new Groups(getHand(), c, this);
 		return tempGroup.getPointValue();
 	}
@@ -190,7 +210,7 @@ public class AIPlayer extends Player {
 	public int getDifficulty(){
 		return difficulty;
 	}
-
+	
 	public void setDifficulty(int d){
 		difficulty = d;
 	}
@@ -278,7 +298,7 @@ public class AIPlayer extends Player {
 						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
 							setGroup.addCard(cardValues[x++]);
 						}
-						if(PhaseGroup.validate(setGroup, 0, setsNeeded[0]))
+						if(PhaseGroup.validate(setGroup, Configuration.SET_PHASE, setsNeeded[0]))
 							complete.add(setGroup);
 						else
 							partial.add(setGroup);
@@ -297,7 +317,7 @@ public class AIPlayer extends Player {
 								runGroup.addCard(cardValues[x]);
 							x++;
 						}
-						if(PhaseGroup.validate(runGroup, 1, minLength))
+						if(PhaseGroup.validate(runGroup, Configuration.RUN_PHASE, player.numLengthRun()))
 							complete.add(runGroup);
 						else
 							partial.add(runGroup);
@@ -307,9 +327,9 @@ public class AIPlayer extends Player {
 			if(player.colorPhase()){
 				int color = 0;
 				for(int x = 0; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
-					ArrayList<Card> colorGroup = new ArrayList<Card>();
+					PhaseGroup colorGroup = new PhaseGroup();
 					while(cardValues[x].getValue() == color && x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE){
-						colorGroup.add(cardValues[x++]);
+						colorGroup.addCard(cardValues[x++]);
 					}
 					complete.add(colorGroup);
 					color++;
