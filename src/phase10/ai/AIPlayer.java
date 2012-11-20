@@ -7,12 +7,12 @@ package phase10.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import phase10.Configuration;
 import phase10.Hand;
 import phase10.Phase10;
 import phase10.PhaseGroup;
 import phase10.Player;
 import phase10.card.Card;
+import phase10.util.Configuration;
 
 /**
  * @author Paul Harris
@@ -111,7 +111,7 @@ public class AIPlayer extends Player {
 	}
 	
 	private boolean drawOrPickUp(){//true to pick up, false to draw
-		// TODO sense your immenant doom,
+		// TODO sense your immenant doom, idk if its part of 
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(addedPointValue(cardOnTopOfPile.getValue()) < currentPointValue()){
 			if(difficulty < 30)
@@ -141,7 +141,7 @@ public class AIPlayer extends Player {
 	}
 
 	private boolean layDownPhase(){
-
+		
 	}
 	
 	private boolean playOffPhases(){
@@ -208,7 +208,7 @@ public class AIPlayer extends Player {
 	}
 	
 	private class Groups{
-		private ArrayList<ArrayList<Card>> complete,
+		private ArrayList<PhaseGroup> complete,
 					partial,
 					excess,
 					connected,
@@ -219,12 +219,12 @@ public class AIPlayer extends Player {
 		
 		private Groups(AIPlayer p){
 			player = p;
-			complete = new ArrayList<ArrayList<Card>>();
+			complete = new ArrayList<PhaseGroup>();
 			if(!p.colorPhase()){
-				partial = new ArrayList<ArrayList<Card>>();
-				excess = new ArrayList<ArrayList<Card>>();
-				connected = new ArrayList<ArrayList<Card>>();
-				conflicting = new ArrayList<ArrayList<Card>>();
+				partial = new ArrayList<PhaseGroup>();
+				excess = new ArrayList<PhaseGroup>();
+				connected = new ArrayList<PhaseGroup>();
+				conflicting = new ArrayList<PhaseGroup>();
 				single = new ArrayList<Card>();
 			}
 		}
@@ -273,12 +273,12 @@ public class AIPlayer extends Player {
 			if(setsNeeded != null){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == cardValues[x-1].getValue()){
-						ArrayList<Card> setGroup = new ArrayList<Card>();
-						setGroup.add(cardValues[x-1]);
+						PhaseGroup setGroup = new PhaseGroup();
+						setGroup.addCard(cardValues[x-1]);
 						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
-							setGroup.add(cardValues[x++]);
+							setGroup.addCard(cardValues[x++]);
 						}
-						if(setGroup.size() >= setsNeeded[setsNeeded.length])
+						if(PhaseGroup.validate(setGroup, 0, setsNeeded[0]))
 							complete.add(setGroup);
 						else
 							partial.add(setGroup);
@@ -288,16 +288,16 @@ public class AIPlayer extends Player {
 			if(player.numLengthRun() > 0){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue()){
-						ArrayList<Card> runGroup = new ArrayList<Card>();
-						runGroup.add(cardValues[x-1]);//TODO look at this
+						PhaseGroup runGroup = new PhaseGroup();
+						runGroup.addCard(cardValues[x-1]);//TODO look at this
 						while(x < cardValues.length 
 								&& (cardValues[x].getValue() == 1 + cardValues[x-1].getValue() || cardValues[x].getValue() == cardValues[x-1].getValue()) 
 								&& cardValues[x].getValue() < Configuration.WILD_VALUE){
 							if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue())
-								runGroup.add(cardValues[x]);
+								runGroup.addCard(cardValues[x]);
 							x++;
 						}
-						if(runGroup.size() >= player.numLengthRun())
+						if(PhaseGroup.validate(runGroup, 1, minLength))
 							complete.add(runGroup);
 						else
 							partial.add(runGroup);
