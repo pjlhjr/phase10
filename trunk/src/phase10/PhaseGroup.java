@@ -102,11 +102,11 @@ public final class PhaseGroup implements Serializable {
 		if (!checkSkips(pg))
 			return false;
 
-		if (type == 0) {
+		if (type == Configuration.SET_PHASE) {
 			return validateSet(pg);
-		} else if (type == 1) {
+		} else if (type == Configuration.RUN_PHASE) {
 			return validateRun(pg);
-		} else if (type == 2) {
+		} else if (type == Configuration.COLOR_PHASE) {
 			return validateAllOneColor(pg);
 		}
 
