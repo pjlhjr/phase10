@@ -12,6 +12,7 @@ import javax.swing.JTextPane;
 import javax.swing.ButtonGroup;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
 
 public class SkipInputFrame extends JFrame {
 	
@@ -38,6 +39,7 @@ public class SkipInputFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public SkipInputFrame() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SkipInputFrame.class.getResource("/images/GameIcon.png")));
 		
 		setTitle("Skip Player");
 		setResizable(false);

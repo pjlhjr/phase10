@@ -17,8 +17,10 @@ public class GuiManager {
 	
 	//use main method only for testing
 	public static void main(String[] args) {
-		GuiManager guiMgr = new GuiManager(new GameManager());
+		GameManager thisGame = new GameManager();
+		GuiManager guiMgr = new GuiManager(thisGame);
 
+		
 			guiMgr.initGame();
 			//guiMgr.displayGameFrame();
 	}
@@ -31,10 +33,12 @@ public class GuiManager {
 	public GuiManager(GameManager m) {
 		super();
 		mainManager = m; //passes a reference from the game manager into the GUI manager
-		
 		gameLang = new Language();
-		
 		settingsWindow = new SettingsFrame(this);
+		gameWindow = new GameFrame(this);
+		scoreWindow = new ScoreFrame(this);
+		pdWindow = new PhaseDescriptionFrame(1, this);
+		siWindow = new SkipInputFrame();
 	}
 	/*
 	 * end constructors
@@ -103,10 +107,6 @@ public class GuiManager {
 	public void initGame() {
 
 		displaySettingsFrame();
-		gameWindow = new GameFrame(this);
-		scoreWindow = new ScoreFrame();
-		pdWindow = new PhaseDescriptionFrame(1, this);
-		siWindow = new SkipInputFrame();
 	}
 	
 	
