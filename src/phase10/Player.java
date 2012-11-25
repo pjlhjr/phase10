@@ -26,13 +26,14 @@ public class Player implements Serializable {
 	private boolean hasLaidDownPhase;
 	private boolean skipNextTurn;
 	private ArrayList<PhaseGroup> phaseGroups;
+
 	protected Phase10 game;
 
 	/**
 	 * Creates the default player object with no name
 	 */
 	public Player(Phase10 g) {
-		this("", g);
+		this(g, "[Player]");
 	}
 
 	/**
@@ -41,7 +42,7 @@ public class Player implements Serializable {
 	 * @param n
 	 *            the player's name
 	 */
-	public Player(String n, Phase10 g) {
+	public Player(Phase10 g, String n) {
 		name = n;
 		score = 0;
 		phase = 1;
@@ -103,9 +104,17 @@ public class Player implements Serializable {
 		return hand;
 	}
 
+	/**
+	 * Add the phase group(s) to this player's phase groups.
+	 * 
+	 * @param pg
+	 *            the phase group(s)
+	 * @return true if valid to add, otherwise false.
+	 */
 	public boolean addPhaseGroups(PhaseGroup... pg) {
 		int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
 
+		// cannot lay down phases if player already has
 		if (hasLaidDownPhase)
 			return false;
 
@@ -238,10 +247,19 @@ public class Player implements Serializable {
 			return false;
 	}
 
+	/**
+	 * Gets the number of phasegroups this person has laid down
+	 * @return the number of laid down phase groups
+	 */
 	public int getNumberOfPhaseGroups() {
 		return phaseGroups.size();
 	}
 
+	/**
+	 * Gets the phasegroup at the given index
+	 * @param index the index of the phasegroup to get
+	 * @return the phase group
+	 */
 	public PhaseGroup getPhaseGroup(int index) {
 		return phaseGroups.get(index);
 	}

@@ -30,8 +30,8 @@ public class GameManager {
 	GameManager() {
 		//TODO: initialize GUI manager
 		//gui = new GuiManager(this);
-		// TODO call gui method(s) to initialize frames
-		newGame();
+		// TODO call gui method(s) to initialize frames, prompt for new game/ load game
+		newGame(); //TODO remove- testing only
 	}
 	
 	/**
