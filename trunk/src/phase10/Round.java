@@ -29,9 +29,11 @@ public final class Round implements Serializable {
 	private Phase10 game;
 	private ArrayList<Card> deck;
 	private Stack<Card> discardStack;
-	
-	private int turn; // what player's turn it is
-	
+
+	private int curPlayerNum; // what player's turn it is
+
+	private int turnNumber;
+
 	private ArrayList<LogEntry> log;
 
 	/**
@@ -44,8 +46,8 @@ public final class Round implements Serializable {
 	 */
 	Round(Phase10 g) {
 		game = g;
-		turn = game.getDealer();
-		
+		curPlayerNum = game.getDealer();
+		turnNumber = 0;
 		log = new ArrayList<LogEntry>();
 
 		initiateRound();
@@ -65,8 +67,9 @@ public final class Round implements Serializable {
 		// cannot pick up a skip
 		if (discardStack.peek().getValue() == Configuration.SKIP_VALUE)
 			return false;
-
-		player.getHand().addCard(discardStack.pop());
+		Card card = discardStack.pop();
+		log.add(new LogEntry(turnNumber, player, card, false));
+		player.getHand().addCard(card);
 		return true;
 	}
 
@@ -102,11 +105,12 @@ public final class Round implements Serializable {
 	 *            the card to discard
 	 */
 	public void discard(Player player, Card card) {
+		log.add(new LogEntry(turnNumber, player, card, true));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
-			int nextPlayer = turn + 1;
+			int nextPlayer = curPlayerNum + 1;
 			if (nextPlayer >= game.getNumberOfPlayers()) {
 				nextPlayer = 0;
 			}
@@ -119,10 +123,10 @@ public final class Round implements Serializable {
 	/**
 	 * Gets the "showing" card on the discard pile. Does not change the stack.
 	 * 
-	 * @return the top card from the discard pile
+	 * @return the top card from the discard pile, null if there is no card
 	 */
 	public Card getTopOfDiscardStack() {
-		return discardStack.peek();
+		return discardStack.isEmpty() ? null : discardStack.peek();
 	}
 
 	/**
@@ -130,8 +134,8 @@ public final class Round implements Serializable {
 	 * 
 	 * @return the current player index
 	 */
-	public int getTurn() {
-		return turn;
+	public int getCurPlayerNum() {
+		return curPlayerNum;
 	}
 
 	/**
@@ -144,11 +148,10 @@ public final class Round implements Serializable {
 	}
 
 	/**
-	 * Creates a deck:
-	 *  Number 1-12, two of each in four different colors
+	 * Creates a deck: Number 1-12, two of each in four different colors +wilds, skips
 	 */
 	private void createDeck() {
-		
+
 		deck = new ArrayList<Card>();
 		for (int color = 0; color < 4; color++) {
 			for (int value = 1; value < 13; value++) {
@@ -200,11 +203,12 @@ public final class Round implements Serializable {
 			game.nextRound();
 		} else {
 			advanceTurn();
-			if (game.getPlayer(turn).getSkip()) {
-				game.getPlayer(turn).setSkip(false);
+			if (game.getPlayer(curPlayerNum).getSkip()) {
+				game.getPlayer(curPlayerNum).setSkip(false);
 				advanceTurn();
-			} else if (game.getPlayer(turn) instanceof AIPlayer) {
-				AIPlayer p = (AIPlayer) game.getPlayer(turn);
+			}
+			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
+				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
 				// TODO call gui?
 				p.playTurn();
 			}
@@ -218,14 +222,16 @@ public final class Round implements Serializable {
 	 * Increases the turn counter by 1, or wraps around back to 0
 	 */
 	private void advanceTurn() {
-		turn++;
-		if (turn >= game.getNumberOfPlayers()) {
-			turn = 0;
+		turnNumber++;
+		curPlayerNum++;
+		if (curPlayerNum >= game.getNumberOfPlayers()) {
+			curPlayerNum = 0;
 		}
 	}
 
 	/**
 	 * Checks if any players have no cards left in their hand
+	 * 
 	 * @return true if the round is over
 	 */
 	private boolean roundIsComplete() {
@@ -235,13 +241,23 @@ public final class Round implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets the log of actions for the round
+	 * 
 	 * @return the log
 	 */
-	public ArrayList<LogEntry> getLog(){
+	public ArrayList<LogEntry> getLog() {
 		return log;
+	}
+
+	/**
+	 * Gets the current turn number for this round
+	 * 
+	 * @return the turn number
+	 */
+	public int getTurnNumber() {
+		return turnNumber;
 	}
 
 }

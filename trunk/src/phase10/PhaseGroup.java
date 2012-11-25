@@ -25,7 +25,7 @@ public final class PhaseGroup implements Serializable {
 	private static final long serialVersionUID = 20121L;
 
 	private ArrayList<Card> cards;
-	private int type; // 0:set, 1:run, 2:same color
+	private int type;
 	private boolean laidDown;
 
 	public PhaseGroup() {
@@ -49,7 +49,7 @@ public final class PhaseGroup implements Serializable {
 				temp.addCard(getCard(i));
 			}
 			temp.addCard(c);
-			if (PhaseGroup.validate(temp, type, 1)) {
+			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
 				return true;
 			}
@@ -72,15 +72,14 @@ public final class PhaseGroup implements Serializable {
 	public int getNumberOfCards() {
 		return cards.size();
 	}
-	
+
 	/**
-	 * @return The type of phase (0: set, 1: run, 2: all 1 color) 
+	 * @return The type of phase (0: set, 1: run, 2: all 1 color)
 	 */
-	public int getType(){
+	public int getType() {
 		return type;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param t
@@ -96,10 +95,15 @@ public final class PhaseGroup implements Serializable {
 	}
 
 	/**
-	 * Validates the given phase group to match the type (set, run, or all1Color) and minimum length
-	 * @param pg the PhaseGroup to check
-	 * @param type The type of phase (0: set, 1: run, 2: all 1 color)
-	 * @param minLength the minimum length the phase must have
+	 * Validates the given phase group to match the type (set, run, or
+	 * all1Color) and minimum length
+	 * 
+	 * @param pg
+	 *            the PhaseGroup to check
+	 * @param type
+	 *            The type of phase (0: set, 1: run, 2: all 1 color)
+	 * @param minLength
+	 *            the minimum length the phase must have
 	 * @return true if it is a valid phase group, false otherwise
 	 */
 	public static boolean validate(PhaseGroup pg, int type, int minLength) {
@@ -130,7 +134,6 @@ public final class PhaseGroup implements Serializable {
 	}
 
 	private static boolean validateRun(PhaseGroup pg) {
-		// System.out.println("Checking run");
 		ArrayList<Integer> values = new ArrayList<Integer>(
 				pg.getNumberOfCards());
 		int min = pg.getCard(0).getValue();
@@ -149,14 +152,12 @@ public final class PhaseGroup implements Serializable {
 			if (curValue < min)
 				min = curValue;
 		}
-		//System.out.println("numWilds: " + numWilds + " min: " + min);
+
 		int curValue = min;
 		while (!values.isEmpty()) {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
-					//System.out.println("Removing " + values.get(i) + " at: "
-					//		+ i);
 					values.remove(i);
 					found = true;
 				}

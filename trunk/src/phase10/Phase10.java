@@ -7,6 +7,7 @@ package phase10;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import phase10.exceptions.Phase10Exception;
 
@@ -78,7 +79,7 @@ public final class Phase10 implements Serializable {
 		if (!started)
 			throw new Phase10Exception(
 					"Phase10 Has not yet been started. Must call startGame before this action can be done.");
-		return getPlayer(round.getTurn());
+		return getPlayer(round.getCurPlayerNum());
 	}
 
 	/**
@@ -182,17 +183,18 @@ public final class Phase10 implements Serializable {
 	 */
 	private void finishRound() {
 		for (Player p : players) {
+			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			if (hand.getNumberOfCards() > 0) {
-				for (int c = 0; c < hand.getNumberOfCards(); c++) {
-					p.addToScore(hand.getCard(c).getPointValue());
-					hand.removeCard(c);
-				}
+			for (int c = 0; c < hand.getNumberOfCards(); c++) {
+				p.addToScore(hand.getAnyCard(c).getPointValue());
+				hand.removeCard(c);
 			}
 
+			// clear phasegroups
 			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
 				p.removePhaseGroup(pg);
 			}
+			// increment phase if has laid down
 			if (p.hasLaidDownPhase()) {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
