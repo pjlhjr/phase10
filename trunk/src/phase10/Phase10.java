@@ -25,12 +25,15 @@ public final class Phase10 implements Serializable {
 	private int roundNumber;
 	private int dealer;
 	private boolean started;
+	
+	private GameManager gameManager;
 
-	Phase10() {
+	Phase10(GameManager gm) {
 		players = new ArrayList<Player>();
 		dealer = -1;
 		roundNumber = 0;
 		started = false;
+		gameManager = gm;
 	}
 
 	/**
@@ -104,6 +107,10 @@ public final class Phase10 implements Serializable {
 	 */
 	public int getDealer() {
 		return dealer;
+	}
+	
+	GameManager getGameManager(){
+		return gameManager;
 	}
 
 	/**

@@ -221,8 +221,13 @@ public final class Round implements Serializable {
 				// TODO call gui?
 				p.playTurn();
 			}
-			// TODO Call method here of GUI, to prompt the player for their
-			// turn?
+			
+			try{
+				game.getGameManager().getGui().newTurnWindowUpdate();
+			}
+			catch(NullPointerException e){
+				System.out.println("Too early");
+			}
 		}
 
 	}

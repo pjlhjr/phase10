@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import phase10.exceptions.Phase10Exception;
 import phase10.gui.GuiManager;
 
 /**
@@ -29,7 +30,7 @@ public class GameManager {
 
 	GameManager() {
 		gui = new GuiManager(this);
-		newGame();
+		newGame();//TODO remove when able
 		gui.initGame();
 	}
 	
@@ -37,7 +38,7 @@ public class GameManager {
 	 * Create a new Phase10 object
 	 */
 	public void newGame() {
-		game = new Phase10();
+		game = new Phase10(this);
 	}
 
 	/**
@@ -46,6 +47,10 @@ public class GameManager {
 	 */
 	public Phase10 getGame() {
 		return game;
+	}
+	
+	GuiManager getGui(){
+		return gui;
 	}
 
 	/**
