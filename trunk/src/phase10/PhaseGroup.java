@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import phase10.card.Card;
 import phase10.card.WildCard;
+import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
 
 /**
@@ -203,6 +204,14 @@ public final class PhaseGroup implements Serializable {
 			}
 		}
 		return true;
+	}
+	
+	public void setType(int type){
+		if (laidDown){
+			throw new Phase10Exception("Cannot change type: already laid down");
+		}else{
+			this.type = type;
+		}
 	}
 
 	/*
