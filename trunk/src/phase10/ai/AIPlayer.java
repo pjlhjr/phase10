@@ -47,7 +47,7 @@ public class AIPlayer extends Player {
 	
 	//TODO test difficulty levels
 	public void playTurn(){
-		if(!(drawOrPickUp()^bestChoice(10))){
+		/*if(!(drawOrPickUp()^bestChoice(10))){
 			game.getRound().drawFromDeck(this);
 		}else{
 			game.getRound().drawFromDiscard(this);
@@ -56,7 +56,9 @@ public class AIPlayer extends Player {
 			addPhaseGroups(group.getCompletePhaseGroups());
 		if(hasLaidDownPhase())
 			playOffPhases();
-		game.getRound().discard(this, discardCard());
+		game.getRound().discard(this, discardCard());*/
+		game.getRound().drawFromDeck(this);
+		game.getRound().discard(this, getHand().getCard(0));
 	}
 	
 	int[] setsNeeded(){
