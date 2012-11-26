@@ -29,15 +29,19 @@ public final class PhaseGroup implements Serializable {
 	private int type;
 	private boolean laidDown;
 
-	public PhaseGroup() {
+	private Phase10 game;
+
+	public PhaseGroup(Phase10 g) {
 		cards = new ArrayList<Card>();
 		laidDown = false;
 		type = -1;
+		game = g;
 	}
 
 	/**
 	 * @param c
 	 *            The card to add to this phase group
+	 * @
 	 * @return true if valid, false if the card does not fit in the phase group
 	 */
 	public boolean addCard(Card c) {
@@ -45,13 +49,14 @@ public final class PhaseGroup implements Serializable {
 			cards.add(c);
 			return true;
 		} else {
-			PhaseGroup temp = new PhaseGroup();
+			PhaseGroup temp = new PhaseGroup(game);
 			for (int i = 0; i < getNumberOfCards(); i++) {
 				temp.addCard(getCard(i));
 			}
 			temp.addCard(c);
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
+				game.getCurrentPlayer().getHand().removeCard(c);
 				return true;
 			}
 			return false;
@@ -89,6 +94,9 @@ public final class PhaseGroup implements Serializable {
 	void setLaidDown(int t) {
 		laidDown = true;
 		type = t;
+		for (int i = 0; i < cards.size(); i++) {
+			game.getCurrentPlayer().getHand().removeCard(cards.get(i));
+		}
 	}
 
 	boolean getLaidDown() {
@@ -205,11 +213,11 @@ public final class PhaseGroup implements Serializable {
 		}
 		return true;
 	}
-	
-	public void setType(int type){
-		if (laidDown){
+
+	public void setType(int type) {
+		if (laidDown) {
 			throw new Phase10Exception("Cannot change type: already laid down");
-		}else{
+		} else {
 			this.type = type;
 		}
 	}
