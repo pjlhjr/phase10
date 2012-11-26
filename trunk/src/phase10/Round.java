@@ -63,7 +63,8 @@ public final class Round implements Serializable {
 	 *            the player to move the card to
 	 * @return false if it is an invalid move (attempt to pick up a skip card)
 	 */
-	public boolean drawFromDiscard(Player player) {
+	public boolean drawFromDiscard() {
+		Player player = game.getCurrentPlayer();
 		// cannot pick up a skip
 		if (discardStack.peek().getValue() == Configuration.SKIP_VALUE)
 			return false;
@@ -78,10 +79,9 @@ public final class Round implements Serializable {
 	 * there are no more cards in the deck after this operation, the discard
 	 * stack is reshuffled.
 	 * 
-	 * @param player
-	 *            the player to move the card to
 	 */
-	public void drawFromDeck(Player player) {
+	public void drawFromDeck() {
+		Player player = game.getCurrentPlayer();
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
 
@@ -104,7 +104,8 @@ public final class Round implements Serializable {
 	 * @param card
 	 *            the card to discard
 	 */
-	public void discard(Player player, Card card) {
+	public void discard(Card card) {
+		Player player = game.getCurrentPlayer();
 		log.add(new LogEntry(turnNumber, player, card, true));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
