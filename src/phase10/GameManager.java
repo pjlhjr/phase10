@@ -27,7 +27,7 @@ public class GameManager {
 		new GameManager();
 	}
 
-	public GameManager() {
+	GameManager() {
 		gui = new GuiManager(this);
 		newGame();
 		gui.initGame();

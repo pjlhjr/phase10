@@ -8,8 +8,7 @@ package phase10.card;
 import java.awt.Color;
 import java.io.Serializable;
 
-import phase10.Configuration;
-
+import phase10.util.Configuration;
 /**
  * This class contains all of the information for each playing card for the
  * Phase 10 game.
