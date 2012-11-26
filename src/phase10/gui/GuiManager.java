@@ -8,20 +8,10 @@ import phase10.Player;
 public class GuiManager {
 	protected GameManager mainManager;	
 	private SettingsFrame settingsWindow;
-	private GameFrame gameWindow;
 	private PhaseDescriptionFrame pdWindow;
 	private SkipInputFrame siWindow;
 	private Language gameLang;
-
-
-	
-	//use main method only for testing
-	public static void main(String[] args) {
-		GameManager thisGame = new GameManager();
-		GuiManager guiMgr = new GuiManager(thisGame);
-			guiMgr.initGame();
-			//guiMgr.displayGameFrame();
-	}
+	private GameFrame gameWindow;
 
 
 
@@ -40,6 +30,10 @@ public class GuiManager {
 	 * end constructors
 	 */
 	
+	public GameFrame getGameFrame() {
+		return gameWindow;
+	}
+	
 	
 	public Language getGameLang() {
 		return gameLang;
@@ -54,7 +48,7 @@ public class GuiManager {
 	}
 
 	void displayGameFrame() {
-		GameFrame gameWindow = new GameFrame(this);
+		gameWindow = new GameFrame(this);
 		gameWindow.setVisible(true);
 	}
 	
@@ -90,9 +84,9 @@ public class GuiManager {
 	}
 	
 	
-	private void newTurnWindowUpdate() {
+	public void newTurnWindowUpdate() {
 		//TODO - update necessary frames for the next player's turn
-		
+		gameWindow.updateFrame(mainManager.getGame());
 	}
 	
 	public void endGame() {
