@@ -57,8 +57,8 @@ public class AIPlayer extends Player {
 		if(hasLaidDownPhase())
 			playOffPhases();
 		game.getRound().discard(this, discardCard());*/
-		game.getRound().drawFromDeck(this);
-		game.getRound().discard(this, getHand().getCard(0));
+		game.getRound().drawFromDeck();
+		game.getRound().discard(getHand().getCard(0));
 	}
 	
 	int[] setsNeeded(){
