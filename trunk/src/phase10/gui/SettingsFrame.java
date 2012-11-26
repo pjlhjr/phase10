@@ -49,7 +49,7 @@ public class SettingsFrame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -59,7 +59,7 @@ public class SettingsFrame extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -361,7 +361,7 @@ public class SettingsFrame extends JFrame {
 				return;
 			}
 			else {
-				gManage.mainManager.getGame().addPlayer(new Player(settingsFrm.getUserName(), gManage.mainManager.getGame()));
+				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
 			}
 				if(settingsFrm.getOpponent_1().isEmpty()) {
 					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 1", "Phase 10");
@@ -369,7 +369,7 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					gManage.mainManager.getGame().addPlayer(new Player(settingsFrm.getOpponent_1(), gManage.mainManager.getGame()));
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_1()));
 				}
 			if(settingsFrm.opponentField_2.isVisible()) {
 				if(settingsFrm.getOpponent_2().isEmpty()) {
@@ -378,7 +378,7 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					gManage.mainManager.getGame().addPlayer(new Player(settingsFrm.getOpponent_2(), gManage.mainManager.getGame()));
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_2()));
 				}
 			}
 			if(settingsFrm.opponentField_3.isVisible()) {
@@ -388,7 +388,7 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					gManage.mainManager.getGame().addPlayer(new Player(settingsFrm.getOpponent_3(), gManage.mainManager.getGame()));
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_3()));
 				}
 			}
 
