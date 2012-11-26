@@ -26,22 +26,6 @@ public class ScoreFrame extends JFrame {
 	private JTable table;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ScoreFrame frame = new ScoreFrame(new GuiManager(new GameManager()));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public ScoreFrame(GuiManager gManage) {
