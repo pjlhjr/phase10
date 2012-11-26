@@ -10,34 +10,22 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-import phase10.GameManager;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
-import javax.swing.JScrollPane;
 
 public class SaveFileFrame extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField filenameField;
 	private String filename;
 
 	public String getFilename() {
 		return filename;
-	}
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			SaveFileFrame dialog = new SaveFileFrame(new GuiManager(new GameManager()));
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -81,6 +69,7 @@ public class SaveFileFrame extends JDialog {
 						
 						while(flag == false) 
 						{
+							@SuppressWarnings("unused")
 							MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
 							flag = gManage.mainManager.saveGame("test.txt");
 						}

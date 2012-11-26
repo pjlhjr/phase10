@@ -41,29 +41,6 @@ public class GameFrame extends JFrame {
 
 	Player current;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameManager mainManager = new GameManager();
-					mainManager.newGame();
-					//TODO get test situation to work
-					Phase10 aGame = mainManager.getGame();
-					aGame.addPlayer(new Player(aGame));
-					aGame.addPlayer(new Player(aGame));
-					aGame.startGame();
-					GameFrame frame = new GameFrame(new GuiManager(mainManager));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/*
 	 * begin text field values.
 	 */
@@ -101,6 +78,12 @@ public class GameFrame extends JFrame {
 
 	private JButton discardButton;
 
+
+	private JLabel lblPlayername;
+
+
+	private JTextArea phaseNumber;
+
 	//end components
 
 	/**
@@ -123,7 +106,7 @@ public class GameFrame extends JFrame {
 		getContentPane().add(infoPanel);
 		infoPanel.setLayout(null);
 
-		JLabel lblPlayername = new JLabel("PlayerName");
+		lblPlayername = new JLabel("PlayerName");
 		lblPlayername.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlayername.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblPlayername.setBounds(10, 37, 149, 38);
@@ -135,7 +118,7 @@ public class GameFrame extends JFrame {
 		infoPanel.add(lblPhase);
 
 
-		JTextArea phaseNumber = new JTextArea();
+		phaseNumber = new JTextArea();
 		phaseNumber.setRows(1);
 		phaseNumber.setColumns(1);
 		phaseNumber.setFont(new Font("Century Gothic", Font.BOLD, 36));
@@ -341,6 +324,7 @@ public class GameFrame extends JFrame {
 
 	public void updateFrame(Phase10 currentGame) {
 		Hand currentHand = currentGame.getCurrentPlayer().getHand();
+		Player currentPlayer = currentGame.getCurrentPlayer();
 
 		/*
 		 * begin update of card images
@@ -379,13 +363,21 @@ public class GameFrame extends JFrame {
 				getCardFile(currentGame.getRound().getTopOfDiscardStack())
 				)));
 		
+		
+		
+		
+		
 		/*
 		 * end update of card images
 		 */
 
 
 		//begin update of infoPanel
-		//infoPanel
+		
+		lblPlayername.setText(currentPlayer.getName());
+		phaseNumber.setText(Integer.toString(currentPlayer.getPhase()));
+		//TODO update phase description window
+		
 		//end update of infoPanel
 
 	}

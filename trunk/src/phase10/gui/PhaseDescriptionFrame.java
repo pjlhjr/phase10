@@ -1,6 +1,5 @@
 package phase10.gui;
 
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -10,7 +9,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 
-import phase10.GameManager;
+import phase10.Phase10;
+import phase10.Player;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,22 +23,6 @@ public class PhaseDescriptionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PhaseDescriptionFrame frame = new PhaseDescriptionFrame(5, new GuiManager(new GameManager()));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/*
 	 * All the Strings that will be displayed in this window.
 	 */
@@ -49,6 +33,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	
 	GuiManager gManage;
 	Language gLang;
+	private JTextArea phaseDescription;
 	
 	/**
 	 * Create the frame.
@@ -91,7 +76,7 @@ public class PhaseDescriptionFrame extends JFrame {
 		btnOkay.setBounds(163, 180, 89, 23);
 		contentPane.add(btnOkay);
 		
-		JTextArea phaseDescription = new JTextArea();
+		phaseDescription = new JTextArea();
 		phaseDescription.setFont(new Font("Microsoft YaHei", Font.ITALIC, 19));
 		phaseDescription.setLineWrap(true);
 		phaseDescription.setWrapStyleWord(true);
@@ -99,6 +84,13 @@ public class PhaseDescriptionFrame extends JFrame {
 		phaseDescription.setText(phaseDescriptionString);
 		phaseDescription.setBounds(108, 84, 230, 66);
 		contentPane.add(phaseDescription);
+	}
+	
+	void updateFrame(Player currentPlayer) {
+		
+		phaseDescription.setText(setPhaseDescriptionString(currentPlayer.getPhase()));
+		
+		
 	}
 
 	private void initLanguage(Language langSetter) {
