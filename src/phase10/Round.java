@@ -188,6 +188,9 @@ public final class Round implements Serializable {
 			}
 		}
 
+		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
+			game.getPlayer(p).getHand().sortByValue();
+		}
 		// Add the next card to the discard pile
 		discardStack = new Stack<Card>();
 		discardStack.push(deck.get(deck.size() - 1));
