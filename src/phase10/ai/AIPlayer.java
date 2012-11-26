@@ -45,6 +45,11 @@ public class AIPlayer extends Player {
 	System.out.println((tot/1000000.0*100));*/
 	}
 	
+	/**
+	 * This method is called by the game manager for the AIPlayer to complete a turn.
+	 * This method either draws or picks up a card from the top of the discard pile, 
+	 * lays down the AIPlayers card, plays off other peoples' laid down phases, and discards.
+	 */
 	//TODO test difficulty levels
 	public void playTurn(){
 		/*if(!(drawOrPickUp()^bestChoice(10))){
@@ -118,7 +123,8 @@ public class AIPlayer extends Player {
 	
 	//TODO make hard player look at median, get rid of higher cards if on later turns
 	private boolean drawOrPickUp(){//true to pick up, false to draw
-		// TODO sense your immenant doom, idk if its part of 
+		// TODO sense your immenant doom, idk if its part of, 
+		// on long run phases some cards are needed no matter what, on difficulty > 70 draw those
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){
 			if(difficulty < 30)
@@ -173,26 +179,29 @@ public class AIPlayer extends Player {
 	 * take difficulty into account, a less difficult player takes the first opportunity,
 	 * get rid of return statement
 	 */
+	//TODO make diff. at higher diff look further than first card
 	private boolean playOffPhases(){
-		return false;
 		Player current;
-		ArrayList<PhaseGroup> 	setGroups = new ArrayList<PhaseGroup>(),
+/*		ArrayList<PhaseGroup> 	setGroups = new ArrayList<PhaseGroup>(),
 								runGroups = new ArrayList<PhaseGroup>(),
 								colorGroups = new ArrayList<PhaseGroup>();
-		PhaseGroup temp;
+		PhaseGroup temp;*/
 		
 		for(int player = 0; player < game.getNumberOfPlayers(); player++){
 			current = game.getPlayer(player);
 			if(current.hasLaidDownPhase()){
 				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
-					temp = current.getPhaseGroup(group);
+					for(int hand = 0; hand < getHand().getNumberOfCards(); hand++){
+						current.getPhaseGroup(group).addCard(getHand().getCard(hand));
+					}// Wild cards, have to have a certain hiddenValue
+					/*temp = current.getPhaseGroup(group);
 					if(temp.getType() == Configuration.RUN_PHASE){
 						runGroups.add(temp);
 					}else if(temp.getType() == Configuration.SET_PHASE){
 						setGroups.add(temp);
 					}else if(temp.getType() == Configuration.COLOR_PHASE){
 						colorGroups.add(temp);
-					}
+					}*/
 				}
 			}
 		}
@@ -203,12 +212,14 @@ public class AIPlayer extends Player {
 	//TODO use the log. incorporate difficulty. get rid of higher point value cards later in the round
 	private Card discardCard(){
 		group = new Groups(getHand(), this);
-		int x = 1;
-		Card c;
-		do{
-			c = group.recommendDiscard(x++);
-		}while(!bestChoice(10));
-		return c;
+		int x = 0;
+		Card[] c = group.recommendDiscard();
+		while(!bestChoice(10)){
+			//something else
+			x++;
+		}
+		x %= c.length;
+		return c[x];
 	}
 	
 	private int currentPointValue(){
@@ -326,25 +337,49 @@ public class AIPlayer extends Player {
 				if(numLengthRun() > 0)
 					connectedGroup(); // only do at certain difficulties
 			}
-			for(CardGroup )
-			for(int x = 0; x < cardValues.length; x++){
-				if(cardValues[x] instanceof WildCard){
-					
-				}
-			}
 			//TODO deal with wilds
 		}
 		
 		//TODO figure out some way, break this problem down, single cards
 		private void connectedGroup(){
 			for(PhaseGroup g: complete){
-				if(g.getCard(0).getValue() != g.getCard(1).getValue()){
+				if(g.getType() == Configuration.RUN_PHASE){
 					for(PhaseGroup other: complete){
-						if(other.getCard(0).getValue() != other.getCard(1).getValue())
+						if(other.getType() == Configuration.RUN_PHASE){
+							if(g.getCard(0).getValue()-2==other.getCard(other.getNumberOfCards()-1).getValue()){
+								ArrayList<PhaseGroup> tempList = new ArrayList<PhaseGroup>();
+								for(ArrayList<PhaseGroup> c: connected)
+									if(c.contains(other) && c.contains(g))
+										continue;
+								tempList.add(other);
+								tempList.add(g);
+								connected.add(tempList);
+							}
+						}
 					}
-					for(Card c: single){
-						
+					for(PhaseGroup other: partial){
+						if(other.getType() == Configuration.RUN_PHASE){
+							if(g.getCard(0).getValue()-2==other.getCard(other.getNumberOfCards()-1).getValue()){
+								ArrayList<PhaseGroup> tempList = new ArrayList<PhaseGroup>();
+								for(ArrayList<PhaseGroup> c: connected)
+									if(c.contains(other) && c.contains(g))
+										continue;
+								tempList.add(other);
+								tempList.add(g);
+								connected.add(tempList);
+							}
+						}
 					}
+				}
+			}
+			for(PhaseGroup p: partial){
+				if()
+			}
+			for(Card c: single){
+				if(c instanceof WildCard){
+					
+				}else{
+					
 				}
 			}
 		}
@@ -402,6 +437,7 @@ public class AIPlayer extends Player {
 						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
 							setGroup.addCard(cardValues[x++]);
 						}
+						setGroup.setType(Configuration.SET_PHASE);
 						if(PhaseGroup.validate(setGroup, Configuration.SET_PHASE, player.setsNeeded()[0]))
 							complete.add(setGroup);
 						else
@@ -421,6 +457,7 @@ public class AIPlayer extends Player {
 								runGroup.addCard(cardValues[x]);
 							x++;
 						}
+						runGroup.setType(Configuration.RUN_PHASE);
 						if(PhaseGroup.validate(runGroup, Configuration.RUN_PHASE, player.numLengthRun()))
 							complete.add(runGroup);
 						else
@@ -435,6 +472,7 @@ public class AIPlayer extends Player {
 					while(cardValues[x].getValue() == color && x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE){
 						colorGroup.addCard(cardValues[x++]);
 					}
+					colorGroup.setType(Configuration.COLOR_PHASE);
 					complete.add(colorGroup);
 					color++;
 				}
@@ -442,7 +480,7 @@ public class AIPlayer extends Player {
 		}
 		
 		//TODO fill in, this method used for finding which cards are needed, use difficulty
-		public int[] cardsForConnectedGroups(){
+		private int[] cardsForConnectedGroups(){
 			
 		}
 		
@@ -451,9 +489,33 @@ public class AIPlayer extends Player {
 			
 		}
 		
-		//TODO fill in
-		public Card recommendDiscard(int nthChoice){
-			
+		//TODO figure out discard value.
+		// on run phases with higher diff don't discard certain
+		public Card[] recommendDiscard(){
+			double[] discardValue = new double[cardValues.length];
+			for(int x = 0; x < cardValues.length; x++){
+				discardValue[x] = cardValues[x].getPointValue()/10.0;
+				if(difficulty > 70 && numLengthRun() > 4){
+					if(cardValues[x].getValue() == 6 || cardValues[x].getValue() == 7)
+						continue;
+					if(cardValues[x].getValue() == 5 || cardValues[x].getValue() == 8 && numLengthRun() >= 8)
+						continue;
+					if(cardValues[x].getValue() == 4 || cardValues[x].getValue() == 9 && numLengthRun() == 9)
+						continue;
+				}
+				
+			}
+			for(int x = 0; x < discardValue.length; x++){
+				int lowestIndex = x;
+				for(int y = x + 1; y < discardValue.length; y++){
+					double temp;
+					if(discardValue[lowestIndex] > discardValue[y]){
+						temp = discardValue[lowestIndex];
+						discardValue[lowestIndex] = discardValue[y];
+						discardValue[y] = temp;
+					}
+				}
+			}
 		}
 	}
 }
