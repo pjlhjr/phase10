@@ -20,7 +20,9 @@ import java.awt.Toolkit;
 import javax.swing.ButtonGroup;
 
 import phase10.*;
+import phase10.card.Card;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -28,6 +30,12 @@ import java.awt.event.MouseAdapter;
 
 
 public class GameFrame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	private final ButtonGroup handButtons = new ButtonGroup();
 
 
@@ -44,8 +52,8 @@ public class GameFrame extends JFrame {
 					mainManager.newGame();
 					//TODO get test situation to work
 					Phase10 aGame = mainManager.getGame();
-					aGame.addPlayer(new Player());
-					aGame.addPlayer(new Player());
+					aGame.addPlayer(new Player(aGame));
+					aGame.addPlayer(new Player(aGame));
 					aGame.startGame();
 					GameFrame frame = new GameFrame(new GuiManager(mainManager));
 					frame.setVisible(true);
@@ -70,19 +78,33 @@ public class GameFrame extends JFrame {
 	/*
 	 * end text field values
 	 */
-
+	
 	//begin components
 	private JPanel infoPanel = new JPanel();
 	private JPanel deckPanel = new JPanel();
 	private JPanel handPanel = new JPanel();
 	private JPanel playersPanel = new JPanel();
 	private JPanel yourPhasesPanel = new JPanel();
+
+	private JButton hcardButton1 = new JButton("");
+	private JButton hcardButton2 = new JButton("");
+	private JButton hcardButton4 = new JButton("");
+	private JButton hcardButton3 = new JButton("");
+	private JButton hcardButton5 = new JButton("");
+	private JButton hcardButton6 = new JButton("");
+	private JButton hcardButton7 = new JButton("");
+	private JButton hcardButton8 = new JButton("");
+	private JButton hcardButton9 = new JButton("");
+	private JButton hcardButton10 = new JButton("");
+	private JButton hcardButton11 = new JButton("");
+
 	//end components
 
 	/**
-	 * Create the frame.
+	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
 
 		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
@@ -140,27 +162,27 @@ public class GameFrame extends JFrame {
 		btnScoreboard.setBounds(25, 291, 118, 23);
 		infoPanel.add(btnScoreboard);
 
-		JButton btnSaveAndExit = new JButton("Save");
-		btnSaveAndExit.addMouseListener(new MouseAdapter() {
+		JButton btnSave = new JButton("Save");
+		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				SaveFileFrame saverWindow = new SaveFileFrame(gManage);
 				saverWindow.setVisible(true);
-				
+
 			}
 		});
-		btnSaveAndExit.setBounds(22, 347, 124, 23);
-		infoPanel.add(btnSaveAndExit);
+		btnSave.setBounds(22, 347, 124, 23);
+		infoPanel.add(btnSave);
 
-		JButton btnExitWithoutSaving = new JButton("Exit");
-		btnExitWithoutSaving.addMouseListener(new MouseAdapter() {
+		JButton btnExit = new JButton("Exit");
+		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+
 			}
 		});
-		btnExitWithoutSaving.setBounds(5, 392, 154, 25);
-		infoPanel.add(btnExitWithoutSaving);
+		btnExit.setBounds(5, 392, 154, 25);
+		infoPanel.add(btnExit);
 
 		deckPanel.setBounds(982, 533, 169, 107);
 		getContentPane().add(deckPanel);
@@ -168,7 +190,6 @@ public class GameFrame extends JFrame {
 
 		JButton deckButton = new JButton("");
 		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
-		deckButton.addMouseListener(new deckListener()); //mouse listener for the deck button
 		deckPanel.add(deckButton);
 
 		JButton discardButton = new JButton("");
@@ -178,7 +199,8 @@ public class GameFrame extends JFrame {
 		getContentPane().add(handPanel);
 		handPanel.setLayout(new GridLayout(0, 11, 0, 0));
 
-		JButton hcardButton1 = new JButton("");
+		//begin buttons for player's hand
+
 		hcardButton1.setHorizontalTextPosition(SwingConstants.CENTER);
 		hcardButton1.setPreferredSize(new Dimension(100, 23));
 		hcardButton1.setMargin(new Insets(0, 0, 0, 0));
@@ -191,54 +213,49 @@ public class GameFrame extends JFrame {
 		handButtons.add(hcardButton1);
 		handPanel.add(hcardButton1);
 
-		JButton hcardButton2 = new JButton("");
 		handButtons.add(hcardButton2);
 		handPanel.add(hcardButton2);
 
-		JButton hcardButton3 = new JButton("");
 		handButtons.add(hcardButton3);
 		handPanel.add(hcardButton3);
 
-		JButton hcardButton4 = new JButton("");
 		handButtons.add(hcardButton4);
 		handPanel.add(hcardButton4);
 
-		JButton hcardButton5 = new JButton("");
 		handButtons.add(hcardButton5);
 		handPanel.add(hcardButton5);
 
-		JButton hcardButton6 = new JButton("");
 		handButtons.add(hcardButton6);
 		handPanel.add(hcardButton6);
 
-		JButton hcardButton7 = new JButton("");
 		handButtons.add(hcardButton7);
 		handPanel.add(hcardButton7);
 
-		JButton hcardButton8 = new JButton("");
 		handButtons.add(hcardButton8);
 		handPanel.add(hcardButton8);
 
-		JButton hcardButton9 = new JButton("");
 		handButtons.add(hcardButton9);
 		handPanel.add(hcardButton9);
 
-		JButton hcardButton10 = new JButton("");
 		handButtons.add(hcardButton10);
 		handPanel.add(hcardButton10);
 
-		JButton hcardButton11 = new JButton("");
 		handButtons.add(hcardButton11);
 		handPanel.add(hcardButton11);
+		hcardButton11.setVisible(false); //Initially set to false. Will be true when user picks up a card
+
+		//end buttons for player's hand
 
 		playersPanel.setBounds(10, 11, 962, 416);
 		getContentPane().add(playersPanel);
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 
-		ArrayList<JPanel> oppPanels = new ArrayList<JPanel>();
+		//TODO error?
+		ArrayList<opponentPanel> oppPanels = new ArrayList<opponentPanel>();
 		try {
 			for(int x = 0; x < currentGame.getNumberOfPlayers() - 1; x++) {
 				oppPanels.add(new opponentPanel(currentGame.getPlayer(x)));
+				playersPanel.add(oppPanels.get(x));
 			}
 		} catch (NullPointerException e) {
 			System.out.println("null pointer exception generated when trying to display opponent Panels");
@@ -274,24 +291,6 @@ public class GameFrame extends JFrame {
 		public void mouseReleased(MouseEvent arg0) {}
 
 	}
-
-	private class deckListener implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-
-	}
 	/*
 	 * end button listeners
 	 */
@@ -300,26 +299,85 @@ public class GameFrame extends JFrame {
 	 * begin functional methods
 	 */
 
+	/**
+	 * Will read information from a Card object and return the path to the correct
+	 * image for that Card.
+	 * 
+	 * @param aCard the card object
+	 * @return the filename to the image file of the specified card
+	 */
+	private String getCardFile(Card aCard) {
 
-	//	public void updateFrame(Player c) {
-	//		current = c;
-	//		Hand currentHand = c.getHand();
-	//		
-	//		String cardFileName;
-	//		String buttonName;
-	//		
-	//		for(int i = 0; i < 11; i++) {
-	//			cardFileName = currentHand.getCard(i).getColor();
-	//			cardFileName += currentHand.getCard(0).getValue();
-	//			
-	//			buttonName = "hcardButton" + currentHand.getCard(i).getValue();
-	//			//TODO finish the "update hand" part of this method
-	//			
-	//		}
-	//		
-	//		//begin update of infoPanel
-	//			//infoPanel.
-	//		//end update of infoPanel
-	//		
-	//	}
+		String filename = "/images/cardImages/";
+
+		if(aCard.getColor() == Color.RED)
+			filename += "Red";
+		else if(aCard.getColor() == Color.BLUE)
+			filename += "Blue";
+		else if(aCard.getColor() == Color.YELLOW)
+			filename += "Yellow";
+		else if(aCard.getColor() == Color.GREEN)
+			filename += "Green";
+		else
+			filename = "Error!";
+
+		if(aCard.getValue() == 13)
+			filename += "Wild";
+		else if(aCard.getValue() == 14)
+			filename += "Skip";
+		else
+			filename += aCard.getValue();
+
+		filename += ".png";
+
+		return filename;
+	}
+
+
+	public void updateFrame(Player current) {
+		Hand currentHand = current.getHand();
+
+		/*
+		 * begin update of card images
+		 */
+		hcardButton1.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(1))
+				)));
+		hcardButton2.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(2))
+				)));
+		hcardButton3.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(3))
+				)));
+		hcardButton4.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(4))
+				)));
+		hcardButton5.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(5))
+				)));
+		hcardButton6.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(6))
+				)));
+		hcardButton7.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(7))
+				)));
+		hcardButton8.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(8))
+				)));
+		hcardButton9.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(9))
+				)));
+		hcardButton10.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(10))
+				)));
+		/*
+		 * end update of card images
+		 */
+
+
+		//begin update of infoPanel
+		//infoPanel
+		//end update of infoPanel
+
+	}
 }
