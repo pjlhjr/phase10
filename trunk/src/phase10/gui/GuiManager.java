@@ -1,6 +1,7 @@
 package phase10.gui;
 
 import phase10.GameManager;
+import phase10.Player;
 
 
 
@@ -8,7 +9,6 @@ public class GuiManager {
 	protected GameManager mainManager;	
 	private SettingsFrame settingsWindow;
 	private GameFrame gameWindow;
-	private ScoreFrame scoreWindow;
 	private PhaseDescriptionFrame pdWindow;
 	private SkipInputFrame siWindow;
 	private Language gameLang;
@@ -19,8 +19,6 @@ public class GuiManager {
 	public static void main(String[] args) {
 		GameManager thisGame = new GameManager();
 		GuiManager guiMgr = new GuiManager(thisGame);
-
-		
 			guiMgr.initGame();
 			//guiMgr.displayGameFrame();
 	}
@@ -35,8 +33,6 @@ public class GuiManager {
 		mainManager = m; //passes a reference from the game manager into the GUI manager
 		gameLang = new Language();
 		settingsWindow = new SettingsFrame(this);
-		gameWindow = new GameFrame(this);
-		scoreWindow = new ScoreFrame(this);
 		pdWindow = new PhaseDescriptionFrame(1, this);
 		siWindow = new SkipInputFrame();
 	}
@@ -53,25 +49,30 @@ public class GuiManager {
 	/*
 	 * Begin display methods
 	 */
-	public void displaySettingsFrame() {
+	void displaySettingsFrame() {
 		settingsWindow.setVisible(true);
 	}
 
-	public void displayGameFrame() {
+	void displayGameFrame() {
+		GameFrame gameWindow = new GameFrame(this);
 		gameWindow.setVisible(true);
 	}
 	
-	public void displayScoreFrame() {
+	void displayScoreFrame() {
+		ScoreFrame scoreWindow = new ScoreFrame(this);
 		scoreWindow.setVisible(true);
 	}
 	
-	public void displayInvalidMoveFrame() {} //still need to implement this frame
+	void displayMessageFrame(String message, String title) {
+		MessageFrame messageWindow = new MessageFrame(message, title);
+		messageWindow.setVisible(true);
+	}
 	
-	public void displayPhaseDescriptionFrame() {
+	void displayPhaseDescriptionFrame() {
 		pdWindow.setVisible(true);
 	}
 	
-	public void displaySkipInputFrame() {
+	void displaySkipInputFrame() {
 		siWindow.setVisible(true);
 	}
 
@@ -79,27 +80,6 @@ public class GuiManager {
 	 * End display methods
 	 */
 	
-	
-	/*
-	 * begin update methods
-	 * 
-	 * (might place these methods in their respective classes)
-	 */
-	
-//	private void updateGameFrame() {
-//		gameWindow.updateFrame(GameManager.getGame().getPlayer(index));
-//	}
-	private void updateSettingsFrame() {}
-	private void updatePhaseDescriptionFrame() {}
-	private void updateSkipInputFrame() {}
-	private void updateInvalidMoveFrame() {}
-	protected void updateLanguage(Language l) {
-		this.gameLang = l;
-	}
-	
-	/*
-	 * end update methods
-	 */
 	
 	/*
 	 * begin GUI functional methods
@@ -110,11 +90,26 @@ public class GuiManager {
 	}
 	
 	
-	public void newTurnWindowUpdate() {
+	private void newTurnWindowUpdate() {
 		//TODO - update necessary frames for the next player's turn
+		
 	}
 	
-	public void endGame() {}
+	public void endGame() {
+		
+		Player winner = mainManager.getGame().getPlayer(1);
+		for(int i = 2; i < mainManager.getGame().getNumberOfPlayers(); i++) {
+			if(mainManager.getGame().getPlayer(i).getScore() > winner.getScore())
+				winner = mainManager.getGame().getPlayer(i);
+		}
+		
+		String endMessage = "Congratulations " + winner.getName() + "! You Won!";
+		
+		displayMessageFrame(endMessage, "End Game");
+		
+		displayScoreFrame();
+		
+	}
 	
 	/*
 	 * end GUI functional methods
