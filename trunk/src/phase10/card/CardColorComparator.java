@@ -7,7 +7,7 @@ package phase10.card;
 
 import java.util.Comparator;
 
-import phase10.Configuration;
+import phase10.util.Configuration;
 
 /**
  * This is used to compare cards to each other and determine the order they
