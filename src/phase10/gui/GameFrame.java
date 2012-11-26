@@ -98,6 +98,9 @@ public class GameFrame extends JFrame {
 	private JButton hcardButton10 = new JButton("");
 	private JButton hcardButton11 = new JButton("");
 
+
+	private JButton discardButton;
+
 	//end components
 
 	/**
@@ -192,7 +195,7 @@ public class GameFrame extends JFrame {
 		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
 		deckPanel.add(deckButton);
 
-		JButton discardButton = new JButton("");
+		discardButton = new JButton("");
 		deckPanel.add(discardButton);
 
 		handPanel.setBounds(0, 533, 976, 107);
@@ -264,6 +267,8 @@ public class GameFrame extends JFrame {
 
 		yourPhasesPanel.setBounds(0, 427, 972, 107);
 		getContentPane().add(yourPhasesPanel);
+		
+		updateFrame(gManage.mainManager.getGame());
 	}
 
 	/*
@@ -318,8 +323,6 @@ public class GameFrame extends JFrame {
 			filename += "Yellow";
 		else if(aCard.getColor() == Color.GREEN)
 			filename += "Green";
-		else
-			filename = "Error!";
 
 		if(aCard.getValue() == 13)
 			filename += "Wild";
@@ -329,47 +332,53 @@ public class GameFrame extends JFrame {
 			filename += aCard.getValue();
 
 		filename += ".png";
+		
+		System.out.println(filename); //TODO get the correct filename
 
 		return filename;
 	}
 
 
-	public void updateFrame(Player current) {
-		Hand currentHand = current.getHand();
+	public void updateFrame(Phase10 currentGame) {
+		Hand currentHand = currentGame.getCurrentPlayer().getHand();
 
 		/*
 		 * begin update of card images
 		 */
 		hcardButton1.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(1))
+				getCardFile(currentHand.getCard(0))
 				)));
 		hcardButton2.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(2))
+				getCardFile(currentHand.getCard(1))
 				)));
 		hcardButton3.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(3))
+				getCardFile(currentHand.getCard(2))
 				)));
 		hcardButton4.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(4))
+				getCardFile(currentHand.getCard(3))
 				)));
 		hcardButton5.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(5))
+				getCardFile(currentHand.getCard(4))
 				)));
 		hcardButton6.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(6))
+				getCardFile(currentHand.getCard(5))
 				)));
 		hcardButton7.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(7))
+				getCardFile(currentHand.getCard(6))
 				)));
 		hcardButton8.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(8))
+				getCardFile(currentHand.getCard(7))
 				)));
 		hcardButton9.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentHand.getCard(8)))
+				));
+		hcardButton10.setIcon(new ImageIcon(GameFrame.class.getResource(
 				getCardFile(currentHand.getCard(9))
 				)));
-		hcardButton10.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentHand.getCard(10))
+		discardButton.setIcon(new ImageIcon(GameFrame.class.getResource(
+				getCardFile(currentGame.getRound().getTopOfDiscardStack())
 				)));
+		
 		/*
 		 * end update of card images
 		 */

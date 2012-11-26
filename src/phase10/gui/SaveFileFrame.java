@@ -77,7 +77,7 @@ public class SaveFileFrame extends JDialog {
 					public void mouseClicked(MouseEvent e) {
 						
 						filename = filenameField.getText();
-						boolean flag = gManage.mainManager.saveGame("test.txt");
+						boolean flag = gManage.mainManager.saveGame(filename);
 						
 						while(flag == false) 
 						{
