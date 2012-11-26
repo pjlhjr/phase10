@@ -71,6 +71,7 @@ public final class Round implements Serializable {
 		Card card = discardStack.pop();
 		log.add(new LogEntry(turnNumber, player, card, false));
 		player.getHand().addCard(card);
+		player.getHand().sortByValue();
 		return true;
 	}
 
@@ -84,6 +85,8 @@ public final class Round implements Serializable {
 		Player player = game.getCurrentPlayer();
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
+		
+		player.getHand().sortByValue();
 
 		if (deck.size() == 0) {
 			Card topDiscard = discardStack.pop();
@@ -109,6 +112,8 @@ public final class Round implements Serializable {
 		log.add(new LogEntry(turnNumber, player, card, true));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
+		
+		player.getHand().sortByValue();
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
 			int nextPlayer = curPlayerNum + 1;
