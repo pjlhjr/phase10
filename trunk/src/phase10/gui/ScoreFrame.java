@@ -1,10 +1,7 @@
 package phase10.gui;
 
 
-import java.awt.EventQueue;
-
 import phase10.*;
-import phase10.gui.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -68,9 +65,11 @@ public class ScoreFrame extends JFrame {
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
+			@SuppressWarnings("rawtypes")
 			Class[] columnTypes = new Class[] {
 				Integer.class, String.class, Integer.class, Integer.class
 			};
+			@SuppressWarnings("unchecked")
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}

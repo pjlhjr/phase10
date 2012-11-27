@@ -30,8 +30,7 @@ public class GameManager {
 
 	GameManager() {
 		gui = new GuiManager(this);
-		newGame();//TODO remove when able
-		gui.initGame();
+		gui.initGui();
 	}
 	
 	/**
