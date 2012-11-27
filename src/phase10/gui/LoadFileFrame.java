@@ -14,7 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 
-public class SaveFileFrame extends JDialog {
+public class LoadFileFrame extends JDialog {
 
 	/**
 	 * 
@@ -31,8 +31,8 @@ public class SaveFileFrame extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public SaveFileFrame(GuiManager guiM) {
-		setTitle("Save Game");
+	public LoadFileFrame(GuiManager guiM) {
+		setTitle("Load Game");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 		
 		final GuiManager gManage = guiM;
@@ -66,13 +66,13 @@ public class SaveFileFrame extends JDialog {
 					public void mouseClicked(MouseEvent e) {
 						
 						filename = filenameField.getText();
-						boolean flag = gManage.mainManager.saveGame(filename);
+						boolean flag = gManage.mainManager.loadGame(filename);
 						
 						while(flag == false) 
 						{
 							@SuppressWarnings("unused")
 							MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
-							flag = gManage.mainManager.saveGame("test.txt");
+							flag = gManage.mainManager.loadGame(filename);
 						}
 						
 						dispose();

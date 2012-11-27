@@ -12,7 +12,7 @@ public class GuiManager {
 	private SkipInputFrame siWindow;
 	private Language gameLang;
 	private GameFrame gameWindow;
-
+	private WelcomeFrame welcomeWindow;
 
 
 	/*
@@ -25,6 +25,7 @@ public class GuiManager {
 		settingsWindow = new SettingsFrame(this);
 		pdWindow = new PhaseDescriptionFrame(1, this);
 		siWindow = new SkipInputFrame();
+		welcomeWindow = new WelcomeFrame(this);
 	}
 	/*
 	 * end constructors
@@ -78,12 +79,16 @@ public class GuiManager {
 	/*
 	 * begin GUI functional methods
 	 */
-	public void initGame() {
-
-		displaySettingsFrame();
+	public void initGui() {
+		
+		displayWelcomeWindow();
 	}
 	
 	
+	private void displayWelcomeWindow() {
+		welcomeWindow.setVisible(true);
+	}
+
 	public void newTurnWindowUpdate() {
 		//TODO - update necessary frames for the next player's turn
 		gameWindow.updateFrame(mainManager.getGame());

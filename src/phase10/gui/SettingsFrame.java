@@ -1,8 +1,6 @@
 package phase10.gui;
 
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -19,18 +17,11 @@ import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-
-import phase10.GameManager;
 import phase10.Player;
 import java.awt.event.MouseAdapter;
 import java.awt.Toolkit;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 public class SettingsFrame extends JFrame {
 
