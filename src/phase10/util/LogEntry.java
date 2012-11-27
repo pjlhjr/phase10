@@ -1,9 +1,13 @@
 package phase10.util;
 
+import java.io.Serializable;
+
 import phase10.Player;
 import phase10.card.Card;
 
-public class LogEntry {
+public class LogEntry implements Serializable {
+	
+	private static final long serialVersionUID = 20121L;
 
 	private int turnNumber;
 	private Player player;

@@ -7,7 +7,6 @@ package phase10;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import phase10.exceptions.Phase10Exception;
 
@@ -25,8 +24,8 @@ public final class Phase10 implements Serializable {
 	private int roundNumber;
 	private int dealer;
 	private boolean started;
-	
-	private GameManager gameManager;
+
+	private transient GameManager gameManager;
 
 	Phase10(GameManager gm) {
 		players = new ArrayList<Player>();
@@ -108,8 +107,8 @@ public final class Phase10 implements Serializable {
 	public int getDealer() {
 		return dealer;
 	}
-	
-	GameManager getGameManager(){
+
+	GameManager getGameManager() {
 		return gameManager;
 	}
 
@@ -207,6 +206,10 @@ public final class Phase10 implements Serializable {
 				p.incrementPhase();
 			}
 		}
+	}
+	
+	void setGameManager(GameManager gm){
+		gameManager = gm;
 	}
 
 }

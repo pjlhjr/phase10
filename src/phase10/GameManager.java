@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import phase10.exceptions.Phase10Exception;
 import phase10.gui.GuiManager;
 
 /**
@@ -32,7 +31,7 @@ public class GameManager {
 		gui = new GuiManager(this);
 		gui.initGui();
 	}
-	
+
 	/**
 	 * Create a new Phase10 object
 	 */
@@ -47,18 +46,20 @@ public class GameManager {
 	public Phase10 getGame() {
 		return game;
 	}
-	
-	GuiManager getGui(){
+
+	GuiManager getGui() {
 		return gui;
 	}
 
 	/**
 	 * Loads a game
-	 * @param fileName the file path to the save file
+	 * 
+	 * @param fileName
+	 *            the file path to the save file
 	 * @return true if the load was successful, otherwise false
 	 */
 	public boolean loadGame(String fileName) {
-		if (!fileName.substring(fileName.length()-4).equals(".p10")){
+		if (!fileName.substring(fileName.length() - 4).equals(".p10")) {
 			fileName = fileName + ".p10";
 		}
 		try {
@@ -68,6 +69,8 @@ public class GameManager {
 			Object obj = ois.readObject();
 			if (obj instanceof Phase10) {
 				game = (Phase10) obj;
+				game.setGameManager(this);
+				
 				ois.close();
 				return true;
 			}
@@ -81,19 +84,21 @@ public class GameManager {
 
 	/**
 	 * Saves the current game
-	 * @param fileName the path to save to (should be *.dat)
+	 * 
+	 * @param fileName
+	 * 
 	 * @return true if the save was successful, otherwise false
 	 */
 	public boolean saveGame(String fileName) {
-		if (!fileName.substring(fileName.length()-4).equals(".p10")){
+		if (!fileName.substring(fileName.length() - 4).equals(".p10")) {
 			fileName = fileName + ".p10";
 		}
 		try {
 			FileOutputStream fos = new FileOutputStream(fileName);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			
+
 			oos.writeObject(game);
-			
+
 			oos.close();
 			return true;
 		} catch (Exception e) {
