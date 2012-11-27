@@ -31,6 +31,10 @@ public final class PhaseGroup implements Serializable {
 
 	private Phase10 game;
 
+	/**
+	 * Creates a phase group object
+	 * @param g the Phase10 object this phase group belongs to
+	 */
 	public PhaseGroup(Phase10 g) {
 		cards = new ArrayList<Card>();
 		laidDown = false;
@@ -41,7 +45,7 @@ public final class PhaseGroup implements Serializable {
 	/**
 	 * @param c
 	 *            The card to add to this phase group
-	 * @
+	 * 
 	 * @return true if valid, false if the card does not fit in the phase group
 	 */
 	public boolean addCard(Card c) {

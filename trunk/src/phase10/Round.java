@@ -41,8 +41,6 @@ public final class Round implements Serializable {
 	 * 
 	 * @param g
 	 *            the phase10 game
-	 * @param dealer
-	 *            the player the round starts with
 	 */
 	Round(Phase10 g) {
 		game = g;
@@ -56,11 +54,9 @@ public final class Round implements Serializable {
 	}
 
 	/**
-	 * Removes the next card from the discard pile and moves it into the
+	 * Removes the next card from the discard pile and moves it into the current
 	 * player's hand
 	 * 
-	 * @param player
-	 *            the player to move the card to
 	 * @return false if it is an invalid move (attempt to pick up a skip card)
 	 */
 	public boolean drawFromDiscard() {
@@ -76,16 +72,16 @@ public final class Round implements Serializable {
 	}
 
 	/**
-	 * Removes the next card from the deck and moves it to the player's hand. If
-	 * there are no more cards in the deck after this operation, the discard
-	 * stack is reshuffled.
+	 * Removes the next card from the deck and moves it to the current player's
+	 * hand. If there are no more cards in the deck after this operation, the
+	 * discard stack is reshuffled.
 	 * 
 	 */
 	public void drawFromDeck() {
 		Player player = game.getCurrentPlayer();
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
-		
+
 		player.getHand().sortByValue();
 
 		if (deck.size() == 0) {
@@ -99,11 +95,10 @@ public final class Round implements Serializable {
 	}
 
 	/**
-	 * Removes the card from the player's hand and adds it to the discard pile.
-	 * Then, advances to the next player's turn (& checks if the round is over)
+	 * Removes the card from the current player's hand and adds it to the
+	 * discard pile. Then, advances to the next player's turn (& checks if the
+	 * round is over)
 	 * 
-	 * @param player
-	 *            the player to remove the card from
 	 * @param card
 	 *            the card to discard
 	 */
@@ -112,7 +107,7 @@ public final class Round implements Serializable {
 		log.add(new LogEntry(turnNumber, player, card, true));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
-		
+
 		player.getHand().sortByValue();
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
@@ -154,7 +149,8 @@ public final class Round implements Serializable {
 	}
 
 	/**
-	 * Creates a deck: Number 1-12, two of each in four different colors +wilds, skips
+	 * Creates a deck: Number 1-12, two of each in four different colors +wilds,
+	 * skips
 	 */
 	private void createDeck() {
 
@@ -221,11 +217,10 @@ public final class Round implements Serializable {
 				// TODO call gui?
 				p.playTurn();
 			}
-			
-			try{
+
+			try {
 				game.getGameManager().getGui().newTurnWindowUpdate();
-			}
-			catch(NullPointerException e){
+			} catch (NullPointerException e) {
 				System.out.println("Too early");
 			}
 		}
