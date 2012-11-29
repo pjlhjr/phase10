@@ -14,6 +14,7 @@ import java.util.Stack;
 import phase10.ai.AIPlayer;
 import phase10.card.Card;
 import phase10.card.WildCard;
+import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
 import phase10.util.LogEntry;
 
@@ -58,16 +59,24 @@ public final class Round implements Serializable {
 	 * player's hand
 	 * 
 	 * @return false if it is an invalid move (attempt to pick up a skip card)
+	 * @throws Phase10Exception
+	 *             if player has already drawn a card this turn
 	 */
 	public boolean drawFromDiscard() {
 		Player player = game.getCurrentPlayer();
+		if (player.getHasDrawnCard())
+			throw new Phase10Exception(
+					"Cannot draw from discard: has already drawn");
+
 		// cannot pick up a skip
 		if (discardStack.peek().getValue() == Configuration.SKIP_VALUE)
 			return false;
+
 		Card card = discardStack.pop();
 		log.add(new LogEntry(turnNumber, player, card, false));
 		player.getHand().addCard(card);
 		player.getHand().sortByValue();
+		player.setHasDrawnCard(true);
 		return true;
 	}
 
@@ -76,11 +85,20 @@ public final class Round implements Serializable {
 	 * hand. If there are no more cards in the deck after this operation, the
 	 * discard stack is reshuffled.
 	 * 
+	 * @throws Phase10Exception
+	 *             if player has already drawn a card this turn
+	 * 
 	 */
 	public void drawFromDeck() {
 		Player player = game.getCurrentPlayer();
+		if (player.getHasDrawnCard())
+			throw new Phase10Exception(
+					"Cannot draw from deck: has already drawn");
+
 		player.getHand().addCard(deck.get(deck.size() - 1));
 		deck.remove(deck.size() - 1);
+
+		player.setHasDrawnCard(true);
 
 		player.getHand().sortByValue();
 
@@ -101,12 +119,20 @@ public final class Round implements Serializable {
 	 * 
 	 * @param card
 	 *            the card to discard
+	 * @throws Phase10Exception
+	 *             if player has not yet drawn a card this turn
 	 */
 	public void discard(Card card) {
 		Player player = game.getCurrentPlayer();
+
+		if (!player.getHasDrawnCard())
+			throw new Phase10Exception("Cannot discard: has not yet drawn");
+
 		log.add(new LogEntry(turnNumber, player, card, true));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
+
+		player.setHasDrawnCard(false);
 
 		player.getHand().sortByValue();
 

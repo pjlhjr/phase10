@@ -26,6 +26,8 @@ public class Player implements Serializable {
 	private boolean hasLaidDownPhase;
 	private boolean skipNextTurn;
 	private ArrayList<PhaseGroup> phaseGroups;
+	
+	private boolean hasDrawnCard;
 
 	protected Phase10 game;
 
@@ -51,6 +53,7 @@ public class Player implements Serializable {
 		phaseGroups = new ArrayList<PhaseGroup>();
 		skipNextTurn = false;
 		hasLaidDownPhase = false;
+		hasDrawnCard = false;
 	}
 
 	/**
@@ -291,5 +294,13 @@ public class Player implements Serializable {
 
 	void removePhaseGroup(int pg) {
 		phaseGroups.remove(pg);
+	}
+	
+	void setHasDrawnCard(boolean state){
+		hasDrawnCard = state;
+	}
+	
+	boolean getHasDrawnCard(){
+		return hasDrawnCard;
 	}
 }

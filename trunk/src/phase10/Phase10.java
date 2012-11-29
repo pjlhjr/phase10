@@ -205,6 +205,8 @@ public final class Phase10 implements Serializable {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
 			}
+			//reset has drawn card
+			p.setHasDrawnCard(false);
 		}
 	}
 	
