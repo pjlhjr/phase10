@@ -39,6 +39,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PhaseDescriptionFrame(int currentPhase, GuiManager gm) {
+		setResizable(false);
 		
 		gManage = gm;
 		gLang = gManage.getGameLang();

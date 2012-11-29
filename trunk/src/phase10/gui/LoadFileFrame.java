@@ -34,9 +34,9 @@ public class LoadFileFrame extends JDialog {
 	public LoadFileFrame(GuiManager guiM) {
 		setTitle("Load Game");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
-		
+
 		final GuiManager gManage = guiM;
-		
+
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -64,18 +64,21 @@ public class LoadFileFrame extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						
+
 						filename = filenameField.getText();
 						boolean flag = gManage.mainManager.loadGame(filename);
-						
-						while(flag == false) 
+
+						if(flag == false) 
 						{
-							@SuppressWarnings("unused")
+							dispose();
+							LoadFileFrame tryAgain = new LoadFileFrame(gManage);
+							tryAgain.setVisible(true);
 							MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
-							flag = gManage.mainManager.loadGame(filename);
+							invalidMessage.setVisible(true);
 						}
-						
-						dispose();
+						else {
+							dispose();
+						}
 					}
 				});
 				okButton.setActionCommand("OK");

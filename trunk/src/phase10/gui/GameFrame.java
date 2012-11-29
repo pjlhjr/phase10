@@ -20,6 +20,7 @@ import javax.swing.ButtonGroup;
 
 import phase10.*;
 import phase10.card.Card;
+import phase10.exceptions.Phase10Exception;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -39,8 +40,9 @@ public class GameFrame extends JFrame {
 
 
 	Player current;
-	
+
 	ArrayList<Card> selectedCards = new ArrayList<Card>();
+	private boolean isDiscarding;
 
 	//begin components
 	private JPanel infoPanel = new JPanel();
@@ -75,6 +77,9 @@ public class GameFrame extends JFrame {
 
 
 	private JButton btnNewPhase;
+
+
+	private ArrayList<opponentPanel> oppPanels;
 
 	//end components
 
@@ -115,9 +120,8 @@ public class GameFrame extends JFrame {
 		phaseNumber.setColumns(1);
 		phaseNumber.setFont(new Font("Century Gothic", Font.BOLD, 36));
 
-		//TODO fix null pointer exception errors.
 		try {
-			phaseNumber.setText(Integer.toString(currentGame.getCurrentPlayer().getPhase())); //problem targeted! null is returned at Phase10: line 52
+			phaseNumber.setText(Integer.toString(currentGame.getCurrentPlayer().getPhase()));
 		} catch (NullPointerException e) {
 			phaseNumber.setText("null");
 		}
@@ -276,15 +280,15 @@ public class GameFrame extends JFrame {
 		handPanel.add(hcardButton5);
 
 		handButtons.add(hcardButton6);
-		hcardButton5.addActionListener(new ActionListener() {
+		hcardButton6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton5.isSelected()) {
+				if(hcardButton6.isSelected()) {
 					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(5));
-					hcardButton5.setSelected(false);
+					hcardButton6.setSelected(false);
 				}
 				else {
 					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(5));
-					hcardButton5.setSelected(true);
+					hcardButton6.setSelected(true);
 				}
 				if(selectedCards.size() == 1) {
 					discardButton.setEnabled(true);
@@ -304,7 +308,7 @@ public class GameFrame extends JFrame {
 				}
 				else {
 					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(6));
-					hcardButton1.setSelected(true);
+					hcardButton7.setSelected(true);
 				}
 				if(selectedCards.size() == 1) {
 					discardButton.setEnabled(true);
@@ -340,7 +344,7 @@ public class GameFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(hcardButton9.isSelected()) {
 					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(8));
-					hcardButton1.setSelected(false);
+					hcardButton9.setSelected(false);
 				}
 				else {
 					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(8));
@@ -394,10 +398,11 @@ public class GameFrame extends JFrame {
 			}
 		});
 		handPanel.add(hcardButton11);
-		hcardButton11.setVisible(false); //Initially set to false. Will be true when user picks up a card
+
+		hcardButton11.setVisible(false); //Initially set to false. Will be true when user picks up a card on the first turn
 
 		//end buttons for player's hand
-		
+
 		//begin deck panel
 
 		deckPanel.setBounds(982, 533, 169, 107);
@@ -405,12 +410,16 @@ public class GameFrame extends JFrame {
 		deckPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
 		deckButton = new JButton("");
+		deckButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		deckButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				gManage.mainManager.getGame().getRound().drawFromDeck();
 				hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
+						getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
 				hcardButton11.setVisible(true);
 				updateFrame(gManage.mainManager.getGame());
 				deckButton.setEnabled(false);
@@ -418,26 +427,48 @@ public class GameFrame extends JFrame {
 				btnNewPhase.setEnabled(true);
 				discardButton.setIcon(null);
 				discardButton.setText("discard selected card");
-				
+
 			}
 		});
 		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
 		deckPanel.add(deckButton);
 
+		isDiscarding = false;
+
 		discardButton = new JButton("");
 		discardButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				gManage.mainManager.getGame().getRound().drawFromDiscard();
-				hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
-				hcardButton11.setVisible(true);
-				updateFrame(gManage.mainManager.getGame());
-				deckButton.setEnabled(false);
-				discardButton.setEnabled(false);
-				btnNewPhase.setEnabled(true);
-				discardButton.setIcon(null);
-				discardButton.setText("discard selected card");
+
+				if(isDiscarding == false) {
+					try {
+						gManage.mainManager.getGame().getRound().drawFromDiscard();
+						hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
+								getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
+						hcardButton11.setVisible(true);
+						updateFrame(gManage.mainManager.getGame());
+						deckButton.setEnabled(false);
+						discardButton.setEnabled(false);
+						btnNewPhase.setEnabled(true);
+						discardButton.setIcon(null);
+						discardButton.setText("discard selected card");
+						isDiscarding = true;
+					} catch (Phase10Exception e1) {
+						//TODO catch an exception. Is this really an exception?
+						MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
+						skipPickup.setVisible(true);
+
+						e1.printStackTrace();
+					}
+
+				}
+				else {
+					gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
+					updateFrame(gManage.mainManager.getGame());
+					deckButton.setEnabled(true);
+					discardButton.setEnabled(true);
+
+				}
 			}
 		});
 		deckPanel.add(discardButton);
@@ -448,11 +479,10 @@ public class GameFrame extends JFrame {
 		getContentPane().add(playersPanel);
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 
-		//TODO error?
-		ArrayList<opponentPanel> oppPanels = new ArrayList<opponentPanel>();
+		oppPanels = new ArrayList<opponentPanel>();
 		try {
 			for(int x = 0; x < currentGame.getNumberOfPlayers() - 1; x++) {
-				oppPanels.add(new opponentPanel(currentGame.getPlayer(x)));
+				oppPanels.add(new opponentPanel(currentGame.getPlayer(x), gManage.mainManager.getGame(), this));
 				playersPanel.add(oppPanels.get(x));
 			}
 		} catch (NullPointerException e) {
@@ -463,12 +493,27 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.setBounds(0, 427, 972, 107);
 		getContentPane().add(yourPhasesPanel);
 		yourPhasesPanel.setLayout(null);
-		
+
 		btnNewPhase = new JButton("Add a Phase!");
+		btnNewPhase.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				PhaseGroup newPhase = new PhaseGroup(gManage.mainManager.getGame());
+
+				for(Card c : selectedCards)
+					newPhase.addCard(c);
+
+				boolean isValidGroup = gManage.mainManager.getGame().getCurrentPlayer().addPhaseGroups(newPhase);
+				if(!isValidGroup) {
+					//MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase (phase " + gManage.mainManager.getCurrentPlayer().getPhase() + ".", "Invalid move");    
+				}
+			}
+		});
 		btnNewPhase.setEnabled(false);
 		btnNewPhase.setBounds(413, 42, 146, 23);
 		yourPhasesPanel.add(btnNewPhase);
-		
+
 		JButton button = new JButton("");
 		button.setVisible(false);
 		button.setPreferredSize(new Dimension(100, 23));
@@ -477,7 +522,7 @@ public class GameFrame extends JFrame {
 		button.setHorizontalTextPosition(SwingConstants.CENTER);
 		button.setBounds(10, 0, 88, 107);
 		yourPhasesPanel.add(button);
-		
+
 		JButton button_1 = new JButton("");
 		button_1.setVisible(false);
 		button_1.setPreferredSize(new Dimension(100, 23));
@@ -486,7 +531,7 @@ public class GameFrame extends JFrame {
 		button_1.setHorizontalTextPosition(SwingConstants.CENTER);
 		button_1.setBounds(179, 0, 88, 107);
 		yourPhasesPanel.add(button_1);
-		
+
 		JButton button_2 = new JButton("");
 		button_2.setVisible(false);
 		button_2.setPreferredSize(new Dimension(100, 23));
@@ -495,7 +540,7 @@ public class GameFrame extends JFrame {
 		button_2.setHorizontalTextPosition(SwingConstants.CENTER);
 		button_2.setBounds(707, 0, 88, 107);
 		yourPhasesPanel.add(button_2);
-		
+
 		JButton button_3 = new JButton("");
 		button_3.setVisible(false);
 		button_3.setPreferredSize(new Dimension(100, 23));
@@ -504,17 +549,17 @@ public class GameFrame extends JFrame {
 		button_3.setHorizontalTextPosition(SwingConstants.CENTER);
 		button_3.setBounds(884, 0, 88, 107);
 		yourPhasesPanel.add(button_3);
-		
+
 		JButton btnNewButton = new JButton("add to phase");
 		btnNewButton.setVisible(false);
 		btnNewButton.setBounds(277, 27, 117, 52);
 		yourPhasesPanel.add(btnNewButton);
-		
+
 		JButton button_4 = new JButton("add to phase");
 		button_4.setVisible(false);
 		button_4.setBounds(580, 27, 117, 52);
 		yourPhasesPanel.add(button_4);
-		
+
 		JLabel lblTo = new JLabel("to");
 		lblTo.setVisible(false);
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -522,7 +567,7 @@ public class GameFrame extends JFrame {
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblTo.setBounds(108, 25, 61, 53);
 		yourPhasesPanel.add(lblTo);
-		
+
 		JLabel label = new JLabel("to");
 		label.setVisible(false);
 		label.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -530,7 +575,7 @@ public class GameFrame extends JFrame {
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		label.setBounds(805, 27, 61, 53);
 		yourPhasesPanel.add(label);
-		
+
 		updateFrame(gManage.mainManager.getGame());
 	}
 
@@ -562,7 +607,10 @@ public class GameFrame extends JFrame {
 	/*
 	 * end button listeners
 	 */
-
+	//	{
+	//	for(opponentPanel x : oppPanels)
+	//		x.update();
+	//	}
 	/*
 	 * begin functional methods
 	 */
@@ -595,8 +643,14 @@ public class GameFrame extends JFrame {
 			filename += aCard.getValue();
 
 		filename += ".png";
-		
-		System.out.println(filename); //TODO get the correct filename
+
+		return filename;
+	}
+
+	private String getSelectedCardFile(Card aCard) {
+		String filename = getCardFile(aCard);
+		filename = filename.substring(0, filename.length() - 4);
+		filename += "Selected.png";
 
 		return filename;
 	}
@@ -606,9 +660,30 @@ public class GameFrame extends JFrame {
 		Hand currentHand = currentGame.getCurrentPlayer().getHand();
 		Player currentPlayer = currentGame.getCurrentPlayer();
 
+		//begin update of opponent panels
+		for(opponentPanel x : oppPanels) {
+			x.update();
+		}
+		//end update of opponent panels
+
 		/*
-		 * begin update of card images
+		 * begin update of cards
 		 */
+		
+		hcardButton1.setSelected(false);
+		hcardButton2.setSelected(false);
+		hcardButton3.setSelected(false);
+		hcardButton4.setSelected(false);
+		hcardButton5.setSelected(false);
+		hcardButton6.setSelected(false);
+		hcardButton7.setSelected(false);
+		hcardButton8.setSelected(false);
+		hcardButton9.setSelected(false);
+		hcardButton10.setSelected(false);
+		hcardButton11.setSelected(false);
+		
+
+		//begin unselected image update
 		hcardButton1.setIcon(new ImageIcon(GameFrame.class.getResource(
 				getCardFile(currentHand.getCard(0))
 				)));
@@ -639,25 +714,77 @@ public class GameFrame extends JFrame {
 		hcardButton10.setIcon(new ImageIcon(GameFrame.class.getResource(
 				getCardFile(currentHand.getCard(9))
 				)));
+		//end unselected image update
+
+		//begin selected image setters
+		hcardButton1.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(0))
+				)));
+		hcardButton2.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(1))
+				)));
+		hcardButton3.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(2))
+				)));
+		hcardButton4.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(3))
+				)));
+		hcardButton5.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(4))
+				)));
+		hcardButton6.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(5))
+				)));
+		hcardButton7.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(6))
+				)));
+		hcardButton8.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(7))
+				)));
+		hcardButton9.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(8)))
+				));
+		hcardButton10.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+				getSelectedCardFile(currentHand.getCard(9))
+				)));
+
+		//end selected image setters
+
+		hcardButton1.setSelected(false);
+		hcardButton2.setSelected(false);
+		hcardButton3.setSelected(false);
+		hcardButton4.setSelected(false);
+		hcardButton5.setSelected(false);
+		hcardButton6.setSelected(false);
+		hcardButton7.setSelected(false);
+		hcardButton8.setSelected(false);
+		hcardButton9.setSelected(false);
+		hcardButton10.setSelected(false);
+
+
 		if(currentGame.getRound().getTopOfDiscardStack() == null) {
 			discardButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/NoCardsLeft.png")));
+
 		}
 		else {
-		discardButton.setIcon(new ImageIcon(GameFrame.class.getResource(
-				getCardFile(currentGame.getRound().getTopOfDiscardStack())
-				)));
+			discardButton.setIcon(new ImageIcon(GameFrame.class.getResource(
+					getCardFile(currentGame.getRound().getTopOfDiscardStack())
+					)));
+			discardButton.setEnabled(true);
 		}
-		
+
+		deckButton.setEnabled(true);
+
 		/*
-		 * end update of card images
+		 * end update of cards
 		 */
 
 
 		//begin update of infoPanel
-		
+
 		lblPlayername.setText(currentPlayer.getName());
 		phaseNumber.setText(Integer.toString(currentPlayer.getPhase()));
-		
+
 		//end update of infoPanel
 
 	}
