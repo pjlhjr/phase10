@@ -33,7 +33,9 @@ public final class PhaseGroup implements Serializable {
 
 	/**
 	 * Creates a phase group object
-	 * @param g the Phase10 object this phase group belongs to
+	 * 
+	 * @param g
+	 *            the Phase10 object this phase group belongs to
 	 */
 	public PhaseGroup(Phase10 g) {
 		cards = new ArrayList<Card>();
@@ -43,10 +45,25 @@ public final class PhaseGroup implements Serializable {
 	}
 
 	/**
+	 * This method will add cards to an existing phase group, but has some
+	 * interesting variations depending on the context.
+	 * 
+	 * <br> - if the phase
+	 * group has not been marked as laid down (you have not called the
+	 * addPhaseGroup method of player), the card will be added to the phase
+	 * group (without validation), and will not be taken out of the player's
+	 * hand <br>- when you call the addPhaseGroup method of Player, the phase
+	 * group(s) will be validated, and if it is valid the cards will be removed
+	 * from the player's hand <br>- now when the addCard method is called, it
+	 * will validate it before adding it to the phase group, and if it is valid,
+	 * will remove the card from the player's hand.
+	 * 
 	 * @param c
 	 *            The card to add to this phase group
 	 * 
-	 * @return true if valid, false if the card does not fit in the phase group
+	 * @return true if valid to add to the laid down phase group, or if the
+	 *         phase group is not laid down; false if the card does not fit in
+	 *         the laid down phase group
 	 */
 	public boolean addCard(Card c) {
 		if (!laidDown) {
