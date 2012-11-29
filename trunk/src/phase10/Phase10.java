@@ -93,8 +93,9 @@ public final class Phase10 implements Serializable {
 	 *             if the game has already started
 	 */
 	public void addPlayer(Player p) {
-		if (!started)
+		if (!started){
 			players.add(p);
+		}
 		else
 			throw new Phase10Exception(
 					"Cannot add player after game has started");
@@ -121,6 +122,7 @@ public final class Phase10 implements Serializable {
 	 */
 	public void startGame() {
 		if (!started) {
+			dealer = getNumberOfPlayers()-1;
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				nextRound();
