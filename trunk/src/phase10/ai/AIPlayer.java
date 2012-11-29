@@ -33,6 +33,7 @@ public class AIPlayer extends Player {
 		super(game, name);
 		this.game = game;
 		this.difficulty = difficulty;
+		System.out.println("AIPlayer difficulty: " + difficulty);
 	}
 	
 	public static void main(String[] args){
@@ -50,20 +51,36 @@ public class AIPlayer extends Player {
 	 * This method either draws or picks up a card from the top of the discard pile, 
 	 * lays down the AIPlayers card, plays off other peoples' laid down phases, and discards.
 	 */
-	//TODO test difficulty levels
+	//TODO test difficulty levels, handle exceptions
 	public void playTurn(){
-		/*if(!(drawOrPickUp()^bestChoice(10))){
-			game.getRound().drawFromDeck(this);
-		}else{
-			game.getRound().drawFromDiscard(this);
+		try{
+			if(!(drawOrPickUp()^bestChoice(10))){
+				game.getRound().drawFromDeck();
+			}else{
+				game.getRound().drawFromDiscard();
+			}
+		}catch(Exception e){
+			System.out.println("AIPlayer, draw: " + e.toString());
+			game.getRound().drawFromDeck();
 		}
-		if(!hasLaidDownPhase() && layDownPhase())
-			addPhaseGroups(group.getCompletePhaseGroups());
-		if(hasLaidDownPhase())
-			playOffPhases();
-		game.getRound().discard(this, discardCard());*/
-		game.getRound().drawFromDeck();
-		game.getRound().discard(getHand().getCard(0));
+		try{
+			if(!hasLaidDownPhase() && layDownPhase())
+				addPhaseGroups(group.getCompletePhaseGroups());
+		}catch(Exception e){
+			System.out.println("AIPlayer, laydown: " + e.toString());
+		}
+		try{
+			if(hasLaidDownPhase())
+				playOffPhases();
+		}catch(Exception e){
+			System.out.println("AIPlayer, playoff: " + e.toString());
+		}
+		try{
+			game.getRound().discard(discardCard());
+		}catch(Exception e){
+			game.getRound().discard(getHand().getCard(0));
+			System.out.println("AIPlayer, playoff: " + e.toString());
+		}		
 	}
 	
 	int[] setsNeeded(){
@@ -192,21 +209,16 @@ public class AIPlayer extends Player {
 			if(current.hasLaidDownPhase()){
 				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
 					for(int hand = 0; hand < getHand().getNumberOfCards(); hand++){
-						current.getPhaseGroup(group).addCard(getHand().getCard(hand));
+						if(bestChoice(10) && current.getPhaseGroup(group).addCard(getHand().getCard(hand))){
+							playOffPhases();
+							return true;
+						}
 					}// Wild cards, have to have a certain hiddenValue
-					/*temp = current.getPhaseGroup(group);
-					if(temp.getType() == Configuration.RUN_PHASE){
-						runGroups.add(temp);
-					}else if(temp.getType() == Configuration.SET_PHASE){
-						setGroups.add(temp);
-					}else if(temp.getType() == Configuration.COLOR_PHASE){
-						colorGroups.add(temp);
-					}*/
 				}
 			}
 		}
 		
-		
+		return false;
 	}
 	
 	//TODO use the log. incorporate difficulty. get rid of higher point value cards later in the round
@@ -432,7 +444,7 @@ public class AIPlayer extends Player {
 			if(player.setsNeeded()[0] != 0){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == cardValues[x-1].getValue()){
-						PhaseGroup setGroup = new PhaseGroup();
+						PhaseGroup setGroup = new PhaseGroup(game);
 						setGroup.addCard(cardValues[x-1]);
 						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
 							setGroup.addCard(cardValues[x++]);
@@ -448,7 +460,7 @@ public class AIPlayer extends Player {
 			if(player.numLengthRun() > 0){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue()){
-						PhaseGroup runGroup = new PhaseGroup();
+						PhaseGroup runGroup = new PhaseGroup(game);
 						runGroup.addCard(cardValues[x-1]);//TODO look at this
 						while(x < cardValues.length 
 								&& (cardValues[x].getValue() == 1 + cardValues[x-1].getValue() || cardValues[x].getValue() == cardValues[x-1].getValue()) 
@@ -468,7 +480,7 @@ public class AIPlayer extends Player {
 			if(player.colorPhase()){
 				int color = 0;
 				for(int x = 0; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
-					PhaseGroup colorGroup = new PhaseGroup();
+					PhaseGroup colorGroup = new PhaseGroup(game);
 					while(cardValues[x].getValue() == color && x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE){
 						colorGroup.addCard(cardValues[x++]);
 					}
