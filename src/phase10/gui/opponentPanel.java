@@ -5,19 +5,21 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import phase10.Phase10;
+import phase10.PhaseGroup;
 import phase10.Player;
-import java.awt.GridBagLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import java.awt.GridLayout;
+import phase10.card.Card;
+
 import javax.swing.JButton;
-import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 public class opponentPanel extends JPanel {
 
 	/**
@@ -25,11 +27,18 @@ public class opponentPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JButton addToPhase_1;
+	private Player opponent;
+	private JTextField txtPhase;
+	private JTextField numCardsPane;
+	private JTextField txtpnScore;
+	private Phase10 currentGame;
 
 	/**
 	 * Create the panel.
 	 */
-	public opponentPanel(Player opponent) {
+	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
+		this.opponent = opponent;
+		this.currentGame = currentGame;
 		
 		//begin panel setup
 		setLayout(new BorderLayout(0, 0));
@@ -47,21 +56,21 @@ public class opponentPanel extends JPanel {
 		namePane.setText(opponent.getName());
 		oppInfoPanel.add(namePane, BorderLayout.NORTH);
 		
-		JTextField txtPhase = new JTextField();
+		txtPhase = new JTextField();
 		txtPhase.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPhase.setEditable(false);
 		txtPhase.setPreferredSize(new Dimension(100, 20));
 		txtPhase.setText("Phase: " + opponent.getPhase());
 		oppInfoPanel.add(txtPhase, BorderLayout.WEST);
 		
-		JTextField numCardsPane = new JTextField();
+		numCardsPane = new JTextField();
 		numCardsPane.setHorizontalAlignment(SwingConstants.CENTER);
 		numCardsPane.setEditable(false);
 		numCardsPane.setPreferredSize(new Dimension(13, 10));
 		numCardsPane.setText("Cards in hand: " + opponent.getHand().getNumberOfCards());
 		oppInfoPanel.add(numCardsPane, BorderLayout.CENTER);
 		
-		JTextField txtpnScore = new JTextField();
+		txtpnScore = new JTextField();
 		txtpnScore.setHorizontalAlignment(SwingConstants.CENTER);
 		txtpnScore.setEditable(false);
 		txtpnScore.setPreferredSize(new Dimension(100, 20));
@@ -72,32 +81,60 @@ public class opponentPanel extends JPanel {
 		add(panel, BorderLayout.CENTER);
 		
 		addToPhase_1 = new JButton("Add to Phase");
-		addToPhase_1.setVisible(false);
+		addToPhase_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				PhaseGroup cardsToAdd = new PhaseGroup(currentGame);
+				ArrayList<Card> cardsToAddList = gameWindow.selectedCards;
+				
+				for(Card x : cardsToAddList) {
+					cardsToAdd.addCard(x);
+				}
+
+				boolean canAddToPhase = opponent.addPhaseGroups(cardsToAdd);
+				if(canAddToPhase == false) {
+					MessageFrame invalidAdd = new MessageFrame("The card(s) you are trying to add do not fit within this phase", "Invalid move");
+					invalidAdd.setVisible(true);
+				}
+			}
+		});
 		
 		JButton button_1 = new JButton("");
-		button_1.setVisible(false);
 		
 		JLabel lblTo = new JLabel("to");
-		lblTo.setVisible(false);
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JButton btnAddToPhase = new JButton("");
-		btnAddToPhase.setVisible(false);
 		
 		JButton button = new JButton("");
-		button.setVisible(false);
 		
 		JLabel label = new JLabel("to");
-		label.setVisible(false);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton button_3 = new JButton("");
-		button_3.setVisible(false);
 		
 		JButton button_4 = new JButton("Add to Phase");
-		button_4.setVisible(false);
+		button_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PhaseGroup cardsToAdd = new PhaseGroup(currentGame);
+				ArrayList<Card> cardsToAddList = gameWindow.selectedCards;
+				
+				for(Card x : cardsToAddList) {
+					cardsToAdd.addCard(x);
+				}
+				
+
+				boolean canAddToPhase = opponent.addPhaseGroups(cardsToAdd);
+				if(canAddToPhase == false) {
+					MessageFrame invalidAdd = new MessageFrame("The card(s) you are trying to add do not fit within this phase", "Invalid move");
+					invalidAdd.setVisible(true);
+				}
+			}
+		});
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -154,5 +191,22 @@ public class opponentPanel extends JPanel {
 		);
 		panel.setLayout(gl_panel);
 		//end panel setup
+	}
+	
+	void update() {
+		
+		//TODO get this to work!!!!!
+		
+		//currentGame.getPlayer(/*opponent.getIndex()*/ + 1 % currentGame.getNumberOfPlayers());
+		
+		this.txtPhase.setText("Phase: " + opponent.getPhase());
+		this.txtpnScore.setText("Score: " + opponent.getScore());
+		this.txtPhase.setText("Phase: " + opponent.getPhase());
+		
+		//TODO add update for the phases area
+	}
+
+	Player getOpponent() {
+		return opponent;
 	}
 }

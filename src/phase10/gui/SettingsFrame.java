@@ -18,6 +18,8 @@ import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import phase10.Player;
+import phase10.ai.AIPlayer;
+
 import java.awt.event.MouseAdapter;
 import java.awt.Toolkit;
 import java.awt.event.ItemListener;
@@ -35,6 +37,13 @@ public class SettingsFrame extends JFrame {
 	protected JTextField opponentField_2;
 	protected JTextField opponentField_3;
 	private JButton btnRemovePlayer;
+	private JRadioButton computerRadio1;
+	private JRadioButton computerRadio2;
+	private JRadioButton computerRadio3;
+	private Language lang;
+	private JComboBox<String> comboBox_1;
+	private JComboBox<String> comboBox_2;
+	private JComboBox<String> comboBox_3;
 
 
 	/**
@@ -59,7 +68,7 @@ public class SettingsFrame extends JFrame {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SettingsFrame(GuiManager gManage) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
-		Language lang = gManage.getGameLang();
+		lang = gManage.getGameLang();
 
 		setResizable(false);
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
@@ -94,14 +103,14 @@ public class SettingsFrame extends JFrame {
 		contentPane.add(comboBox);
 
 
-		final JComboBox comboBox_1 = new JComboBox();
+		comboBox_1 = new JComboBox<String>();
 		comboBox_1.setBounds(438, 129, 79, 20);
 		contentPane.add(comboBox_1);
 		comboBox_1.addItem(lang.getEntry("EASY"));
 		comboBox_1.addItem(lang.getEntry("MEDIUM"));
 		comboBox_1.addItem(lang.getEntry("HARD"));
 
-		final JComboBox comboBox_2 = new JComboBox();
+		comboBox_2 = new JComboBox<String>();
 		comboBox_2.setVisible(false);
 		comboBox_2.setBounds(438, 186, 79, 20);
 		contentPane.add(comboBox_2);
@@ -109,7 +118,7 @@ public class SettingsFrame extends JFrame {
 		comboBox_2.addItem(lang.getEntry("MEDIUM"));
 		comboBox_2.addItem(lang.getEntry("HARD"));
 
-		final JComboBox comboBox_3 = new JComboBox();
+		comboBox_3 = new JComboBox<String>();
 		comboBox_3.setVisible(false);
 		comboBox_3.setBounds(438, 244, 79, 20);
 		contentPane.add(comboBox_3);
@@ -177,7 +186,7 @@ public class SettingsFrame extends JFrame {
 		opp1Group.add(humanRadio1);
 		contentPane.add(humanRadio1);
 
-		final JRadioButton computerRadio1 = new JRadioButton(lang.getEntry("COMPUTER"));
+		computerRadio1 = new JRadioButton(lang.getEntry("COMPUTER"));
 		computerRadio1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -203,7 +212,7 @@ public class SettingsFrame extends JFrame {
 		opp2Group.add(humanRadio2);
 		contentPane.add(humanRadio2);
 
-		final JRadioButton computerRadio2 = new JRadioButton(lang.getEntry("COMPUTER"));
+		computerRadio2 = new JRadioButton(lang.getEntry("COMPUTER"));
 		computerRadio2.setVisible(false);
 		computerRadio2.addMouseListener(new MouseAdapter() {
 			@Override
@@ -231,7 +240,7 @@ public class SettingsFrame extends JFrame {
 		opp3Group.add(humanRadio3);
 		contentPane.add(humanRadio3);
 
-		final JRadioButton computerRadio3 = new JRadioButton(lang.getEntry("COMPUTER"));
+		computerRadio3 = new JRadioButton(lang.getEntry("COMPUTER"));
 		computerRadio3.setVisible(false);
 		computerRadio3.addMouseListener(new MouseAdapter() {
 			@Override
@@ -312,6 +321,24 @@ public class SettingsFrame extends JFrame {
 		beginButton.addMouseListener(new BeginListener(this, gManage));
 	}
 
+	int getDifficulty(JComboBox<String> menu) {
+		//TODO write this method
+
+		if(menu.getSelectedItem() == lang.getEntry("EASY")) {
+			return 25;
+		}
+		else if(menu.getSelectedItem() == lang.getEntry("MEDIUM")) {
+			return 50;
+		}
+		else if(menu.getSelectedItem() == lang.getEntry("HARD")) {
+			return 75;
+		}
+		else {
+			System.out.println("There was an error in converting the selection of the difficulty to the difficulty value. Setting difficulty to medium");
+			return 50;
+		}	
+	}
+
 	public String getUserName() {
 		return nameField.getText();
 	}
@@ -345,7 +372,8 @@ public class SettingsFrame extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-
+			
+			//main user
 			if(settingsFrm.getUserName().isEmpty()) {
 				MessageFrame errorFrame = new MessageFrame("Please put in a name for yourself", "Phase 10");
 				errorFrame.setVisible(true);
@@ -354,14 +382,22 @@ public class SettingsFrame extends JFrame {
 			else {
 				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
 			}
-				if(settingsFrm.getOpponent_1().isEmpty()) {
-					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 1", "Phase 10");
-					errorFrame.setVisible(true);
-					return;
+			
+			//opponent 1
+			if(settingsFrm.getOpponent_1().isEmpty()) {
+				MessageFrame errorFrame = new MessageFrame("Please put in a name for player 1", "Phase 10");
+				errorFrame.setVisible(true);
+				return;
+			}
+			else {
+				if(computerRadio1.isSelected()) {
+					gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_1), settingsFrm.getOpponent_1()));
 				}
-				else {
-					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_1()));
-				}
+				else
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_1()));
+			}
+			
+			//opponent 2
 			if(settingsFrm.opponentField_2.isVisible()) {
 				if(settingsFrm.getOpponent_2().isEmpty()) {
 					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 2", "Phase 10");
@@ -369,9 +405,15 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_2()));
+					if(computerRadio1.isSelected()) {
+						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
+					}
+					else
+						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_2()));
 				}
 			}
+			
+			//opponent 3
 			if(settingsFrm.opponentField_3.isVisible()) {
 				if(settingsFrm.getOpponent_3().isEmpty()) {
 					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 3", "Phase 10");
@@ -379,12 +421,18 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getOpponent_3()));
+					if(computerRadio1.isSelected()) {
+						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_3), settingsFrm.getOpponent_3()));
+					}
+					else
+						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_3()));
 				}
 			}
 
 			gManage.mainManager.getGame().startGame();
 			gManage.displayGameFrame(); //displays the next window: the game window
+			
+			
 
 			settingsFrm.dispose();
 		}
