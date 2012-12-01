@@ -5,6 +5,7 @@
 package phase10.ai;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import phase10.Hand;
@@ -51,16 +52,17 @@ public class AIPlayer extends Player {
 	 * This method either draws or picks up a card from the top of the discard pile, 
 	 * lays down the AIPlayers card, plays off other peoples' laid down phases, and discards.
 	 */
-	//TODO test difficulty levels
-	// adjust difficulty levels based on how far ahead/behind
-	// should I worry about what other players do next turn?
-	// if an opposing player only has one card left, etc
-	// other special cases
-	// look for patterns in other player's style, if lower cards are being laid down, closer to the end
-	// better if 34 than 35, for partial run (partial over connected)
-	// make sure that things aren't being done that are for Rummy in general and not application specific
-	// "safe" cards to discard
-	// don't discard cards that will be immediately picked up and laid down
+	/* TODO test difficulty levels
+	* adjust difficulty levels based on how far ahead/behind
+	* should I worry about what other players do next turn?
+	* if an opposing player only has one card left, etc
+	* other special cases
+	* look for patterns in other player's style, if lower cards are being laid down, closer to the end
+	* better if -34- than 3-5, for partial run (partial over connected)
+	* make sure that things aren't being done that are for Rummy in general and not application specific
+	* "safe" cards to discard
+	* don't discard cards that will be immediately picked up and laid down
+	*/
 	public void playTurn(){
 		try{
 			if(!(drawOrPickUp()^bestChoice(10))){
@@ -207,7 +209,7 @@ public class AIPlayer extends Player {
 	 * get rid of return statement
 	 */
 	//TODO make diff. at higher diff look further than first card
-	//on easier difficultlies pace how often the AI lays down phases
+	// on easier difficultlies pace how often the AI lays down phases
 	private boolean playOffPhases(){
 		Player current;
 		
@@ -288,14 +290,14 @@ public class AIPlayer extends Player {
 	}
 	
 	private class Groups{
-		private ArrayList<Card> single,
-								conflictingCards;
+		private ArrayList<Card> single;
+		private ArrayList<Card>	conflictingCards;
 		private Card[] cardValues;
 		private AIPlayer player;
-		private ArrayList<PhaseGroup> 	complete,
-										partial;
-		private ArrayList<ArrayList<PhaseGroup>>	connected,
-													conflicting;
+		private ArrayList<PhaseGroup> 	complete;
+		private ArrayList<PhaseGroup>	partial;
+		private ArrayList<ArrayList<PhaseGroup>>	connected;
+		private ArrayList<ArrayList<PhaseGroup>>	conflicting;
 		
 		private Groups(AIPlayer p){
 			player = p;
@@ -335,17 +337,17 @@ public class AIPlayer extends Player {
 			
 			for(Card c: cardValues){
 				countIt = true;
+				
+				counted:
 				for(PhaseGroup g: complete){
 					for(int x = 0; x < g.getNumberOfCards(); x++){
 						if(c == g.getCard(x)){
 							countIt = false;
-							break;
+							break counted;
 						}
 					}
-					if(!countIt){
-						break;
-					}
 				}
+				
 				if(countIt){
 					val += c.getPointValue();
 				}
@@ -517,9 +519,25 @@ public class AIPlayer extends Player {
 		// on run phases with higher diff don't discard certain
 		public Card[] recommendDiscard(){
 			double[] discardValue = new double[cardValues.length];
+			
+			bigLoop:
 			for(int x = 0; x < cardValues.length; x++){
-				discardValue[x] = cardValues[x].getPointValue()/100.0;
-				discardValue[x] = cardValues[x].getPointValue()/100.0;
+				if(cardValues[x].getValue() == Configuration.WILD_VALUE){
+					discardValue[x] = Double.MIN_VALUE;
+					continue bigLoop;
+				}else if(cardValues[x].getValue() == Configuration.SKIP_VALUE){
+					discardValue[x] = Double.MAX_VALUE;
+					continue bigLoop;
+				}else{
+					discardValue[x] = cardValues[x].getPointValue() + cardValues[x].getValue()/100.0;
+				}
+				
+				for(Card s: single){
+					if(cardValues[x] == s){
+						continue bigLoop;
+					}
+				}
+				
 				if(difficulty > 70 && numLengthRun() > 4){
 					if(cardValues[x].getValue() == 6 || cardValues[x].getValue() == 7)
 						continue;
@@ -528,24 +546,58 @@ public class AIPlayer extends Player {
 					if((cardValues[x].getValue() == 4 || cardValues[x].getValue() == 9) && numLengthRun() == 9)
 						continue;
 				}
+				
+				foundComplete:
+				for(PhaseGroup c: complete){
+					for(int completeIndex = 0; completeIndex < c.getNumberOfCards(); completeIndex++){
+						if(c.getCard(completeIndex) == cardValues[x]){
+							for(int restOfComplete = 0; restOfComplete < c.getNumberOfCards(); restOfComplete++){
+								if(c.getCard(restOfComplete) != cardValues[x])
+									discardValue[x] -= c.getCard(restOfComplete).getPointValue();
+							}
+							break foundComplete;
+						}
+					}
+				}
+				
+				for(PhaseGroup p: partial){
+					for(int partialIndex = 0; partialIndex < p.getNumberOfCards(); partialIndex++){
+						if(p.getCard(partialIndex) == cardValues[x]){
+							for(int restOfPartial = 0; restOfPartial < p.getNumberOfCards(); restOfPartial++){
+								if(p.getCard(restOfPartial) != cardValues[x]){
+									discardValue[x] -= Configuration.WILD_VALUE - p.getCard(restOfPartial).getPointValue();
+								}
+							}
+							break;
+						}
+					}
+				}
 				//don't count things in connected groups
 				//subtract for the point values of other cards in phase group (would be added if the card was taken out)
 				//partial:
 				// if not in a group add the point value
-				// always discard skips, never wilds
-				
+				// always discard skips, never wild
 			}
+			
+			//insertion sort, sorting sortedResults according to the discardValue
+			Card[] sortedResults = Arrays.copyOf(cardValues, cardValues.length);
 			for(int x = 0; x < discardValue.length; x++){
 				int lowestIndex = x;
 				for(int y = x + 1; y < discardValue.length; y++){
-					double temp;
+					double tempIndex;
+					Card tempCard;
 					if(discardValue[lowestIndex] > discardValue[y]){
-						temp = discardValue[lowestIndex];
+						tempIndex = discardValue[lowestIndex];
+						tempCard = sortedResults[lowestIndex];
 						discardValue[lowestIndex] = discardValue[y];
-						discardValue[y] = temp;
+						sortedResults[lowestIndex] = sortedResults[y];
+						discardValue[y] = tempIndex;
+						sortedResults[lowestIndex] = tempCard;
 					}
 				}
 			}
+			
+			return sortedResults;
 		}
 	}
 }
