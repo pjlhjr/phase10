@@ -35,6 +35,8 @@ public final class Round implements Serializable {
 
 	private int turnNumber;
 
+	private boolean started;
+
 	private ArrayList<LogEntry> log;
 
 	/**
@@ -45,13 +47,22 @@ public final class Round implements Serializable {
 	 */
 	Round(Phase10 g) {
 		game = g;
-		curPlayerNum = game.getDealer()-1;
+		curPlayerNum = game.getDealer() - 1;
 		turnNumber = 0;
 		log = new ArrayList<LogEntry>();
 
-		initiateRound();
+		started = false;
 
-		nextTurn();
+		initiateRound();
+	}
+
+	public void startRound() {
+		if (!started) {
+			started = true;
+			nextTurn();
+		} else {
+			throw new Phase10Exception("Round already started");
+		}
 	}
 
 	/**
@@ -230,18 +241,18 @@ public final class Round implements Serializable {
 	 * invoked.
 	 */
 	private void nextTurn() {
-		//System.out.println("next turn");
+		// System.out.println("next turn");
 		if (roundIsComplete()) {
 			game.nextRound();
 		} else {
 			advanceTurn();
 			if (game.getPlayer(curPlayerNum).getSkip()) {
-				//System.out.println("skip");
+				// System.out.println("skip");
 				game.getPlayer(curPlayerNum).setSkip(false);
 				advanceTurn();
 			}
 			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
-				//System.out.println("ai player's turn: "+curPlayerNum);
+				// System.out.println("ai player's turn: "+curPlayerNum);
 				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
 				// TODO call gui?
 				p.playTurn();
@@ -251,6 +262,7 @@ public final class Round implements Serializable {
 				game.getGameManager().getGui().newTurnWindowUpdate();
 			} catch (NullPointerException e) {
 				System.out.println("Too early");
+				e.printStackTrace();
 			}
 		}
 
@@ -260,13 +272,13 @@ public final class Round implements Serializable {
 	 * Increases the turn counter by 1, or wraps around back to 0
 	 */
 	private void advanceTurn() {
-		//System.out.print("Advancing player turn from "+curPlayerNum);
+		// System.out.print("Advancing player turn from "+curPlayerNum);
 		turnNumber++;
 		curPlayerNum++;
 		if (curPlayerNum >= game.getNumberOfPlayers()) {
 			curPlayerNum = 0;
 		}
-		//System.out.println(" to "+curPlayerNum);
+		// System.out.println(" to "+curPlayerNum);
 	}
 
 	/**
