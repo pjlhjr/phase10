@@ -39,6 +39,11 @@ public class GuiManager {
 	public Language getGameLang() {
 		return gameLang;
 	}
+	
+	void initGameWindow() {
+		gameWindow = new GameFrame(this);
+		displayGameFrame();
+	}
 
 
 	/*
@@ -49,7 +54,6 @@ public class GuiManager {
 	}
 
 	void displayGameFrame() {
-		gameWindow = new GameFrame(this);
 		gameWindow.setVisible(true);
 	}
 	
@@ -80,7 +84,6 @@ public class GuiManager {
 	 * begin GUI functional methods
 	 */
 	public void initGui() {
-		
 		displayWelcomeWindow();
 	}
 	
