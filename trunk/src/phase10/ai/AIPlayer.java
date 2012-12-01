@@ -51,13 +51,23 @@ public class AIPlayer extends Player {
 	 * This method either draws or picks up a card from the top of the discard pile, 
 	 * lays down the AIPlayers card, plays off other peoples' laid down phases, and discards.
 	 */
-	//TODO test difficulty levels, handle exceptions
+	//TODO test difficulty levels
+	// adjust difficulty levels based on how far ahead/behind
+	// should I worry about what other players do next turn?
+	// if an opposing player only has one card left, etc
+	// other special cases
+	// look for patterns in other player's style, if lower cards are being laid down, closer to the end
+	// better if 34 than 35, for partial run (partial over connected)
+	// make sure that things aren't being done that are for Rummy in general and not application specific
+	// "safe" cards to discard
+	// don't discard cards that will be immediately picked up and laid down
 	public void playTurn(){
 		try{
 			if(!(drawOrPickUp()^bestChoice(10))){
 				game.getRound().drawFromDeck();
 			}else{
-				game.getRound().drawFromDiscard();
+				if(!game.getRound().drawFromDiscard())
+					game.getRound().drawFromDeck();
 			}
 		}catch(Exception e){
 			System.out.println("AIPlayer, draw: " + e.toString());
@@ -138,7 +148,7 @@ public class AIPlayer extends Player {
 		return false;
 	}
 	
-	//TODO make hard player look at median, get rid of higher cards if on later turns
+	//TODO make hard player look at median, get rid of higher cards if on later turns, easier player more likely to keep cards
 	private boolean drawOrPickUp(){//true to pick up, false to draw
 		// TODO sense your immenant doom, idk if its part of, 
 		// on long run phases some cards are needed no matter what, on difficulty > 70 draw those
@@ -170,7 +180,7 @@ public class AIPlayer extends Player {
 		return false;
 	}
 
-	//TODO incorp diff
+	//TODO incorp diff, only allow to lay down phase after a certain point, varing by difficulty
 	private boolean layDownPhase(){
 		group = new Groups(getHand(), this);
 		if(colorPhase()){
@@ -197,12 +207,9 @@ public class AIPlayer extends Player {
 	 * get rid of return statement
 	 */
 	//TODO make diff. at higher diff look further than first card
+	//on easier difficultlies pace how often the AI lays down phases
 	private boolean playOffPhases(){
 		Player current;
-/*		ArrayList<PhaseGroup> 	setGroups = new ArrayList<PhaseGroup>(),
-								runGroups = new ArrayList<PhaseGroup>(),
-								colorGroups = new ArrayList<PhaseGroup>();
-		PhaseGroup temp;*/
 		
 		for(int player = 0; player < game.getNumberOfPlayers(); player++){
 			current = game.getPlayer(player);
@@ -222,6 +229,8 @@ public class AIPlayer extends Player {
 	}
 	
 	//TODO use the log. incorporate difficulty. get rid of higher point value cards later in the round
+	// help out player on occasion?
+	// do a genetic algorithm selection based off score rank, etc
 	private Card discardCard(){
 		group = new Groups(getHand(), this);
 		int x = 0;
@@ -320,22 +329,25 @@ public class AIPlayer extends Player {
 			group();
 		}
 		
-		//TODO deal with something, I don't know what
 		public int getPointValue(){
-			boolean[] cardCounted = new boolean[cardValues.length];
+			boolean countIt;
 			int val = 0;
 			
-			for(int x = 0; x < cardCounted.length; x++){
-				cardCounted[x] = false;
-			}
-			for(ArrayList<Card> c : complete){
-				for(Card num : c){
-					cardCounted[num.getValue()] = true;//TODO just do it, I don't remember what it is
+			for(Card c: cardValues){
+				countIt = true;
+				for(PhaseGroup g: complete){
+					for(int x = 0; x < g.getNumberOfCards(); x++){
+						if(c == g.getCard(x)){
+							countIt = false;
+							break;
+						}
+					}
+					if(!countIt){
+						break;
+					}
 				}
-			}
-			for(int x = 0; x < cardCounted.length; x++){
-				if(!cardCounted[x]){
-					val += cardValues[x].getPointValue();
+				if(countIt){
+					val += c.getPointValue();
 				}
 			}
 			return val;
@@ -397,7 +409,7 @@ public class AIPlayer extends Player {
 		}
 		 
 		private void singleAndConflictingGroup(){
-			ArrayList<PhaseGroup>[] conflict = (ArrayList<PhaseGroup>[])new Object[cardValues.length];
+			ArrayList<PhaseGroup>[] conflict = (ArrayList<PhaseGroup>[])new Object[cardValues.length]; // Dr. Mailler approved
 			Card tempCard;
 			for(int x = 0; x < conflict.length; x++){
 				conflict[x] = new ArrayList<PhaseGroup>();
@@ -506,15 +518,21 @@ public class AIPlayer extends Player {
 		public Card[] recommendDiscard(){
 			double[] discardValue = new double[cardValues.length];
 			for(int x = 0; x < cardValues.length; x++){
-				discardValue[x] = cardValues[x].getPointValue()/10.0;
+				discardValue[x] = cardValues[x].getPointValue()/100.0;
+				discardValue[x] = cardValues[x].getPointValue()/100.0;
 				if(difficulty > 70 && numLengthRun() > 4){
 					if(cardValues[x].getValue() == 6 || cardValues[x].getValue() == 7)
 						continue;
-					if(cardValues[x].getValue() == 5 || cardValues[x].getValue() == 8 && numLengthRun() >= 8)
+					if((cardValues[x].getValue() == 5 || cardValues[x].getValue() == 8) && numLengthRun() >= 8)
 						continue;
-					if(cardValues[x].getValue() == 4 || cardValues[x].getValue() == 9 && numLengthRun() == 9)
+					if((cardValues[x].getValue() == 4 || cardValues[x].getValue() == 9) && numLengthRun() == 9)
 						continue;
 				}
+				//don't count things in connected groups
+				//subtract for the point values of other cards in phase group (would be added if the card was taken out)
+				//partial:
+				// if not in a group add the point value
+				// always discard skips, never wilds
 				
 			}
 			for(int x = 0; x < discardValue.length; x++){
@@ -531,4 +549,3 @@ public class AIPlayer extends Player {
 		}
 	}
 }
-
