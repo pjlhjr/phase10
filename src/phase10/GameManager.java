@@ -18,6 +18,7 @@ import phase10.gui.GuiManager;
  * 
  * @author Evan Forbes
  */
+
 public class GameManager {
 
 	private Phase10 game;

@@ -45,7 +45,7 @@ public final class Round implements Serializable {
 	 */
 	Round(Phase10 g) {
 		game = g;
-		curPlayerNum = game.getDealer();
+		curPlayerNum = game.getDealer()-1;
 		turnNumber = 0;
 		log = new ArrayList<LogEntry>();
 
@@ -230,15 +230,18 @@ public final class Round implements Serializable {
 	 * invoked.
 	 */
 	private void nextTurn() {
+		//System.out.println("next turn");
 		if (roundIsComplete()) {
 			game.nextRound();
 		} else {
 			advanceTurn();
 			if (game.getPlayer(curPlayerNum).getSkip()) {
+				//System.out.println("skip");
 				game.getPlayer(curPlayerNum).setSkip(false);
 				advanceTurn();
 			}
 			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
+				//System.out.println("ai player's turn: "+curPlayerNum);
 				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
 				// TODO call gui?
 				p.playTurn();
@@ -257,11 +260,13 @@ public final class Round implements Serializable {
 	 * Increases the turn counter by 1, or wraps around back to 0
 	 */
 	private void advanceTurn() {
+		//System.out.print("Advancing player turn from "+curPlayerNum);
 		turnNumber++;
 		curPlayerNum++;
 		if (curPlayerNum >= game.getNumberOfPlayers()) {
 			curPlayerNum = 0;
 		}
+		//System.out.println(" to "+curPlayerNum);
 	}
 
 	/**
