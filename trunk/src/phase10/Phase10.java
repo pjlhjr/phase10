@@ -123,6 +123,7 @@ public final class Phase10 implements Serializable {
 	public void startGame() {
 		if (!started) {
 			dealer = getNumberOfPlayers()-1;
+			//System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				nextRound();
