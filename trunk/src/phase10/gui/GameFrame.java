@@ -36,13 +36,10 @@ public class GameFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 
-	private final ButtonGroup handButtons = new ButtonGroup();
-
-
 	Player current;
 
 	ArrayList<Card> selectedCards = new ArrayList<Card>();
-	private boolean isDiscarding;
+	private boolean isDiscarding = false;
 
 	//begin components
 	private JPanel infoPanel = new JPanel();
@@ -51,17 +48,7 @@ public class GameFrame extends JFrame {
 	private JPanel playersPanel = new JPanel();
 	private JPanel yourPhasesPanel = new JPanel();
 
-	private JButton hcardButton1 = new JButton("");
-	private JButton hcardButton2 = new JButton("");
-	private JButton hcardButton4 = new JButton("");
-	private JButton hcardButton3 = new JButton("");
-	private JButton hcardButton5 = new JButton("");
-	private JButton hcardButton6 = new JButton("");
-	private JButton hcardButton7 = new JButton("");
-	private JButton hcardButton8 = new JButton("");
-	private JButton hcardButton9 = new JButton("");
-	private JButton hcardButton10 = new JButton("");
-	private JButton hcardButton11 = new JButton("");
+	private JButton[] handButtons = new JButton[11];
 
 
 	private JButton discardButton;
@@ -179,238 +166,15 @@ public class GameFrame extends JFrame {
 		getContentPane().add(handPanel);
 		handPanel.setLayout(new GridLayout(0, 11, 0, 0));
 
-		//begin buttons for player's hand
 
-		hcardButton1.setHorizontalTextPosition(SwingConstants.CENTER);
-		hcardButton1.setPreferredSize(new Dimension(100, 23));
-		hcardButton1.setMargin(new Insets(0, 0, 0, 0));
-		hcardButton1.setMaximumSize(new Dimension(114, 40));
-		hcardButton1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton1.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(0));
-					hcardButton1.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(0));
-					hcardButton1.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
+		for(int i = 0; i < handButtons.length; i++) {
+			handButtons[i] = new JButton();
 
-		handButtons.add(hcardButton1);
-		handPanel.add(hcardButton1);
-
-		handButtons.add(hcardButton2);
-		hcardButton2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(hcardButton2.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(1));
-					hcardButton2.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(1));
-					hcardButton2.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton2);
-
-		handButtons.add(hcardButton3);
-		hcardButton3.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(hcardButton3.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(2));
-					hcardButton3.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(2));
-					hcardButton3.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton3);
-
-		handButtons.add(hcardButton4);
-		hcardButton4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton4.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(3));
-					hcardButton4.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(3));
-					hcardButton4.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton4);
-
-		handButtons.add(hcardButton5);
-		hcardButton5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton5.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(4));
-					hcardButton5.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(4));
-					hcardButton5.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton5);
-
-		handButtons.add(hcardButton6);
-		hcardButton6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton6.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(5));
-					hcardButton6.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(5));
-					hcardButton6.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton6);
-
-		handButtons.add(hcardButton7);
-		hcardButton7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton7.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(6));
-					hcardButton7.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(6));
-					hcardButton7.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton7);
-
-		handButtons.add(hcardButton8);
-		hcardButton8.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton8.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(7));
-					hcardButton8.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(7));
-					hcardButton8.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton8);
-
-		handButtons.add(hcardButton9);
-		hcardButton9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton9.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(8));
-					hcardButton9.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(8));
-					hcardButton9.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton9);
-
-		handButtons.add(hcardButton10);
-		hcardButton10.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton10.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(9));
-					hcardButton10.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(9));
-					hcardButton10.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton10);
-
-		handButtons.add(hcardButton11);
-		hcardButton11.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(hcardButton11.isSelected()) {
-					selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10));
-					hcardButton11.setSelected(false);
-				}
-				else {
-					selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10));
-					hcardButton11.setSelected(true);
-				}
-				if(selectedCards.size() == 1) {
-					discardButton.setEnabled(true);
-				}
-				else
-					discardButton.setEnabled(false);
-			}
-		});
-		handPanel.add(hcardButton11);
-
-		hcardButton11.setVisible(false); //Initially set to false. Will be true when user picks up a card on the first turn
-
-		//end buttons for player's hand
+			//add an action listener
+			handButtons[i].addActionListener(new HandActionListener(i));
+			handPanel.add(handButtons[i]);
+		}
+		
 
 		//begin deck panel
 
@@ -426,23 +190,21 @@ public class GameFrame extends JFrame {
 		deckButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				gManage.mainManager.getGame().getRound().drawFromDeck();
-				hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
-						getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
-				hcardButton11.setVisible(true);
-				updateFrame(gManage.mainManager.getGame());
-				deckButton.setEnabled(false);
-				discardButton.setEnabled(false);
-				btnNewPhase.setEnabled(true);
-				discardButton.setIcon(null);
-				discardButton.setText("discard selected card");
+				if(isDiscarding == false) {
+					gManage.mainManager.getGame().getRound().drawFromDeck();
+					updateFrame(gManage.mainManager.getGame());
+					deckButton.setEnabled(false);
+					discardButton.setEnabled(false);
+					btnNewPhase.setEnabled(true);
+					discardButton.setIcon(null);
+					discardButton.setText("discard selected card");
+					isDiscarding = true;
+				}
 
 			}
 		});
 		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
 		deckPanel.add(deckButton);
-
-		isDiscarding = false;
 
 		discardButton = new JButton("");
 		discardButton.addMouseListener(new MouseAdapter() {
@@ -450,26 +212,21 @@ public class GameFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 
 				if(isDiscarding == false) {
-					try {
-						gManage.mainManager.getGame().getRound().drawFromDiscard();
-						hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
-								getCardFile(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(10)))));
-						hcardButton11.setVisible(true);
-						updateFrame(gManage.mainManager.getGame());
-						deckButton.setEnabled(false);
-						discardButton.setEnabled(false);
-						btnNewPhase.setEnabled(true);
-						discardButton.setIcon(null);
-						discardButton.setText("discard selected card");
-						isDiscarding = true;
-					} catch (Phase10Exception e1) {
-						//TODO catch an exception. Is this really an exception?
-						MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
-						skipPickup.setVisible(true);
-
-						e1.printStackTrace();
-					}
-
+						boolean isValidCard = gManage.mainManager.getGame().getRound().drawFromDiscard();
+						if(isValidCard) {
+							updateFrame(gManage.mainManager.getGame());
+							deckButton.setEnabled(false);
+							discardButton.setEnabled(false);
+							btnNewPhase.setEnabled(true);
+							discardButton.setIcon(null);
+							discardButton.setText("discard selected card");
+							isDiscarding = true;
+							System.out.println("isDiscarding has been set to true");
+						}
+						else {
+							MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
+							skipPickup.setVisible(true);
+						}
 				}
 				else {
 					gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
@@ -477,6 +234,7 @@ public class GameFrame extends JFrame {
 					deckButton.setEnabled(true);
 					discardButton.setEnabled(true);	
 					isDiscarding = false;
+					System.out.println("isDiscarding has been set to false");
 				}
 			}
 		});
@@ -667,10 +425,10 @@ public class GameFrame extends JFrame {
 
 
 	public void updateFrame(Phase10 currentGame) {
-
+		current = currentGame.getCurrentPlayer();
 		//begin update of opponent panels
 		for(opponentPanel x : oppPanels) {
-			x.update();
+			//x.update(); TODO
 		}
 		//end update of opponent panels
 
@@ -678,18 +436,9 @@ public class GameFrame extends JFrame {
 		 * begin update of cards
 		 */
 
-		hcardButton1.setSelected(false);
-		hcardButton2.setSelected(false);
-		hcardButton3.setSelected(false);
-		hcardButton4.setSelected(false);
-		hcardButton5.setSelected(false);
-		hcardButton6.setSelected(false);
-		hcardButton7.setSelected(false);
-		hcardButton8.setSelected(false);
-		hcardButton9.setSelected(false);
-		hcardButton10.setSelected(false);
-		hcardButton11.setSelected(false);
-
+		for(int i = 0; i < handButtons.length; i++)
+			handButtons[i].setSelected(false);
+		
 		selectedCards.clear();
 
 		updateCardImages();
@@ -722,136 +471,32 @@ public class GameFrame extends JFrame {
 	}
 
 
+	/**
+	 * Updates each of the card's selected and unselected images to the current configuration
+	 * of the current player's hand
+	 */
 	private void updateCardImages() {
+		
 		Hand currentHand = current.getHand();
-		//begin selected and unselected image update
-		switch(currentHand.getNumberOfCards()) {
-		case 11:
-			hcardButton11.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(10))
+		//begin hand button update
+		int i = 0;
+		for(; i < currentHand.getNumberOfCards(); i++) {
+			
+			handButtons[i].setVisible(true);
+			
+			handButtons[i].setIcon(new ImageIcon(GameFrame.class.getResource(
+					getCardFile(currentHand.getCard(i))
 					)));
-
-			hcardButton11.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(10))
-					)));
-		case 10:
-			hcardButton10.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(9))
-					)));
-
-			hcardButton10.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(9))
-					)));
-
-		case 9:
-			hcardButton9.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(8)))
-					));
-
-			hcardButton9.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(8)))
-					));
-
-		case 8:
-			hcardButton8.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(7))
-					)));
-
-			hcardButton8.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(7))
-					)));
-
-		case 7:
-			hcardButton7.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(6))
-					)));
-
-			hcardButton7.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(6))
-					)));	
-
-		case 6:
-			hcardButton6.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(5))
-					)));
-
-			hcardButton6.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(5))
-					)));
-
-		case 5:
-			hcardButton5.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(4))
-					)));
-
-			hcardButton5.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(4))
-					)));
-
-		case 4:
-			hcardButton4.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(3))
-					)));
-
-			hcardButton4.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(3))
-					)));
-
-		case 3:
-			hcardButton3.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(2))
-					)));
-
-			hcardButton3.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(2))
-					)));
-
-		case 2:
-			hcardButton2.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(1))
-					)));
-
-			hcardButton2.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(1))
-					)));
-
-		case 1:
-			hcardButton1.setIcon(new ImageIcon(GameFrame.class.getResource(
-					getCardFile(currentHand.getCard(0))
-					)));
-
-			hcardButton1.setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
-					getSelectedCardFile(currentHand.getCard(0))
+			
+			handButtons[i].setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
+					getSelectedCardFile(currentHand.getCard(i))
 					)));
 		}
-		//end selected and unselected image update
-
-		//begin making all other buttons invisible
-		switch(10 - currentHand.getNumberOfCards()) {
-		case 10:
-			hcardButton1.setVisible(false);
-		case 9:
-			hcardButton2.setVisible(false);
-		case 8:
-			hcardButton3.setVisible(false);
-		case 7:
-			hcardButton4.setVisible(false);
-		case 6:
-			hcardButton5.setVisible(false);
-		case 5:
-			hcardButton6.setVisible(false);
-		case 4:
-			hcardButton7.setVisible(false);
-		case 3:
-			hcardButton8.setVisible(false);
-		case 2:
-			hcardButton9.setVisible(false);
-		case 1:
-			hcardButton10.setVisible(false);
-		case 0:
-			break;
+		
+		for(; i < handButtons.length; i++) {
+			handButtons[i].setVisible(false);
 		}
-		//end making all other buttons invisible
+		//end hand button update
 
 		if(gManage.mainManager.getGame().getRound().getTopOfDiscardStack() == null){
 			discardButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/NoCardsLeft.png")));
@@ -860,6 +505,31 @@ public class GameFrame extends JFrame {
 			discardButton.setIcon(new ImageIcon(GameFrame.class.getResource(
 					getCardFile(gManage.mainManager.getGame().getRound().getTopOfDiscardStack())
 					)));
+		}
+	}
+
+	private class HandActionListener implements ActionListener {
+
+		int i;
+
+		public HandActionListener(int index) {
+			i = index;
+		}
+
+		public void actionPerformed(ActionEvent arg0) {
+			if(handButtons[i].isSelected()) {
+				selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(i));
+				handButtons[i].setSelected(false);
+			}
+			else {
+				selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(i));
+				handButtons[i].setSelected(true);
+			}
+			if(selectedCards.size() == 1) {
+				handButtons[i].setEnabled(true);
+			}
+			else
+				handButtons[i].setEnabled(false);
 		}
 	}
 }
