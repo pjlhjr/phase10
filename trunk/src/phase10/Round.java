@@ -56,6 +56,12 @@ public final class Round implements Serializable {
 		initiateRound();
 	}
 
+	/**
+	 * Starts the round.
+	 * 
+	 * @throws Phase10Exception
+	 *             if round has already started
+	 */
 	public void startRound() {
 		if (!started) {
 			started = true;
@@ -262,7 +268,6 @@ public final class Round implements Serializable {
 				game.getGameManager().getGui().newTurnWindowUpdate();
 			} catch (NullPointerException e) {
 				System.out.println("Too early");
-				e.printStackTrace();
 			}
 		}
 
