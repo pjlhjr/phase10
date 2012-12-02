@@ -20,6 +20,8 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 public class opponentPanel extends JPanel {
 
 	/**
@@ -32,6 +34,14 @@ public class opponentPanel extends JPanel {
 	private JTextField numCardsPane;
 	private JTextField txtpnScore;
 	private Phase10 currentGame;
+	private JButton phaseGroup1Begin;
+	private JButton addToPhase_2;
+	private JTextField namePane;
+	private JLabel lblTo;
+	private JLabel labelTo_2;
+	private JButton phaseGroup2Begin;
+	private JButton phaseGroup2End;
+	private JButton phaseGroup1End;
 
 	/**
 	 * Create the panel.
@@ -49,7 +59,7 @@ public class opponentPanel extends JPanel {
 		add(oppInfoPanel, BorderLayout.NORTH);
 		oppInfoPanel.setLayout(new BorderLayout(0, 0));
 		
-		JTextField namePane = new JTextField();
+		namePane = new JTextField();
 		namePane.setHorizontalAlignment(SwingConstants.CENTER);
 		namePane.setEditable(false);
 		namePane.setPreferredSize(new Dimension(6, 30));
@@ -100,24 +110,28 @@ public class opponentPanel extends JPanel {
 			}
 		});
 		
-		JButton button_1 = new JButton("");
+		phaseGroup1Begin = new JButton("");
 		
-		JLabel lblTo = new JLabel("to");
+		lblTo = new JLabel("to");
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JButton btnAddToPhase = new JButton("");
+		phaseGroup1End = new JButton("");
+		phaseGroup1End.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
-		JButton button = new JButton("");
+		phaseGroup2Begin = new JButton("");
 		
-		JLabel label = new JLabel("to");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelTo_2 = new JLabel("to");
+		labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTo_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JButton button_3 = new JButton("");
+		phaseGroup2End = new JButton("");
 		
-		JButton button_4 = new JButton("Add to Phase");
-		button_4.addMouseListener(new MouseAdapter() {
+		addToPhase_2 = new JButton("Add to Phase");
+		addToPhase_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				PhaseGroup cardsToAdd = new PhaseGroup(currentGame);
@@ -147,8 +161,8 @@ public class opponentPanel extends JPanel {
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(12)
 							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addComponent(btnAddToPhase, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-								.addComponent(button_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+								.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
@@ -156,12 +170,12 @@ public class opponentPanel extends JPanel {
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
 									.addGap(10)
-									.addComponent(label, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-								.addComponent(button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+									.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+								.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
 							.addGap(2))
 						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-							.addComponent(button_4, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
-							.addComponent(button_3, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
+							.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
 					.addGap(25))
 		);
 		gl_panel.setVerticalGroup(
@@ -169,44 +183,90 @@ public class opponentPanel extends JPanel {
 				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(button_1, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-						.addComponent(button, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+						.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+						.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblTo, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-						.addComponent(label, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+						.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnAddToPhase, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-								.addComponent(button_3, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+								.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+								.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
 							.addGap(64))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(125)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-								.addComponent(button_4, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
 					.addGap(114))
 		);
 		panel.setLayout(gl_panel);
+		
+		phaseVisibleSetter();
 		//end panel setup
 	}
 	
-	void update() {
+	void update(Player nextOpponent) {
 		
 		//TODO get this to work!!!!!
+	
+		opponent = nextOpponent;
 		
-		//currentGame.getPlayer(/*opponent.getIndex()*/ + 1 % currentGame.getNumberOfPlayers());
-		
+		this.namePane.setText(opponent.getName());
 		this.txtPhase.setText("Phase: " + opponent.getPhase());
 		this.txtpnScore.setText("Score: " + opponent.getScore());
 		this.txtPhase.setText("Phase: " + opponent.getPhase());
 		
 		//TODO add update for the phases area
+		phaseVisibleSetter();
 	}
 
 	Player getOpponent() {
 		return opponent;
+	}
+	
+	private void phaseVisibleSetter() {
+		if(opponent.hasLaidDownPhase()) {
+			if(opponent.getNumberOfPhaseGroups() == 1) {
+				
+				phaseGroup1Begin.setVisible(true);
+				lblTo.setVisible(true);
+				phaseGroup1End.setVisible(true);
+				addToPhase_1.setVisible(true);
+				
+				phaseGroup2Begin.setVisible(false);
+				labelTo_2.setVisible(false);
+				phaseGroup2End.setVisible(false);
+				addToPhase_2.setVisible(false);
+				
+			}
+			else if(opponent.getNumberOfPhaseGroups() == 2) {
+				phaseGroup1Begin.setVisible(true);
+				lblTo.setVisible(true);
+				phaseGroup1End.setVisible(true);
+				addToPhase_1.setVisible(true);
+				
+				phaseGroup2Begin.setVisible(true);
+				labelTo_2.setVisible(true);
+				phaseGroup2End.setVisible(true);
+				addToPhase_2.setVisible(true);
+			}
+			else
+				System.out.println("Error!");
+		}
+		else {
+			phaseGroup1Begin.setVisible(false);
+			lblTo.setVisible(false);
+			phaseGroup1End.setVisible(false);
+			addToPhase_1.setVisible(false);
+			
+			phaseGroup2Begin.setVisible(false);
+			labelTo_2.setVisible(false);
+			phaseGroup2End.setVisible(false);
+			addToPhase_2.setVisible(false);
+		}
 	}
 }
