@@ -16,12 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Toolkit;
-import javax.swing.ButtonGroup;
-
 import phase10.*;
 import phase10.card.Card;
-import phase10.exceptions.Phase10Exception;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -77,6 +73,7 @@ public class GameFrame extends JFrame {
 	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
+		
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
 
@@ -221,7 +218,6 @@ public class GameFrame extends JFrame {
 							discardButton.setIcon(null);
 							discardButton.setText("discard selected card");
 							isDiscarding = true;
-							System.out.println("isDiscarding has been set to true");
 						}
 						else {
 							MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
@@ -234,7 +230,6 @@ public class GameFrame extends JFrame {
 					deckButton.setEnabled(true);
 					discardButton.setEnabled(true);	
 					isDiscarding = false;
-					System.out.println("isDiscarding has been set to false");
 				}
 			}
 		});
@@ -343,7 +338,6 @@ public class GameFrame extends JFrame {
 		label.setBounds(805, 27, 61, 53);
 		yourPhasesPanel.add(label);
 
-		//updateFrame(gManage.mainManager.getGame()); TODO
 		updateCardImages();
 	}
 
@@ -390,7 +384,7 @@ public class GameFrame extends JFrame {
 	 * @param aCard the card object
 	 * @return the filename to the image file of the specified card
 	 */
-	private String getCardFile(Card aCard) {
+	String getCardFile(Card aCard) {
 
 		String filename = "/images/cardImages/";
 
@@ -425,13 +419,23 @@ public class GameFrame extends JFrame {
 
 
 	public void updateFrame(Phase10 currentGame) {
+		
 		current = currentGame.getCurrentPlayer();
+		
+		
 		//begin update of opponent panels
-		for(opponentPanel x : oppPanels) {
-			//x.update(); TODO
+		int y = 0;
+		for(int x = 0; x < currentGame.getNumberOfPlayers(); x++) {
+			if(currentGame.getPlayer(x) != currentGame.getCurrentPlayer()) {
+				oppPanels.get(y).updatePanel(currentGame.getPlayer(x));
+				y++;
+			}
 		}
+		
 		//end update of opponent panels
 
+		
+		
 		/*
 		 * begin update of cards
 		 */
