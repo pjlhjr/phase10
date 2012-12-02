@@ -11,6 +11,7 @@ import phase10.PhaseGroup;
 import phase10.Player;
 import phase10.card.Card;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -42,6 +43,7 @@ public class opponentPanel extends JPanel {
 	private JButton phaseGroup2Begin;
 	private JButton phaseGroup2End;
 	private JButton phaseGroup1End;
+	private GameFrame gameWindow;
 
 	/**
 	 * Create the panel.
@@ -49,6 +51,7 @@ public class opponentPanel extends JPanel {
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
 		this.opponent = opponent;
 		this.currentGame = currentGame;
+		this.gameWindow = gameWindow;
 		
 		//begin panel setup
 		setLayout(new BorderLayout(0, 0));
@@ -205,11 +208,11 @@ public class opponentPanel extends JPanel {
 		);
 		panel.setLayout(gl_panel);
 		
-		phaseVisibleSetter();
+		phaseAreaUpdate();
 		//end panel setup
 	}
 	
-	void update(Player nextOpponent) {
+	void updatePanel(Player nextOpponent) {
 		
 		//TODO get this to work!!!!!
 	
@@ -221,16 +224,22 @@ public class opponentPanel extends JPanel {
 		this.txtPhase.setText("Phase: " + opponent.getPhase());
 		
 		//TODO add update for the phases area
-		phaseVisibleSetter();
+		phaseAreaUpdate();
 	}
 
 	Player getOpponent() {
 		return opponent;
 	}
 	
-	private void phaseVisibleSetter() {
+	private void phaseAreaUpdate() {
 		if(opponent.hasLaidDownPhase()) {
 			if(opponent.getNumberOfPhaseGroups() == 1) {
+				
+				phaseGroup1Begin.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(0)))));
+				phaseGroup1End.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(
+						opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
 				
 				phaseGroup1Begin.setVisible(true);
 				lblTo.setVisible(true);
@@ -244,6 +253,19 @@ public class opponentPanel extends JPanel {
 				
 			}
 			else if(opponent.getNumberOfPhaseGroups() == 2) {
+				
+				phaseGroup1Begin.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(0)))));
+				phaseGroup1End.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(
+						opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
+				
+				phaseGroup2Begin.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(1).getCard(0)))));
+				phaseGroup2End.setIcon(new ImageIcon(
+						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(1).getCard(
+						opponent.getPhaseGroup(1).getNumberOfCards()-1)))));
+				
 				phaseGroup1Begin.setVisible(true);
 				lblTo.setVisible(true);
 				phaseGroup1End.setVisible(true);
