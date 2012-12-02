@@ -475,8 +475,8 @@ public class GameFrame extends JFrame {
 					gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
 					updateFrame(gManage.mainManager.getGame());
 					deckButton.setEnabled(true);
-					discardButton.setEnabled(true);
-
+					discardButton.setEnabled(true);	
+					isDiscarding = false;
 				}
 			}
 		});
