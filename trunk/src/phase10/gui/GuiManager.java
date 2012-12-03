@@ -23,7 +23,6 @@ public class GuiManager {
 		mainManager = m; //passes a reference from the game manager into the GUI manager
 		gameLang = new Language();
 		settingsWindow = new SettingsFrame(this);
-		pdWindow = new PhaseDescriptionFrame(1, this);
 		siWindow = new SkipInputFrame();
 		welcomeWindow = new WelcomeFrame(this);
 	}
@@ -68,6 +67,7 @@ public class GuiManager {
 	}
 	
 	void displayPhaseDescriptionFrame() {
+		pdWindow = new PhaseDescriptionFrame(this);
 		pdWindow.setVisible(true);
 	}
 	
@@ -92,8 +92,10 @@ public class GuiManager {
 		welcomeWindow.setVisible(true);
 	}
 
+	/**
+	 * updates the necessary frames for the next player's turn
+	 */
 	public void newTurnWindowUpdate() {
-		//TODO - update necessary frames for the next player's turn
 		gameWindow.updateFrame(mainManager.getGame());
 	}
 	
