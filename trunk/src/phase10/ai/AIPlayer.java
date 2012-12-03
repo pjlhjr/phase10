@@ -64,9 +64,6 @@ public class AIPlayer extends Player {
 	* don't discard cards that will be immediately picked up and laid down
 	*/
 	public void playTurn(){
-		for(int x = 0; x < getHand().getNumberOfCards(); x++)
-			System.out.print(getHand().getCard(x) + " ");
-		System.out.println();
 		try{
 			if(!(drawOrPickUp()^bestChoice(10))){
 				game.getRound().drawFromDeck();
@@ -79,7 +76,7 @@ public class AIPlayer extends Player {
 			game.getRound().drawFromDeck();
 		}
 		try{
-			if(!hasLaidDownPhase() && addPhaseGroups(group.getCompletePhaseGroups())) // make sure to lay down on time
+			if(!hasLaidDownPhase() && addPhaseGroups(group.getCompletePhaseGroups())) // make sure to lay down on time & don't lay down before certain point varying by diff
 				System.out.print("laid down a phase"); // make sure it works if too many cards or groups in group
 		}catch(Exception e){
 			System.out.println("AIPlayer, laydown: " + e.toString());
@@ -239,15 +236,16 @@ public class AIPlayer extends Player {
 	//TODO use the log. incorporate difficulty. get rid of higher point value cards later in the round
 	// help out player on occasion?
 	// do a genetic algorithm selection based off score rank, etc
+	// not part of a group that is unnecessary 
 	private Card discardCard(){
 		group = new Groups(getHand());
 		int x = 0;
 		Card[] c = group.recommendDiscard();
-		while(!bestChoice(10)){
+		//while(!bestChoice(10)){
 			//something else
-			x++;
-		}
-		x %= c.length;
+			//x++;
+		//}
+		//x %= c.length;
 		return c[x];
 	}
 	
@@ -525,11 +523,15 @@ public class AIPlayer extends Player {
 		
 		//TODO fill in
 		public PhaseGroup[] getCompletePhaseGroups(){
-			PhaseGroup[] temp = new PhaseGroup[complete.size()];
-			int x = 0;
-			for(PhaseGroup c: complete)
-				temp[x++] = c;
-			return temp;
+			if(complete.size() > 0){
+				PhaseGroup[] temp = new PhaseGroup[complete.size()];
+				int x = 0;
+				for(PhaseGroup c: complete)
+					temp[x++] = c;
+				return temp;
+			}else{
+				return new PhaseGroup[1];
+			}
 		}
 		
 		//TODO figure out discard value.
