@@ -144,7 +144,7 @@ public class GameFrame extends JFrame {
 		phaseNumber.setBounds(58, 120, 53, 53);
 		infoPanel.add(phaseNumber);
 
-		JButton btnPhaseDescription = new JButton("Phase Description");
+		JButton btnPhaseDescription = new JButton("Phase Descriptions");
 		btnPhaseDescription.setBounds(10, 184, 149, 23);
 		btnPhaseDescription.addMouseListener(new pdListener(guiManage));
 		infoPanel.add(btnPhaseDescription);
@@ -352,6 +352,51 @@ public class GameFrame extends JFrame {
 		updateCardImages();
 	}
 
+	private void resetYourPhasesPanel() {
+		if(current.hasLaidDownPhase()) {
+			if(current.getNumberOfPhaseGroups() == 1) {
+				pg1Start.setVisible(true);
+				lblTo.setVisible(true);
+				pg1End.setVisible(true);
+				addToPG1.setVisible(true);
+
+				pg2Start.setVisible(false);
+				lblTo2.setVisible(false);
+				pg2End.setVisible(false);
+				addToPG2.setVisible(false);
+
+				btnNewPhase.setVisible(false);
+			}
+			else {
+				pg1Start.setVisible(true);
+				lblTo.setVisible(true);
+				pg1End.setVisible(true);
+				addToPG1.setVisible(true);
+
+				pg2Start.setVisible(true);
+				lblTo2.setVisible(true);
+				pg2End.setVisible(true);
+				addToPG2.setVisible(true);
+
+				btnNewPhase.setVisible(true);
+			}
+		}
+		else { //make everything else invisible
+			pg1Start.setVisible(false);
+			lblTo.setVisible(false);
+			pg1End.setVisible(false);
+			addToPG1.setVisible(false);
+
+			pg2Start.setVisible(false);
+			lblTo2.setVisible(false);
+			pg2End.setVisible(false);
+			addToPG2.setVisible(false);
+
+			btnNewPhase.setVisible(true);
+		}
+
+	}
+
 	/*
 	 * begin button listeners
 	 */
@@ -444,7 +489,9 @@ public class GameFrame extends JFrame {
 
 		//end update of opponent panels
 
-
+		//begin yourPhasesPanel update
+		resetYourPhasesPanel();
+		//end yourPhasesPanel update
 
 		/*
 		 * begin update of cards
@@ -551,10 +598,13 @@ public class GameFrame extends JFrame {
 
 		boolean isPhasing;
 		boolean isSecondPhaseGroup;
+		private PhaseGroup newPhaseGroup;
+		private PhaseGroup newPhaseGroup2;
 
 		public PhaseActionListener() {
 			isPhasing = false;
 			isSecondPhaseGroup = false;
+			newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
 		}
 
 		@Override
@@ -563,21 +613,90 @@ public class GameFrame extends JFrame {
 			if(isPhasing) {
 				if(isSecondPhaseGroup == false) {
 
-					/*
-					 * adding the phaseGroup
-					 */
-					PhaseGroup newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
-					for(Card c : selectedCards)
+					for(Card c : selectedCards) {
 						newPhaseGroup.addCard(c);
-					
-					boolean isValid = current.addPhaseGroups(newPhaseGroup);
-					if(isValid == false) {
+					}
+
+					for(int i = 0; i < handButtons.length; i++) {
+						if(handButtons[i].isSelected())
+							handButtons[i].setVisible(false);
+					}
+
+					selectedCards.clear();
+
+					switch(current.getPhase()) {
+					case 1:
+						btnNewPhase.setText("add a set of 3");
+						isSecondPhaseGroup = true;
+						break;
+					case 2:
+						btnNewPhase.setText("add a run of 4");
+						isSecondPhaseGroup = true;
+						break;
+					case 3:
+						btnNewPhase.setText("add a run of 4");
+						isSecondPhaseGroup = true;
+						break;
+					case 7:
+						btnNewPhase.setText("add a set of 4");
+						isSecondPhaseGroup = true;
+						break;
+					case 9:
+						btnNewPhase.setText("add a set of 2");
+						isSecondPhaseGroup = true;
+						break;
+					case 10:
+						btnNewPhase.setText("add a set of 3");
+						isSecondPhaseGroup = true;
+						break;
+					default:
+						btnNewPhase.setText("Add a Phase!");
+						btnNewPhase.setVisible(false);
+						isSecondPhaseGroup = false;
+						boolean isValid = current.addPhaseGroups(newPhaseGroup);
+						if(!isValid) {
+							MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
+							notAGoodPhase.setVisible(true);
+						}
+						else { //the player played a valid phase with only one phase group in the phase
+							//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
+							pg1Start.setVisible(true);
+							lblTo.setVisible(true);
+							pg1End.setVisible(true);
+							addToPG1.setVisible(true);
+
+							pg1Start.setIcon((new ImageIcon(GameFrame.class.getResource(
+									getCardFile(newPhaseGroup.getCard(0)))
+									)));
+							pg1End.setIcon((new ImageIcon(GameFrame.class.getResource(
+									getCardFile(newPhaseGroup.getCard(newPhaseGroup.getNumberOfCards() - 1)))
+									)));
+
+							selectedCards.clear();
+
+							btnNewPhase.setVisible(false);
+							btnNewPhase.setText("Add a Phase!");
+							break;
+						}
+					}
+				}
+				else { //is adding the second phase group
+
+					int secondGroupStartIndex = newPhaseGroup.getNumberOfCards();
+
+					newPhaseGroup2 = new PhaseGroup(gManage.mainManager.getGame());
+					//adding phases to the phaseGroup
+					for(Card c : selectedCards)
+						newPhaseGroup2.addCard(c);
+
+					boolean isValid = current.addPhaseGroups(newPhaseGroup, newPhaseGroup2);
+					System.out.println("Phase Group Type: " + newPhaseGroup.getType());
+					if(!isValid) {
 						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
-System.out.println("Adding the first phase failed. The first phase is: " + current.getPhase() + ". The type of the phase is: " + newPhaseGroup.getType() + ". The number of cards in the group is: " + newPhaseGroup.getNumberOfCards());						
 						notAGoodPhase.setVisible(true);
 					}
-					else { //adding selected cards was successful
-						//make the buttons on the left side of youPhasesPanel visible TODO
+					else { //the player played a valid phase
+						//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
 						pg1Start.setVisible(true);
 						lblTo.setVisible(true);
 						pg1End.setVisible(true);
@@ -587,59 +706,25 @@ System.out.println("Adding the first phase failed. The first phase is: " + curre
 								getCardFile(newPhaseGroup.getCard(0)))
 								)));
 						pg1End.setIcon((new ImageIcon(GameFrame.class.getResource(
-								getCardFile(newPhaseGroup.getCard(newPhaseGroup.getNumberOfCards()-1)))
+								getCardFile(newPhaseGroup.getCard(secondGroupStartIndex - 1)))
 								)));
 
-						switch(current.getPhase()) {
-						case 1:
-							btnNewPhase.setText("add a set of 3");
-							break;
-						case 2:
-							btnNewPhase.setText("add a run of 4");
-							break;
-						case 3:
-							btnNewPhase.setText("add a run of 4");
-							break;
-						case 7:
-							btnNewPhase.setText("add a set of 4");
-							break;
-						case 9:
-							btnNewPhase.setText("add a set of 2");
-							break;
-						case 10:
-							btnNewPhase.setText("add a set of 3");
-							break;
-						default:
-							btnNewPhase.setText("Add a Phase!");
-							btnNewPhase.setVisible(false);
-							break;
-						}
-					}
-				}
-				else { //is about to add the second phase group
-					//adding phases to the phaseGroup
-					PhaseGroup newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
-					for(Card c : selectedCards)
-						newPhaseGroup.addCard(c);
 
-					boolean isValid = current.addPhaseGroups(newPhaseGroup);
-					if(!isValid) {
-						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
-						notAGoodPhase.setVisible(true);
-					}
-					else { //the player played a valid phase
-						//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
 						pg2Start.setVisible(true);
 						lblTo2.setVisible(true);
 						pg2End.setVisible(true);
 						addToPG2.setVisible(true);
 
 						pg2Start.setIcon((new ImageIcon(GameFrame.class.getResource(
-								getCardFile(newPhaseGroup.getCard(0)))
+								getCardFile(newPhaseGroup2.getCard(0)))
 								)));
 						pg2End.setIcon((new ImageIcon(GameFrame.class.getResource(
-								getCardFile(newPhaseGroup.getCard(newPhaseGroup.getNumberOfCards()-1)))
+								getCardFile(newPhaseGroup2.getCard(newPhaseGroup2.getNumberOfCards()-1)))
 								)));
+
+						//TODO update the frame
+						updateFrame(gManage.mainManager.getGame());
+						selectedCards.clear();
 
 						btnNewPhase.setVisible(false);
 						btnNewPhase.setText("Add a Phase!");
