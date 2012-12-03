@@ -132,16 +132,13 @@ public final class Hand implements Serializable {
 		Collections.sort(cards, valueComp);
 	}
 
-	// For testing
-	/*
-	 * public static void main(String[] args) { Hand h = new Hand();
-	 * h.addCard(new Card(Configuration.COLORS[0], 1)); h.addCard(new
-	 * Card(Configuration.COLORS[0], 1)); h.addCard(new
-	 * Card(Configuration.COLORS[1], 1)); h.addCard(new
-	 * Card(Configuration.COLORS[2], 6)); h.addCard(new
-	 * Card(Configuration.COLORS[3], 8)); h.addCard(new
-	 * Card(Configuration.COLORS[3], 2)); h.sortByValue(); for (int i = 0; i <
-	 * h.getNumberOfCards(); i++) { System.out.println(h.getCard(i)); } }
-	 */
-
+	public String toString() {
+		StringBuilder out = new StringBuilder("Length: "
+				+ cards.size() + " Hand: ");
+		for (Card e : cards) {
+			out.append(e + ", ");
+		}
+		return out.toString();
+	}	
+	
 }
