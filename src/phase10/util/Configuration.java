@@ -23,4 +23,17 @@ public class Configuration {
 
 	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green",
 			"Yellow"};
+
+	private static int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
+
+	/**
+	 * Gets the number of phase groups required given the phase
+	 * 
+	 * @param phase
+	 *            the phase
+	 * @return the number of phase groups required
+	 */
+	public static int getNumberOfPhaseGroupsRequired(int phase) {
+		return numPhasesExpected[phase - 1];
+	}
 }

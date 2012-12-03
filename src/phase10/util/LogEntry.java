@@ -1,3 +1,8 @@
+/**
+ * CS2003 Lab Project Fall 2012
+ * Paul Harris, Matt Hruz, Evan Forbes
+ * 
+ */
 package phase10.util;
 
 import java.io.Serializable;
@@ -5,6 +10,12 @@ import java.util.Formatter;
 
 import phase10.Player;
 
+/**
+ * Holds each log for the logging utility
+ * 
+ * @author Evan Forbes
+ *
+ */
 public class LogEntry implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
