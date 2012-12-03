@@ -153,6 +153,7 @@ public final class Phase10 implements Serializable {
 
 			// TODO Call Gui- say new round has started
 			round = new Round(this);
+			round.startRound();
 
 		} else {
 			for (Player e : winners) {

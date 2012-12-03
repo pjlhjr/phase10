@@ -430,7 +430,7 @@ public class SettingsFrame extends JFrame {
 			}
 
 			gManage.mainManager.getGame().startGame();
-			gManage.mainManager.getGame().getRound().startRound();
+			//gManage.mainManager.getGame().getRound().startRound();
 			gManage.initGameWindow();
 			gManage.displayGameFrame(); //displays the next window: the game window
 			
