@@ -13,6 +13,7 @@ import phase10.card.Card;
 import phase10.card.WildCard;
 import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
+import phase10.util.LogEntry;
 
 /**
  * This class contains all of the information for each phase group that is laid
@@ -48,15 +49,17 @@ public final class PhaseGroup implements Serializable {
 	 * This method will add cards to an existing phase group, but has some
 	 * interesting variations depending on the context.
 	 * 
-	 * <br> - if the phase
-	 * group has not been marked as laid down (you have not called the
-	 * addPhaseGroup method of player), the card will be added to the phase
-	 * group (without validation), and will not be taken out of the player's
-	 * hand <br>- when you call the addPhaseGroup method of Player, the phase
-	 * group(s) will be validated, and if it is valid the cards will be removed
-	 * from the player's hand <br>- now when the addCard method is called, it
-	 * will validate it before adding it to the phase group, and if it is valid,
-	 * will remove the card from the player's hand.
+	 * <br>
+	 * - if the phase group has not been marked as laid down (you have not
+	 * called the addPhaseGroup method of player), the card will be added to the
+	 * phase group (without validation), and will not be taken out of the
+	 * player's hand <br>
+	 * - when you call the addPhaseGroup method of Player, the phase group(s)
+	 * will be validated, and if it is valid the cards will be removed from the
+	 * player's hand <br>
+	 * - now when the addCard method is called, it will validate it before
+	 * adding it to the phase group, and if it is valid, will remove the card
+	 * from the player's hand.
 	 * 
 	 * @param c
 	 *            The card to add to this phase group
@@ -78,6 +81,11 @@ public final class PhaseGroup implements Serializable {
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
 				game.getCurrentPlayer().getHand().removeCard(c);
+				game.getLog().addEntry(
+						new LogEntry(game.getRound().getTurnNumber(), game
+								.getCurrentPlayer(),
+								"Added card to a laid down phase group: "
+										+ this));
 				return true;
 			}
 			return false;
@@ -243,10 +251,12 @@ public final class PhaseGroup implements Serializable {
 		}
 	}
 
-	/*
-	 * public static void main(String[] args){ PhaseGroup pg = new PhaseGroup();
-	 * pg.addCard(new Card(1,4)); pg.addCard(new Card(1,4)); pg.addCard(new
-	 * Card(2,4)); pg.addCard(new Card(3,4));
-	 * System.out.println(PhaseGroup.validate(pg, 0, 4)); }
-	 */
+	public String toString() {
+		StringBuilder out = new StringBuilder("Type: " + type + " Length: "
+				+ cards.size() + " Cards: ");
+		for (Card e : cards) {
+			out.append(e + ", ");
+		}
+		return out.toString();
+	}
 }

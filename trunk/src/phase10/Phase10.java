@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import phase10.exceptions.Phase10Exception;
+import phase10.util.Configuration;
+import phase10.util.Log;
+import phase10.util.LogEntry;
 
 /**
  * This class contains and manages the information for each Phase 10 game
@@ -24,6 +27,7 @@ public final class Phase10 implements Serializable {
 	private int roundNumber;
 	private int dealer;
 	private boolean started;
+	private Log log;
 
 	private transient GameManager gameManager;
 
@@ -33,6 +37,8 @@ public final class Phase10 implements Serializable {
 		roundNumber = 0;
 		started = false;
 		gameManager = gm;
+
+		log = new Log();
 	}
 
 	/**
@@ -93,10 +99,10 @@ public final class Phase10 implements Serializable {
 	 *             if the game has already started
 	 */
 	public void addPlayer(Player p) {
-		if (!started){
+		if (!started) {
 			players.add(p);
-		}
-		else
+			log.addEntry(new LogEntry(-1, p, "New player added"));
+		} else
 			throw new Phase10Exception(
 					"Cannot add player after game has started");
 	}
@@ -122,8 +128,8 @@ public final class Phase10 implements Serializable {
 	 */
 	public void startGame() {
 		if (!started) {
-			dealer = getNumberOfPlayers()-1;
-			//System.out.println("dealer0: "+dealer);
+			dealer = getNumberOfPlayers() - 1;
+			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				nextRound();
@@ -144,10 +150,18 @@ public final class Phase10 implements Serializable {
 		if (winners.size() == 0) {
 			roundNumber++;
 			nextDealer();
+
 			// TODO Call Gui- say new round has started
 			round = new Round(this);
 
 		} else {
+			for (Player e : winners) {
+				log.addEntry(new LogEntry(-1, e, " Won the game with "
+						+ e.getScore() + " points"));
+			}
+			if (Configuration.PRINT_LOG) {
+				log.printLog();
+			}
 			// TODO call gui- winner(s)
 		}
 	}
@@ -208,13 +222,21 @@ public final class Phase10 implements Serializable {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
 			}
-			//reset has drawn card
+			// reset has drawn card
 			p.setHasDrawnCard(false);
 		}
 	}
-	
-	void setGameManager(GameManager gm){
+
+	void setGameManager(GameManager gm) {
 		gameManager = gm;
+	}
+
+	/**
+	 * @return the log
+	 * 
+	 */
+	public Log getLog() {
+		return log;
 	}
 
 }

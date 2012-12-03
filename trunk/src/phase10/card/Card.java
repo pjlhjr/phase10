@@ -19,7 +19,7 @@ import phase10.util.Configuration;
 public class Card implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
-	
+
 	private Color color;
 	private int value;
 
@@ -34,7 +34,7 @@ public class Card implements Serializable {
 		color = c;
 		value = v;
 	}
-	
+
 	/**
 	 * 
 	 * @param v
@@ -43,8 +43,7 @@ public class Card implements Serializable {
 	public Card(int v) {
 		this(Color.BLACK, v);
 	}
-	
-	
+
 	/**
 	 * @return the color
 	 */
@@ -94,7 +93,13 @@ public class Card implements Serializable {
 	 * @return string representation of the card
 	 */
 	public String toString() {
-		return getColor() + "." + getValue();
+		String color = "";
+		for (int i = 0; i < Configuration.COLORS.length; i++) {
+			if (Configuration.COLORS[i].equals(getColor())) {
+				color = Configuration.COLOR_NAMES[i];
+			}
+		}
+		return color + " " + getValue();
 	}
 
 }

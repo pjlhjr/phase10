@@ -37,8 +37,6 @@ public final class Round implements Serializable {
 
 	private boolean started;
 
-	private ArrayList<LogEntry> log;
-
 	/**
 	 * Creates and initializes the round
 	 * 
@@ -49,7 +47,6 @@ public final class Round implements Serializable {
 		game = g;
 		curPlayerNum = game.getDealer() - 1;
 		turnNumber = 0;
-		log = new ArrayList<LogEntry>();
 
 		started = false;
 
@@ -90,7 +87,8 @@ public final class Round implements Serializable {
 			return false;
 
 		Card card = discardStack.pop();
-		log.add(new LogEntry(turnNumber, player, card, false));
+		game.getLog().addEntry(
+				new LogEntry(turnNumber, player, "Draw from discard: " + card));
 		player.getHand().addCard(card);
 		player.getHand().sortByValue();
 		player.setHasDrawnCard(true);
@@ -111,13 +109,17 @@ public final class Round implements Serializable {
 		if (player.getHasDrawnCard())
 			throw new Phase10Exception(
 					"Cannot draw from deck: has already drawn");
+		Card card = deck.get(deck.size() - 1);
 
-		player.getHand().addCard(deck.get(deck.size() - 1));
+		player.getHand().addCard(card);
 		deck.remove(deck.size() - 1);
 
 		player.setHasDrawnCard(true);
 
 		player.getHand().sortByValue();
+
+		game.getLog().addEntry(
+				new LogEntry(turnNumber, player, "Draw from deck: " + card));
 
 		if (deck.size() == 0) {
 			Card topDiscard = discardStack.pop();
@@ -145,7 +147,8 @@ public final class Round implements Serializable {
 		if (!player.getHasDrawnCard())
 			throw new Phase10Exception("Cannot discard: has not yet drawn");
 
-		log.add(new LogEntry(turnNumber, player, card, true));
+		game.getLog().addEntry(
+				new LogEntry(turnNumber, player, "Discard: " + card));
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
@@ -297,15 +300,6 @@ public final class Round implements Serializable {
 				return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Gets the log of actions for the round
-	 * 
-	 * @return the log
-	 */
-	public ArrayList<LogEntry> getLog() {
-		return log;
 	}
 
 	/**

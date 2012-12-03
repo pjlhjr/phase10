@@ -1,24 +1,22 @@
 package phase10.util;
 
 import java.io.Serializable;
+import java.util.Formatter;
 
 import phase10.Player;
-import phase10.card.Card;
 
 public class LogEntry implements Serializable {
-	
+
 	private static final long serialVersionUID = 20121L;
 
 	private int turnNumber;
 	private Player player;
-	private Card card;
-	private boolean laidDown;
-	
-	public LogEntry(int turn, Player p, Card c, boolean laidDown){
+	private String event;
+
+	public LogEntry(int turn, Player p, String event) {
 		turnNumber = turn;
 		player = p;
-		card = c;
-		this.laidDown = laidDown;
+		this.event = event;
 	}
 
 	/**
@@ -36,18 +34,21 @@ public class LogEntry implements Serializable {
 	}
 
 	/**
-	 * @return the card
+	 * @return the event
 	 */
-	public Card getCard() {
-		return card;
+	public String getEvent() {
+		return event;
 	}
 
-	/**
-	 * @return the laidDown
-	 */
-	public boolean isLaidDown() {
-		return laidDown;
+	public String toString() {
+		StringBuffer out = new StringBuffer();
+		Formatter format = new Formatter(out);
+
+		if (player != null) {
+			format.format("%3d %10.9s %s", turnNumber, player, event);
+		} else {
+			System.out.printf("%3d          %s", turnNumber, event);
+		}
+		return out.toString();
 	}
-	
-	
 }
