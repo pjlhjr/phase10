@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextPane;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 
 public class WelcomeFrame extends JFrame {
 
@@ -38,6 +39,8 @@ public class WelcomeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public WelcomeFrame(final GuiManager gManage) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WelcomeFrame.class.getResource("/images/GameIcon.png")));
+		setTitle("Welcome");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 491, 325);
 		contentPane = new JPanel();
