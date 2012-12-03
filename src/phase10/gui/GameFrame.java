@@ -67,6 +67,30 @@ public class GameFrame extends JFrame {
 
 	private GuiManager gManage;
 
+
+	private JButton pg1Start;
+
+
+	private JLabel lblTo;
+
+
+	private JButton pg1End;
+
+
+	private JButton addToPG1;
+
+
+	private JButton addToPG2;
+
+
+	private JLabel lblTo2;
+
+
+	private JButton pg2End;
+
+
+	private JButton pg2Start;
+
 	//end components
 
 	/**
@@ -78,8 +102,6 @@ public class GameFrame extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
 
 		this.gManage = gManage;
-
-		gManage.mainManager.getGame().getRound().startRound(); //TODO place this snippet elsewhere
 
 		current = gManage.mainManager.getGame().getCurrentPlayer();
 
@@ -230,6 +252,9 @@ public class GameFrame extends JFrame {
 					deckButton.setEnabled(true);
 					discardButton.setEnabled(true);	
 					isDiscarding = false;
+
+					btnNewPhase.setVisible(true);
+					btnNewPhase.setText("Add a Phase!");
 				}
 			}
 		});
@@ -257,72 +282,58 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.setLayout(null);
 
 		btnNewPhase = new JButton("Add a Phase!");
-		btnNewPhase.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				PhaseGroup newPhase = new PhaseGroup(gManage.mainManager.getGame());
-
-				for(Card c : selectedCards)
-					newPhase.addCard(c);
-
-				boolean isValidGroup = gManage.mainManager.getGame().getCurrentPlayer().addPhaseGroups(newPhase);
-				if(!isValidGroup) {
-					//MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase (phase " + gManage.mainManager.getCurrentPlayer().getPhase() + ".", "Invalid move");    
-				}
-			}
-		});
+		btnNewPhase.addActionListener(new PhaseActionListener());
 		btnNewPhase.setEnabled(false);
 		btnNewPhase.setBounds(413, 42, 146, 23);
 		yourPhasesPanel.add(btnNewPhase);
 
-		JButton button = new JButton("");
-		button.setVisible(false);
-		button.setPreferredSize(new Dimension(100, 23));
-		button.setMaximumSize(new Dimension(114, 40));
-		button.setMargin(new Insets(0, 0, 0, 0));
-		button.setHorizontalTextPosition(SwingConstants.CENTER);
-		button.setBounds(10, 0, 88, 107);
-		yourPhasesPanel.add(button);
+		pg1Start = new JButton("");
+		pg1Start.setVisible(false);
+		pg1Start.setPreferredSize(new Dimension(100, 23));
+		pg1Start.setMaximumSize(new Dimension(114, 40));
+		pg1Start.setMargin(new Insets(0, 0, 0, 0));
+		pg1Start.setHorizontalTextPosition(SwingConstants.CENTER);
+		pg1Start.setBounds(10, 0, 88, 107);
+		yourPhasesPanel.add(pg1Start);
 
-		JButton button_1 = new JButton("");
-		button_1.setVisible(false);
-		button_1.setPreferredSize(new Dimension(100, 23));
-		button_1.setMaximumSize(new Dimension(114, 40));
-		button_1.setMargin(new Insets(0, 0, 0, 0));
-		button_1.setHorizontalTextPosition(SwingConstants.CENTER);
-		button_1.setBounds(179, 0, 88, 107);
-		yourPhasesPanel.add(button_1);
+		pg1End = new JButton("");
+		pg1End.setVisible(false);
+		pg1End.setPreferredSize(new Dimension(100, 23));
+		pg1End.setMaximumSize(new Dimension(114, 40));
+		pg1End.setMargin(new Insets(0, 0, 0, 0));
+		pg1End.setHorizontalTextPosition(SwingConstants.CENTER);
+		pg1End.setBounds(179, 0, 88, 107);
+		yourPhasesPanel.add(pg1End);
 
-		JButton button_2 = new JButton("");
-		button_2.setVisible(false);
-		button_2.setPreferredSize(new Dimension(100, 23));
-		button_2.setMaximumSize(new Dimension(114, 40));
-		button_2.setMargin(new Insets(0, 0, 0, 0));
-		button_2.setHorizontalTextPosition(SwingConstants.CENTER);
-		button_2.setBounds(707, 0, 88, 107);
-		yourPhasesPanel.add(button_2);
+		pg2Start = new JButton("");
+		pg2Start.setVisible(false);
+		pg2Start.setPreferredSize(new Dimension(100, 23));
+		pg2Start.setMaximumSize(new Dimension(114, 40));
+		pg2Start.setMargin(new Insets(0, 0, 0, 0));
+		pg2Start.setHorizontalTextPosition(SwingConstants.CENTER);
+		pg2Start.setBounds(707, 0, 88, 107);
+		yourPhasesPanel.add(pg2Start);
 
-		JButton button_3 = new JButton("");
-		button_3.setVisible(false);
-		button_3.setPreferredSize(new Dimension(100, 23));
-		button_3.setMaximumSize(new Dimension(114, 40));
-		button_3.setMargin(new Insets(0, 0, 0, 0));
-		button_3.setHorizontalTextPosition(SwingConstants.CENTER);
-		button_3.setBounds(884, 0, 88, 107);
-		yourPhasesPanel.add(button_3);
+		pg2End = new JButton("");
+		pg2End.setVisible(false);
+		pg2End.setPreferredSize(new Dimension(100, 23));
+		pg2End.setMaximumSize(new Dimension(114, 40));
+		pg2End.setMargin(new Insets(0, 0, 0, 0));
+		pg2End.setHorizontalTextPosition(SwingConstants.CENTER);
+		pg2End.setBounds(884, 0, 88, 107);
+		yourPhasesPanel.add(pg2End);
 
-		JButton btnNewButton = new JButton("add to phase");
-		btnNewButton.setVisible(false);
-		btnNewButton.setBounds(277, 27, 117, 52);
-		yourPhasesPanel.add(btnNewButton);
+		addToPG1 = new JButton("add to phase");
+		addToPG1.setVisible(false);
+		addToPG1.setBounds(277, 27, 117, 52);
+		yourPhasesPanel.add(addToPG1);
 
-		JButton button_4 = new JButton("add to phase");
-		button_4.setVisible(false);
-		button_4.setBounds(580, 27, 117, 52);
-		yourPhasesPanel.add(button_4);
+		addToPG2 = new JButton("add to phase");
+		addToPG2.setVisible(false);
+		addToPG2.setBounds(580, 27, 117, 52);
+		yourPhasesPanel.add(addToPG2);
 
-		JLabel lblTo = new JLabel("to");
+		lblTo = new JLabel("to");
 		lblTo.setVisible(false);
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTo.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -330,13 +341,13 @@ public class GameFrame extends JFrame {
 		lblTo.setBounds(108, 25, 61, 53);
 		yourPhasesPanel.add(lblTo);
 
-		JLabel label = new JLabel("to");
-		label.setVisible(false);
-		label.setHorizontalTextPosition(SwingConstants.CENTER);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		label.setBounds(805, 27, 61, 53);
-		yourPhasesPanel.add(label);
+		lblTo2 = new JLabel("to");
+		lblTo2.setVisible(false);
+		lblTo2.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblTo2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTo2.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblTo2.setBounds(805, 27, 61, 53);
+		yourPhasesPanel.add(lblTo2);
 
 		updateCardImages();
 	}
@@ -421,7 +432,6 @@ public class GameFrame extends JFrame {
 	public void updateFrame(Phase10 currentGame) {
 
 		current = currentGame.getCurrentPlayer();
-
 
 		//begin update of opponent panels
 		int y = 0;
@@ -535,6 +545,149 @@ public class GameFrame extends JFrame {
 			else
 				discardButton.setEnabled(false);
 		}
+	}
+
+	private class PhaseActionListener implements ActionListener {
+
+		boolean isPhasing;
+		boolean isSecondPhaseGroup;
+
+		public PhaseActionListener() {
+			isPhasing = false;
+			isSecondPhaseGroup = false;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if(isPhasing) {
+				if(isSecondPhaseGroup == false) {
+
+					/*
+					 * adding the phaseGroup
+					 */
+					PhaseGroup newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
+					for(Card c : selectedCards)
+						newPhaseGroup.addCard(c);
+					
+					boolean isValid = current.addPhaseGroups(newPhaseGroup);
+					if(isValid == false) {
+						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
+System.out.println("Adding the first phase failed. The first phase is: " + current.getPhase() + ". The type of the phase is: " + newPhaseGroup.getType() + ". The number of cards in the group is: " + newPhaseGroup.getNumberOfCards());						
+						notAGoodPhase.setVisible(true);
+					}
+					else { //adding selected cards was successful
+						//make the buttons on the left side of youPhasesPanel visible TODO
+						pg1Start.setVisible(true);
+						lblTo.setVisible(true);
+						pg1End.setVisible(true);
+						addToPG1.setVisible(true);
+
+						pg1Start.setIcon((new ImageIcon(GameFrame.class.getResource(
+								getCardFile(newPhaseGroup.getCard(0)))
+								)));
+						pg1End.setIcon((new ImageIcon(GameFrame.class.getResource(
+								getCardFile(newPhaseGroup.getCard(newPhaseGroup.getNumberOfCards()-1)))
+								)));
+
+						switch(current.getPhase()) {
+						case 1:
+							btnNewPhase.setText("add a set of 3");
+							break;
+						case 2:
+							btnNewPhase.setText("add a run of 4");
+							break;
+						case 3:
+							btnNewPhase.setText("add a run of 4");
+							break;
+						case 7:
+							btnNewPhase.setText("add a set of 4");
+							break;
+						case 9:
+							btnNewPhase.setText("add a set of 2");
+							break;
+						case 10:
+							btnNewPhase.setText("add a set of 3");
+							break;
+						default:
+							btnNewPhase.setText("Add a Phase!");
+							btnNewPhase.setVisible(false);
+							break;
+						}
+					}
+				}
+				else { //is about to add the second phase group
+					//adding phases to the phaseGroup
+					PhaseGroup newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
+					for(Card c : selectedCards)
+						newPhaseGroup.addCard(c);
+
+					boolean isValid = current.addPhaseGroups(newPhaseGroup);
+					if(!isValid) {
+						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
+						notAGoodPhase.setVisible(true);
+					}
+					else { //the player played a valid phase
+						//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
+						pg2Start.setVisible(true);
+						lblTo2.setVisible(true);
+						pg2End.setVisible(true);
+						addToPG2.setVisible(true);
+
+						pg2Start.setIcon((new ImageIcon(GameFrame.class.getResource(
+								getCardFile(newPhaseGroup.getCard(0)))
+								)));
+						pg2End.setIcon((new ImageIcon(GameFrame.class.getResource(
+								getCardFile(newPhaseGroup.getCard(newPhaseGroup.getNumberOfCards()-1)))
+								)));
+
+						btnNewPhase.setVisible(false);
+						btnNewPhase.setText("Add a Phase!");
+					}
+				}
+			}
+			else{ //is not phasing
+				isPhasing = true;
+				isSecondPhaseGroup = false;
+				switch(current.getPhase()) {
+				case 1:
+					btnNewPhase.setText("add a set of 3");
+					break;
+				case 2:
+					btnNewPhase.setText("add a set of 3");
+					break;
+				case 3:
+					btnNewPhase.setText("add a set of 4");
+					break;
+				case 4:
+					btnNewPhase.setText("add a run of 7");
+					break;
+				case 5:
+					btnNewPhase.setText("add a run of 8");
+					break;
+				case 6:
+					btnNewPhase.setText("add a run of 9");
+					break;
+				case 7:
+					btnNewPhase.setText("add a set of 4");
+					break;
+				case 8:
+					btnNewPhase.setText("add 7 cards of the same color");
+					break;
+				case 9:
+					btnNewPhase.setText("add a set of 5");
+					break;
+				case 10:
+					btnNewPhase.setText("add a set of 5");
+					break;
+
+				default:
+					System.out.println("Error! phase number out of bounds in GameFrame");
+					break;
+				}
+			}
+		}
+
 	}
 }
 
