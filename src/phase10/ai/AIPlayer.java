@@ -76,8 +76,8 @@ public class AIPlayer extends Player {
 			game.getRound().drawFromDeck();
 		}
 		try{
-			if(!hasLaidDownPhase() && layDownPhase())
-				addPhaseGroups(group.getCompletePhaseGroups());
+			if(!hasLaidDownPhase() && addPhaseGroups(group.getCompletePhaseGroups()))
+				System.out.print("laid down a phase"); // make sure it works if too many cards or groups in group
 		}catch(Exception e){
 			System.out.println("AIPlayer, laydown: " + e.toString());
 		}
@@ -92,7 +92,7 @@ public class AIPlayer extends Player {
 		}catch(Exception e){
 			game.getRound().discard(getHand().getCard(0));
 			System.out.println("AIPlayer, playoff: " + e.toString());
-		}		
+		}
 	}
 	
 	int[] setsNeeded(){
@@ -156,6 +156,8 @@ public class AIPlayer extends Player {
 		// on long run phases some cards are needed no matter what, on difficulty > 70 draw those
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){
+			// if i was put in a partial or complete group
+			// think about making it current point value + 5, don't pick up skip, pick up wild
 			if(difficulty < 30)
 				return true;
 			
@@ -293,14 +295,12 @@ public class AIPlayer extends Player {
 		private ArrayList<Card> single;
 		private ArrayList<Card>	conflictingCards;
 		private Card[] cardValues;
-		private AIPlayer player;
 		private ArrayList<PhaseGroup> 	complete;
 		private ArrayList<PhaseGroup>	partial;
 		private ArrayList<ArrayList<PhaseGroup>>	connected;
 		private ArrayList<ArrayList<PhaseGroup>>	conflicting;
 		
 		private Groups(AIPlayer p){
-			player = p;
 			complete = new ArrayList<PhaseGroup>();
 			if(!p.colorPhase()){
 				partial = new ArrayList<PhaseGroup>();
@@ -321,13 +321,14 @@ public class AIPlayer extends Player {
 			group();
 		}
 		
+		//TODO keep the hand sorted
 		public Groups(Hand h, Card c, AIPlayer p){
 			this(p);
 			cardValues = new Card[h.getNumberOfCards()+1];
 			for(int x = 0; x < h.getNumberOfCards(); x++){
 				cardValues[x] = h.getCard(x);
 			}
-			cardValues[h.getNumberOfCards()] = c;
+			cardValues[h.getNumberOfCards()] = c; 
 			group();
 		}
 		
@@ -411,18 +412,18 @@ public class AIPlayer extends Player {
 		}
 		 
 		private void singleAndConflictingGroup(){
-			ArrayList<PhaseGroup>[] conflict = (ArrayList<PhaseGroup>[])new Object[cardValues.length]; // Dr. Mailler approved
+			ArrayList<ArrayList<PhaseGroup>> conflict = new ArrayList<ArrayList<PhaseGroup>>(); 
 			Card tempCard;
-			for(int x = 0; x < conflict.length; x++){
-				conflict[x] = new ArrayList<PhaseGroup>();
+			for(int x = 0; x < cardValues.length; x++){ // WHY??
+				conflict.add(new ArrayList<PhaseGroup>());
 			}
-			for(PhaseGroup g: complete){
+			for(PhaseGroup g: complete){ // only possible with both sets and phases
 				for(int x = 0; x < g.getNumberOfCards(); x++){
 					tempCard = g.getCard(x);
 					int y = 0;
 					for(;y < cardValues.length; y++){
 						if(tempCard == cardValues[y]){
-							conflict[y].add(g);
+							conflict.get(y).add(g);
 							break;
 						}
 					}
@@ -434,44 +435,44 @@ public class AIPlayer extends Player {
 					int y = 0;
 					for(;y < cardValues.length; y++){
 						if(tempCard == cardValues[y]){
-							conflict[y].add(g);
+							conflict.get(y).add(g);
 							break;
 						}
 					}
 				}
 			}
-			for(int x = 0; x < conflict.length; x++){
-				if(conflict[x].size() > 1){
+			for(int x = 0; x < conflict.size(); x++){
+				if(conflict.get(x).size() > 1){
 					conflictingCards.add(cardValues[x]);
 					ArrayList<PhaseGroup> tempList = new ArrayList<PhaseGroup>();
-					for(PhaseGroup g: conflict[x])
+					for(PhaseGroup g: conflict.get(x))
 						tempList.add(g);
 					conflicting.add(tempList);
 				}
-				else if(conflict[x].size() == 0){
+				else if(conflict.get(x).size() == 0){
 					single.add(cardValues[x]);
 				}
 			}
 		}
 		
 		private void completeAndPartialGroup(){
-			if(player.setsNeeded()[0] != 0){
+			if(setsNeeded()[0] != 0){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == cardValues[x-1].getValue()){
 						PhaseGroup setGroup = new PhaseGroup(game);
 						setGroup.addCard(cardValues[x-1]);
-						while(x < cardValues.length && cardValues[x] == cardValues[x-1]){
+						while(x < cardValues.length && cardValues[x].getValue() == cardValues[x-1].getValue()){
 							setGroup.addCard(cardValues[x++]);
-						}
+						} 
 						setGroup.setType(Configuration.SET_PHASE);
-						if(PhaseGroup.validate(setGroup, Configuration.SET_PHASE, player.setsNeeded()[0]))
+						if(PhaseGroup.validate(setGroup, Configuration.SET_PHASE, setsNeeded()[0]))
 							complete.add(setGroup);
 						else
 							partial.add(setGroup);
 					}
 				}
 			}
-			if(player.numLengthRun() > 0){
+			if(numLengthRun() > 0){
 				for(int x = 1; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					if(cardValues[x].getValue() == 1 + cardValues[x-1].getValue()){
 						PhaseGroup runGroup = new PhaseGroup(game);
@@ -484,14 +485,14 @@ public class AIPlayer extends Player {
 							x++;
 						}
 						runGroup.setType(Configuration.RUN_PHASE);
-						if(PhaseGroup.validate(runGroup, Configuration.RUN_PHASE, player.numLengthRun()))
+						if(PhaseGroup.validate(runGroup, Configuration.RUN_PHASE, numLengthRun()))
 							complete.add(runGroup);
 						else
 							partial.add(runGroup);
 					}
 				}
 			}
-			if(player.colorPhase()){
+			if(colorPhase()){
 				int color = 0;
 				for(int x = 0; x < cardValues.length && cardValues[x].getValue() < Configuration.WILD_VALUE; x++){
 					PhaseGroup colorGroup = new PhaseGroup(game);
@@ -512,7 +513,11 @@ public class AIPlayer extends Player {
 		
 		//TODO fill in
 		public PhaseGroup[] getCompletePhaseGroups(){
-			
+			PhaseGroup[] temp = new PhaseGroup[complete.size()];
+			int x = 0;
+			for(PhaseGroup c: complete)
+				temp[x++] = c;
+			return temp;
 		}
 		
 		//TODO figure out discard value.
@@ -523,7 +528,7 @@ public class AIPlayer extends Player {
 			bigLoop:
 			for(int x = 0; x < cardValues.length; x++){
 				if(cardValues[x].getValue() == Configuration.WILD_VALUE){
-					discardValue[x] = Double.MIN_VALUE;
+					discardValue[x] = Double.MAX_VALUE * -1;
 					continue bigLoop;
 				}else if(cardValues[x].getValue() == Configuration.SKIP_VALUE){
 					discardValue[x] = Double.MAX_VALUE;
@@ -548,7 +553,7 @@ public class AIPlayer extends Player {
 				}
 				
 				foundComplete:
-				for(PhaseGroup c: complete){
+				for(PhaseGroup c: complete){ // what about excess groups/conflicting?
 					for(int completeIndex = 0; completeIndex < c.getNumberOfCards(); completeIndex++){
 						if(c.getCard(completeIndex) == cardValues[x]){
 							for(int restOfComplete = 0; restOfComplete < c.getNumberOfCards(); restOfComplete++){
@@ -560,7 +565,7 @@ public class AIPlayer extends Player {
 					}
 				}
 				
-				for(PhaseGroup p: partial){
+				for(PhaseGroup p: partial){ // rethink this, cards in complete groups should be ranked ahead of complete groups
 					for(int partialIndex = 0; partialIndex < p.getNumberOfCards(); partialIndex++){
 						if(p.getCard(partialIndex) == cardValues[x]){
 							for(int restOfPartial = 0; restOfPartial < p.getNumberOfCards(); restOfPartial++){
@@ -582,22 +587,22 @@ public class AIPlayer extends Player {
 			//insertion sort, sorting sortedResults according to the discardValue
 			Card[] sortedResults = Arrays.copyOf(cardValues, cardValues.length);
 			for(int x = 0; x < discardValue.length; x++){
-				int lowestIndex = x;
+				int highestIndex = x;
+				double tempIndex;
+				Card tempCard;
 				for(int y = x + 1; y < discardValue.length; y++){
-					double tempIndex;
-					Card tempCard;
-					if(discardValue[lowestIndex] > discardValue[y]){
-						tempIndex = discardValue[lowestIndex];
-						tempCard = sortedResults[lowestIndex];
-						discardValue[lowestIndex] = discardValue[y];
-						sortedResults[lowestIndex] = sortedResults[y];
-						discardValue[y] = tempIndex;
-						sortedResults[lowestIndex] = tempCard;
-					}
+					if(discardValue[highestIndex] < discardValue[y])
+						highestIndex = y;
 				}
+				tempIndex = discardValue[highestIndex];
+				tempCard = sortedResults[highestIndex];
+				discardValue[highestIndex] = discardValue[x];
+				sortedResults[highestIndex] = sortedResults[x];
+				discardValue[x] = tempIndex;
+				sortedResults[x] = tempCard;
 			}
 			
 			return sortedResults;
-		}
+		} // keep cards that opponents are using in groups
 	}
 }
