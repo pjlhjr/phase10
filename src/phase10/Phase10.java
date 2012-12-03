@@ -126,13 +126,13 @@ public final class Phase10 implements Serializable {
 	 *             if the game has already started or there are less than 2
 	 *             players added.
 	 */
-	public void startGame() {
+	public ArrayList<Player> startGame() {
 		if (!started) {
 			dealer = getNumberOfPlayers() - 1;
 			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
-				nextRound();
+				return nextRound();
 			} else
 				throw new Phase10Exception(
 						"Cannot start game with less than 2 players");
@@ -144,7 +144,7 @@ public final class Phase10 implements Serializable {
 	/**
 	 * Resets the necessary player data and checks to see if there is a winner
 	 */
-	void nextRound() {
+	ArrayList<Player> nextRound() {
 		finishRound();
 		ArrayList<Player> winners = checkWinners();
 		if (winners.size() == 0) {
@@ -162,8 +162,10 @@ public final class Phase10 implements Serializable {
 			if (Configuration.PRINT_LOG) {
 				log.printLog();
 			}
+			return winners;
 			// TODO call gui- winner(s)
 		}
+		return winners;
 	}
 
 	/**
@@ -208,10 +210,14 @@ public final class Phase10 implements Serializable {
 		for (Player p : players) {
 			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			for (int c = 0; c < hand.getNumberOfCards(); c++) {
-				p.addToScore(hand.getAnyCard(c).getPointValue());
-				hand.removeCard(c);
+			log.addEntry(new LogEntry(-1, p, "Finshing round: " + hand));
+
+			while (hand.getNumberOfCards() > 0) {
+				p.addToScore(hand.getAnyCard(0).getPointValue());
+				hand.removeCard(0);
 			}
+			log.addEntry(new LogEntry(-1, p, "New score: " + p.getScore()
+					+ " Hand: " + hand));
 
 			// clear phasegroups
 			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
