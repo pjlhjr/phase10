@@ -119,7 +119,7 @@ public class Player implements Serializable {
 	 */
 	public boolean addPhaseGroups(PhaseGroup... pg) {
 
-		for (int i = 0; i < Configuration.getNumberOfPhaseGroupsRequired(phase); i++)
+		for (int i = 0; i < pg.length; i++)
 			game.getLog().addEntry(
 					new LogEntry(game.getRound().getTurnNumber(), this,
 							"Attempt to lay down phase group " + pg[i]));
