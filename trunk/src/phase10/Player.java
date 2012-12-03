@@ -119,6 +119,9 @@ public class Player implements Serializable {
 	public boolean addPhaseGroups(PhaseGroup... pg) {
 		int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
 
+		for (int i =0; i<numPhasesExpected[phase-1];i++)
+			game.getLog().addEntry(new LogEntry(game.getRound().getTurnNumber(),this,"Attempt to lay down phase group "+pg[i]));
+		
 		// cannot lay down phases if player already has
 		if (hasLaidDownPhase)
 			return false;
