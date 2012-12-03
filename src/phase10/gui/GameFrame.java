@@ -381,7 +381,7 @@ public class GameFrame extends JFrame {
 				btnNewPhase.setVisible(true);
 			}
 		}
-		else { //make everything else invisible
+		else { //make the new phase button visible and make everything else invisible
 			pg1Start.setVisible(false);
 			lblTo.setVisible(false);
 			pg1End.setVisible(false);
@@ -657,6 +657,15 @@ public class GameFrame extends JFrame {
 						if(!isValid) {
 							MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
 							notAGoodPhase.setVisible(true);
+							
+							for(int i = 0; i < handButtons.length; i++) {
+								handButtons[i].setVisible(true);
+							}
+							
+							selectedCards.clear();
+							
+							isPhasing = false;
+							isSecondPhaseGroup = false;
 						}
 						else { //the player played a valid phase with only one phase group in the phase
 							//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
@@ -676,6 +685,9 @@ public class GameFrame extends JFrame {
 
 							btnNewPhase.setVisible(false);
 							btnNewPhase.setText("Add a Phase!");
+							
+							isPhasing = false;
+							isSecondPhaseGroup = false;
 							break;
 						}
 					}
@@ -694,6 +706,15 @@ public class GameFrame extends JFrame {
 					if(!isValid) {
 						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
 						notAGoodPhase.setVisible(true);
+						
+						//set all buttons to visible and clear all selections
+						for(int i = 0; i < handButtons.length; i++) {
+							handButtons[i].setVisible(true);
+							handButtons[i].setSelected(false);
+						}
+						selectedCards.clear();
+						isPhasing = false;
+						isSecondPhaseGroup = false;
 					}
 					else { //the player played a valid phase
 						//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
@@ -728,6 +749,9 @@ public class GameFrame extends JFrame {
 
 						btnNewPhase.setVisible(false);
 						btnNewPhase.setText("Add a Phase!");
+						
+						isPhasing = false;
+						isSecondPhaseGroup = false;
 					}
 				}
 			}

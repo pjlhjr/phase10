@@ -69,7 +69,7 @@ public class ScoreFrame extends JFrame {
 			Class[] columnTypes = new Class[] {
 				Integer.class, String.class, Integer.class, Integer.class
 			};
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
