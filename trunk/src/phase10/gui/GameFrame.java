@@ -73,13 +73,13 @@ public class GameFrame extends JFrame {
 	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
-		
+
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
 
 		this.gManage = gManage;
 
-		gManage.mainManager.getGame().getRound().startRound();
+		gManage.mainManager.getGame().getRound().startRound(); //TODO place this snippet elsewhere
 
 		current = gManage.mainManager.getGame().getCurrentPlayer();
 
@@ -171,7 +171,7 @@ public class GameFrame extends JFrame {
 			handButtons[i].addActionListener(new HandActionListener(i));
 			handPanel.add(handButtons[i]);
 		}
-		
+
 
 		//begin deck panel
 
@@ -209,20 +209,20 @@ public class GameFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 
 				if(isDiscarding == false) {
-						boolean isValidCard = gManage.mainManager.getGame().getRound().drawFromDiscard();
-						if(isValidCard) {
-							updateFrame(gManage.mainManager.getGame());
-							deckButton.setEnabled(false);
-							discardButton.setEnabled(false);
-							btnNewPhase.setEnabled(true);
-							discardButton.setIcon(null);
-							discardButton.setText("discard selected card");
-							isDiscarding = true;
-						}
-						else {
-							MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
-							skipPickup.setVisible(true);
-						}
+					boolean isValidCard = gManage.mainManager.getGame().getRound().drawFromDiscard();
+					if(isValidCard) {
+						updateFrame(gManage.mainManager.getGame());
+						deckButton.setEnabled(false);
+						discardButton.setEnabled(false);
+						btnNewPhase.setEnabled(true);
+						discardButton.setIcon(null);
+						discardButton.setText("discard selected card");
+						isDiscarding = true;
+					}
+					else {
+						MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
+						skipPickup.setVisible(true);
+					}
 				}
 				else {
 					gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
@@ -419,10 +419,10 @@ public class GameFrame extends JFrame {
 
 
 	public void updateFrame(Phase10 currentGame) {
-		
+
 		current = currentGame.getCurrentPlayer();
-		
-		
+
+
 		//begin update of opponent panels
 		int y = 0;
 		for(int x = 0; x < currentGame.getNumberOfPlayers(); x++) {
@@ -431,18 +431,18 @@ public class GameFrame extends JFrame {
 				y++;
 			}
 		}
-		
+
 		//end update of opponent panels
 
-		
-		
+
+
 		/*
 		 * begin update of cards
 		 */
 
 		for(int i = 0; i < handButtons.length; i++)
 			handButtons[i].setSelected(false);
-		
+
 		selectedCards.clear();
 
 		updateCardImages();
@@ -480,23 +480,23 @@ public class GameFrame extends JFrame {
 	 * of the current player's hand
 	 */
 	private void updateCardImages() {
-		
+
 		Hand currentHand = current.getHand();
 		//begin hand button update
 		int i = 0;
 		for(; i < currentHand.getNumberOfCards(); i++) {
-			
+
 			handButtons[i].setVisible(true);
-			
+
 			handButtons[i].setIcon(new ImageIcon(GameFrame.class.getResource(
 					getCardFile(currentHand.getCard(i))
 					)));
-			
+
 			handButtons[i].setSelectedIcon(new ImageIcon(GameFrame.class.getResource(
 					getSelectedCardFile(currentHand.getCard(i))
 					)));
 		}
-		
+
 		for(; i < handButtons.length; i++) {
 			handButtons[i].setVisible(false);
 		}
@@ -529,6 +529,13 @@ public class GameFrame extends JFrame {
 				selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(i));
 				handButtons[i].setSelected(true);
 			}
+			if(selectedCards.size() == 1) {
+				discardButton.setEnabled(true);
+			}
+			else
+				discardButton.setEnabled(false);
 		}
 	}
 }
+
+
