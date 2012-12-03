@@ -8,6 +8,7 @@ package phase10;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import phase10.util.Configuration;
 import phase10.util.LogEntry;
 
 /**
@@ -28,7 +29,7 @@ public class Player implements Serializable {
 	private boolean hasLaidDownPhase;
 	private boolean skipNextTurn;
 	private ArrayList<PhaseGroup> phaseGroups;
-	
+
 	private boolean hasDrawnCard;
 
 	protected Phase10 game;
@@ -117,16 +118,17 @@ public class Player implements Serializable {
 	 * @return true if valid to add, otherwise false.
 	 */
 	public boolean addPhaseGroups(PhaseGroup... pg) {
-		int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
 
-		for (int i =0; i<numPhasesExpected[phase-1];i++)
-			game.getLog().addEntry(new LogEntry(game.getRound().getTurnNumber(),this,"Attempt to lay down phase group "+pg[i]));
-		
+		for (int i = 0; i < Configuration.getNumberOfPhaseGroupsRequired(phase); i++)
+			game.getLog().addEntry(
+					new LogEntry(game.getRound().getTurnNumber(), this,
+							"Attempt to lay down phase group " + pg[i]));
+
 		// cannot lay down phases if player already has
 		if (hasLaidDownPhase)
 			return false;
 
-		if (!(pg.length == numPhasesExpected[phase - 1]))
+		if (!(pg.length == Configuration.getNumberOfPhaseGroupsRequired(phase)))
 			return false;
 
 		boolean success = false;
@@ -250,7 +252,9 @@ public class Player implements Serializable {
 		}
 		if (success) {
 			setLaidDownPhase(true);
-			game.getLog().addEntry(new LogEntry(game.getRound().getTurnNumber(), this, "Laid down phase"));
+			game.getLog().addEntry(
+					new LogEntry(game.getRound().getTurnNumber(), this,
+							"Laid down phase"));
 			return true;
 		} else
 			return false;
@@ -258,6 +262,7 @@ public class Player implements Serializable {
 
 	/**
 	 * Gets the number of phasegroups this person has laid down
+	 * 
 	 * @return the number of laid down phase groups
 	 */
 	public int getNumberOfPhaseGroups() {
@@ -266,7 +271,9 @@ public class Player implements Serializable {
 
 	/**
 	 * Gets the phasegroup at the given index
-	 * @param index the index of the phasegroup to get
+	 * 
+	 * @param index
+	 *            the index of the phasegroup to get
 	 * @return the phase group
 	 */
 	public PhaseGroup getPhaseGroup(int index) {
@@ -301,19 +308,19 @@ public class Player implements Serializable {
 	void removePhaseGroup(int pg) {
 		phaseGroups.remove(pg);
 	}
-	
-	void setHasDrawnCard(boolean state){
+
+	void setHasDrawnCard(boolean state) {
 		hasDrawnCard = state;
 	}
-	
-	boolean getHasDrawnCard(){
+
+	boolean getHasDrawnCard() {
 		return hasDrawnCard;
 	}
-	
+
 	/**
 	 * String representation of the player
 	 */
-	public String toString(){
+	public String toString() {
 		return name;
 	}
 }

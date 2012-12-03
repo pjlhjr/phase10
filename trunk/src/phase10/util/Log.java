@@ -1,9 +1,21 @@
+/**
+ * CS2003 Lab Project Fall 2012
+ * Paul Harris, Matt Hruz, Evan Forbes
+ * 
+ */
+
 package phase10.util;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+/**
+ * Logging utility to keep track of what happens during the game
+ * 
+ * @author Evan Forbes
+ *
+ */
 public class Log {
 
 	ArrayList<LogEntry> log;
