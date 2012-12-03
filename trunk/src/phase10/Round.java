@@ -149,6 +149,10 @@ public final class Round implements Serializable {
 
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Discard: " + card));
+		
+		game.getLog().addEntry(
+				new LogEntry(turnNumber, player, "Current Hand: " + player.getHand()));
+		
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
