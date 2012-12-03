@@ -81,11 +81,17 @@ public final class PhaseGroup implements Serializable {
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
 				game.getCurrentPlayer().getHand().removeCard(c);
+				
 				game.getLog().addEntry(
 						new LogEntry(game.getRound().getTurnNumber(), game
 								.getCurrentPlayer(),
 								"Added card to a laid down phase group: "
 										+ this));
+				
+				if (game.getCurrentPlayer().getHand().getNumberOfCards()==0){
+					game.nextRound();
+				}
+				
 				return true;
 			}
 			return false;
