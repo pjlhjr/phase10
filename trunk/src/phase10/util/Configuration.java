@@ -13,12 +13,14 @@ public class Configuration {
 	public static final int SET_PHASE = 0;
 	public static final int RUN_PHASE = 1;
 	public static final int COLOR_PHASE = 2;
-	
+
 	public static final boolean PRINT_LOG = true;
 	public static final boolean SAVE_LOG = true;
-	public static final String LOG_FILE="log.txt";
-	
-	public static final Color[] COLORS = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
+	public static final String LOG_FILE = "log.txt";
 
-	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green", "Yellow"};
+	public static final Color[] COLORS = {Color.RED, Color.BLUE, Color.GREEN,
+			Color.YELLOW};
+
+	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green",
+			"Yellow"};
 }
