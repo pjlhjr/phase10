@@ -34,7 +34,6 @@ public class opponentPanel extends JPanel {
 	private JTextField txtPhase;
 	private JTextField numCardsPane;
 	private JTextField txtpnScore;
-	private Phase10 currentGame;
 	private JButton phaseGroup1Begin;
 	private JButton addToPhase_2;
 	private JTextField namePane;
@@ -50,7 +49,6 @@ public class opponentPanel extends JPanel {
 	 */
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
 		this.opponent = opponent;
-		this.currentGame = currentGame;
 		this.gameWindow = gameWindow;
 		
 		//begin panel setup
@@ -222,6 +220,7 @@ public class opponentPanel extends JPanel {
 		this.txtPhase.setText("Phase: " + opponent.getPhase());
 		this.txtpnScore.setText("Score: " + opponent.getScore());
 		this.txtPhase.setText("Phase: " + opponent.getPhase());
+		this.numCardsPane.setText("Cards in Hand: " + opponent.getHand().getNumberOfCards());
 		
 		//TODO add update for the phases area
 		phaseAreaUpdate();
