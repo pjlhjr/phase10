@@ -529,11 +529,6 @@ public class GameFrame extends JFrame {
 				selectedCards.add(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(i));
 				handButtons[i].setSelected(true);
 			}
-			if(selectedCards.size() == 1) {
-				handButtons[i].setEnabled(true);
-			}
-			else
-				handButtons[i].setEnabled(false);
 		}
 	}
 }
