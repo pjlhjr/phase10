@@ -8,6 +8,8 @@ package phase10;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import phase10.util.LogEntry;
+
 /**
  * This class contains all of the information for each player for the Phase 10
  * game.
@@ -245,6 +247,7 @@ public class Player implements Serializable {
 		}
 		if (success) {
 			setLaidDownPhase(true);
+			game.getLog().addEntry(new LogEntry(game.getRound().getTurnNumber(), this, "Laid down phase"));
 			return true;
 		} else
 			return false;
@@ -302,5 +305,12 @@ public class Player implements Serializable {
 	
 	boolean getHasDrawnCard(){
 		return hasDrawnCard;
+	}
+	
+	/**
+	 * String representation of the player
+	 */
+	public String toString(){
+		return name;
 	}
 }
