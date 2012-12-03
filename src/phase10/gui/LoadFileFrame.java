@@ -77,6 +77,8 @@ public class LoadFileFrame extends JDialog {
 							invalidMessage.setVisible(true);
 						}
 						else {
+							
+							gManage.initGameWindow();
 							dispose();
 						}
 					}
