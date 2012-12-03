@@ -151,8 +151,8 @@ public class Player implements Serializable {
 					pg[1].setLaidDown(0);
 					phaseGroups.add(pg[1]);
 					success = true;
-				} else if (PhaseGroup.validate(pg[1], 1, 3)
-						&& PhaseGroup.validate(pg[0], 0, 4)) {
+				} else if (PhaseGroup.validate(pg[1], 1, 4)
+						&& PhaseGroup.validate(pg[0], 0, 3)) {
 					pg[0].setLaidDown(0);
 					phaseGroups.add(pg[0]);
 					pg[1].setLaidDown(1);
