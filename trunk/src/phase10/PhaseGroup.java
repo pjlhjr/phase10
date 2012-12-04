@@ -233,7 +233,7 @@ public final class PhaseGroup implements Serializable {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
-					System.out.println("found " + curValue);
+					//System.out.println("found " + curValue);
 					values.remove(i);
 					found = true;
 					break;
