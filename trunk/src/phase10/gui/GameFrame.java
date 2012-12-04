@@ -330,7 +330,7 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(addToPG1);
 
 		addToPG2 = new JButton("add to phase");
-		addToPG2.addActionListener(new AddPhasesListener(0));
+		addToPG2.addActionListener(new AddPhasesListener(1));
 		addToPG2.setVisible(false);
 		addToPG2.setBounds(580, 27, 117, 52);
 		yourPhasesPanel.add(addToPG2);
@@ -562,7 +562,7 @@ public class GameFrame extends JFrame {
 		//end update of opponent panels
 
 		//begin yourPhasesPanel update
-		resetYourPhasesPanel();
+		updateYourPhasesPanel();
 		//end yourPhasesPanel update
 
 		/*
@@ -676,15 +676,19 @@ public class GameFrame extends JFrame {
 		public PhaseActionListener() {
 			isPhasing = false;
 			isSecondPhaseGroup = false;
-			newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			
+			
+			
 			if(isPhasing) {
 				if(isSecondPhaseGroup == false) {
 
+					newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
+					
 					for(Card c : selectedCards) {
 						newPhaseGroup.addCard(c);
 					}
@@ -864,7 +868,6 @@ public class GameFrame extends JFrame {
 				}
 			}
 		}
-
 	}
 
 	protected class AddPhasesListener implements ActionListener {
