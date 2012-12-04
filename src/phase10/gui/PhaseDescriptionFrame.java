@@ -7,13 +7,10 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JButton;
-import javax.swing.JTextArea;
-
-import phase10.Phase10;
-import phase10.Player;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class PhaseDescriptionFrame extends JFrame {
 
@@ -27,18 +24,15 @@ public class PhaseDescriptionFrame extends JFrame {
 	 * All the Strings that will be displayed in this window.
 	 */
 	private String title;
-	private String currentPhaseString;
 	private String okayButtonLabel;
-	private String phaseDescriptionString;
-	
 	GuiManager gManage;
 	Language gLang;
-	private JTextArea phaseDescription;
+	private JTable phaseDescriptionJTable;
 	
 	/**
 	 * Create the frame.
 	 */
-	public PhaseDescriptionFrame(int currentPhase, GuiManager gm) {
+	public PhaseDescriptionFrame(GuiManager gm) {
 		setResizable(false);
 		
 		gManage = gm;
@@ -47,23 +41,23 @@ public class PhaseDescriptionFrame extends JFrame {
 		//TODO change constant String values to language variables
 		initLanguage(gManage.getGameLang());
 		
+		int currentPhase = gManage.mainManager.getGame().getCurrentPlayer().getPhase();
+		
 		title = gLang.getEntry("PD_FRAME_TITLE") + " " + currentPhase;
-		currentPhaseString = gLang.getEntry("PHASE") + " " + currentPhase + ":";
-		phaseDescriptionString = this.setPhaseDescriptionString(currentPhase);
 		okayButtonLabel = "Okay";
 		
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 432, 264);
+		setBounds(100, 100, 471, 488);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel phaseLabel = new JLabel(currentPhaseString);
+		JLabel phaseLabel = new JLabel("Phase Descriptions");
 		phaseLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
 		phaseLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		phaseLabel.setBounds(143, 11, 130, 52);
+		phaseLabel.setBounds(83, 11, 254, 52);
 		contentPane.add(phaseLabel);
 		
 		JButton btnOkay = new JButton(okayButtonLabel);
@@ -74,37 +68,56 @@ public class PhaseDescriptionFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnOkay.setBounds(163, 180, 89, 23);
+		btnOkay.setBounds(171, 402, 89, 23);
 		contentPane.add(btnOkay);
 		
-		phaseDescription = new JTextArea();
-		phaseDescription.setFont(new Font("Microsoft YaHei", Font.ITALIC, 19));
-		phaseDescription.setLineWrap(true);
-		phaseDescription.setWrapStyleWord(true);
-		phaseDescription.setEditable(false);
-		phaseDescription.setText(phaseDescriptionString);
-		phaseDescription.setBounds(108, 84, 230, 66);
-		contentPane.add(phaseDescription);
-	}
-	
-	void updateFrame(Player currentPlayer) {
+		//Initialize table contents
+		String[][] phaseDescriptionTable = new String[10][gm.mainManager.getGame().getNumberOfPlayers() + 2];
+		for(int r = 0; r < 10; r++) {
+			phaseDescriptionTable[r][0] = Integer.toString(r + 1);
+			phaseDescriptionTable[r][1] = setPhaseDescriptionString(r+1);
+			for(int c = 2; c < phaseDescriptionTable[r].length; c++) {
+				if(gm.mainManager.getGame().getPlayer(c-2).getPhase() == r+1){
+					phaseDescriptionTable[r][c] = "X";
+				}
+				else {
+					phaseDescriptionTable[r][1] = "";
+				}
+			}
+		}
 		
-		phaseDescription.setText(setPhaseDescriptionString(currentPlayer.getPhase()));
+		//end table contents
 		
 		
+		//initialize table header
+		String[] tableHead = new String[gm.mainManager.getGame().getNumberOfPlayers() + 2];
+		tableHead[0] = "Phase #";
+		tableHead[1] = "Phase Description";
+		//end table header
+		
+		for(int i = 0; i < gm.mainManager.getGame().getNumberOfPlayers(); i++) {
+			tableHead[i+2] = gm.mainManager.getGame().getPlayer(i).getName();
+		}
+		
+		phaseDescriptionJTable = new JTable();
+		phaseDescriptionJTable.setModel(new DefaultTableModel(phaseDescriptionTable, tableHead));
+		phaseDescriptionJTable.getColumnModel().getColumn(0).setPreferredWidth(65);
+		phaseDescriptionJTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+		phaseDescriptionJTable.getTableHeader().setVisible(true);
+		phaseDescriptionJTable.setBounds(48, 74, 334, 296);
+		contentPane.add(phaseDescriptionJTable);
 	}
 
 	private void initLanguage(Language langSetter) {
 		
 		//TODO GET LANGUAGE FILE STRAIGHTENED UP THEN WORK THIS OUT!!!
 		title = langSetter.getEntry("PD_FRAME_TITLE");
-		currentPhaseString = langSetter.getEntry("CURRENT_PHASE");
+		langSetter.getEntry("CURRENT_PHASE");
 		okayButtonLabel = langSetter.getEntry("OKAY");
-		phaseDescriptionString = langSetter.getEntry("PHASE_1_STRING");
+		langSetter.getEntry("PHASE_1_STRING");
 	}
 
 	private String setPhaseDescriptionString(int phaseNum) {
-		//TODO edit to add compatibility for other languages
 		switch (phaseNum) {
 		case 1:
 			return gLang.getEntry("PHASE_1_STRING");
