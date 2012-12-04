@@ -150,8 +150,6 @@ public final class Round implements Serializable {
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Discard: " + card));
 		
-		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Current Hand: " + player.getHand()));
 		
 		discardStack.push(card);
 		player.getHand().removeCard(card);
@@ -159,6 +157,9 @@ public final class Round implements Serializable {
 		player.setHasDrawnCard(false);
 
 		player.getHand().sortByValue();
+		
+		game.getLog().addEntry(
+				new LogEntry(turnNumber, player, "Current Hand: " + player.getHand()));
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
 			int nextPlayer = curPlayerNum + 1;
@@ -166,6 +167,8 @@ public final class Round implements Serializable {
 				nextPlayer = 0;
 			}
 			game.getPlayer(nextPlayer).setSkip(true);
+			game.getLog().addEntry(
+					new LogEntry(turnNumber, player, "Skipping player: " + game.getPlayer(nextPlayer)));
 		}
 
 		nextTurn();
