@@ -6,6 +6,7 @@ package phase10.ai;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Random;
 
 import phase10.Hand;
@@ -26,25 +27,15 @@ import phase10.util.Configuration;
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private final int difficulty;
-	//private ArrayList<Integer> opponentCard;
-	//private ArrayList<Integer> discardedCards;
 	private Groups group;
 	
 	public AIPlayer(Phase10 game, int difficulty, String name){
 		super(game, name);
-		this.game = game;
 		this.difficulty = difficulty;
-		System.out.println("AIPlayer difficulty: " + difficulty);
 	}
 	
 	public static void main(String[] args){
-	/*int tot = 0;
-	for(int x = 0; x < 1000000; x++){
-		if(bestChoice(10)){
-			tot++;
-		}
-	}
-	System.out.println((tot/1000000.0*100));*/
+		new AITester();
 	}
 	
 	/**
@@ -64,8 +55,10 @@ public class AIPlayer extends Player {
 	* don't discard cards that will be immediately picked up and laid down
 	*/
 	public void playTurn(){
+		// all exceptions in this method are caught, because if this method throws an exception
+		// the AIPlayer will not draw a card and the program will freeze
 		try{
-			if(!(drawOrPickUp()^bestChoice(10))){
+			if(!(drawOrPickUp()^bestChoice(10))){ // choose whether to draw from the deck or pick up from the stack
 				game.getRound().drawFromDeck();
 			}else{
 				if(!game.getRound().drawFromDiscard())
@@ -73,20 +66,24 @@ public class AIPlayer extends Player {
 			}
 		}catch(Exception e){
 			System.out.println("AIPlayer, draw: " + e.toString());
-			game.getRound().drawFromDeck();
+			game.getRound().drawFromDeck(); // if something goes wrong, draw
 		}
+		
 		try{
-			if(!hasLaidDownPhase() && addPhaseGroups(group.getCompletePhaseGroups())) // make sure to lay down on time & don't lay down before certain point varying by diff
-				System.out.print("laid down a phase"); // make sure it works if too many cards or groups in group
+			if(!hasLaidDownPhase()) // attempt to lay down phase groups
+				addPhaseGroups(getPhaseGroups()); // make sure to lay down on time & don't lay down before certain point varying by diff
+				// make sure it works if too many cards or groups in group
 		}catch(Exception e){
 			System.out.println("AIPlayer, laydown: " + e.toString());
 		}
+		
 		try{
 			if(hasLaidDownPhase())
 				playOffPhases();
 		}catch(Exception e){
 			System.out.println("AIPlayer, playoff: " + e.toString());
 		}
+		
 		try{
 			game.getRound().discard(discardCard());
 		}catch(Exception e){
@@ -150,11 +147,20 @@ public class AIPlayer extends Player {
 		return false;
 	}
 	
+	/**
+	 * @return true if it is recommended to pick up a card, 
+	 * or false if it is recommended to draw a card 
+	 */
+	//TODO make hard player look at median, get rid of higher cards if on later turns, easier player more likely to keep cards
 	private boolean drawOrPickUp(){//true to pick up, false to draw
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
+		if(cardOnTopOfPile.getValue() == Configuration.WILD_VALUE)
+			return true;
+		if(cardOnTopOfPile.getValue() == Configuration.SKIP_VALUE)
+			return false;
 		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){
-			// if i was put in a partial or complete group
-			// think about making it current point value + 5, don't pick up skip, pick up wild
+			// if it was put in a partial or complete group
+			// think about making it current point value + 5
 			if(difficulty < 30)
 				return true;
 			
@@ -168,24 +174,18 @@ public class AIPlayer extends Player {
 				if (difficulty < 70)
 					return true;
 				
-				int[] sortedValuesIndex = new int[values.length];
-				for(int x = 1; x < values.length; x++){
-					int y = 0;
-					for(; y <= x; y++)
-						if(values[sortedValuesIndex[x]] < values[sortedValuesIndex[y]])
-							break;
-					//TODO make hard player look at median, get rid of higher cards if on later turns, easier player more likely to keep cards
-				}
+				group = new Groups(getHand(), cardOnTopOfPile);
+				if(group.cardInCompleteGroup(cardOnTopOfPile))
+					return true;
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * TODO incorp diff, only allow to lay down phase after a certain point, varing by difficulty
+	/*
+	 * incorp diff, only allow to lay down phase after a certain point, varing by difficulty
 	 * @deprecated never used, unnessessary
 	 * @return whether to laydown a phase or not
-	 */
 	private boolean layDownPhase(){ 
 		group = new Groups(getHand());
 		if(colorPhase()){
@@ -203,7 +203,7 @@ public class AIPlayer extends Player {
 				return true;
 		}
 		return false;
-	}
+	}*/
 	
 	/*
 	 * TODO finish basic algorithm, figure out how to incorporate difficulty
@@ -262,13 +262,13 @@ public class AIPlayer extends Player {
 			for(int x = 0; x < Configuration.WILD_VALUE - 1; x++){		
 				totalPointValues[x] = addedPointValue(new Card(x));
 			}
-			totalPointValues[Configuration.WILD_VALUE - 1] = addedPointValue(new WildCard(Configuration.WILD_VALUE));
+			totalPointValues[Configuration.WILD_VALUE - 1] = addedPointValue(new WildCard());
 		}else{
 			totalPointValues = new int[Configuration.COLORS.length + 1];
 			for(int x = 0; x < Configuration.COLORS.length; x++){
 				totalPointValues[x] = addedPointValue(new Card(Configuration.COLORS[x], 1));
 			}
-			totalPointValues[Configuration.COLORS.length] = addedPointValue(new WildCard(Configuration.WILD_VALUE));
+			totalPointValues[Configuration.COLORS.length] = addedPointValue(new WildCard());
 		}
 		return totalPointValues;
 	}
@@ -294,13 +294,20 @@ public class AIPlayer extends Player {
 			return false;
 	}
 	
+	/**
+	 * @return the best complete grouping of the cards in the AIPlayer's hand
+	 */
+	private PhaseGroup[] getPhaseGroups(){
+		group = new Groups(getHand());
+		return group.getCompletePhaseGroups();
+	}
+	
 	private class Groups{
 		private ArrayList<Card> single;
 		private ArrayList<Card>	conflictingCards;
 		private Card[] cardValues;
 		private ArrayList<PhaseGroup> 	complete;
 		private ArrayList<PhaseGroup>	partial;
-		private ArrayList<ArrayList<PhaseGroup>>	connected;
 		private ArrayList<ArrayList<PhaseGroup>>	conflicting;
 		
 		private Groups(){
@@ -310,11 +317,14 @@ public class AIPlayer extends Player {
 				conflicting = new ArrayList<ArrayList<PhaseGroup>>();
 				single = new ArrayList<Card>();
 				conflictingCards = new ArrayList<Card>();
-				if(numLengthRun() > 0);
-					connected = new ArrayList<ArrayList<PhaseGroup>>();
 			}
 		}
 		
+		public boolean cardInCompleteGroup(Card cardOnTopOfPile) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
 		Groups(Hand h){
 			this();
 			cardValues = new Card[h.getNumberOfCards()];
@@ -362,18 +372,16 @@ public class AIPlayer extends Player {
 		//TODO deal with wilds
 		private void group(){
 			completeAndPartialGroup();
+			dealWithWilds();
 			if(!colorPhase()){
 				singleAndConflictingGroup();
-				//resolveConflicts();
+				resolveConflicts();
 			}
-			//TODO deal with wilds
 		}
 		
-		//TODO figure out some way, break this problem down,  
-		//nesseccary? no runs less than 4 means must be a partial group present
-		/**
-		 * @deprecated
-		 */
+		/* figure out some way, break this problem down,  
+		nesseccary? no runs less than 4 means must be a partial group present
+		
 		private void connectedGroup(){
 			for(PhaseGroup g: complete){
 				if(g.getType() == Configuration.RUN_PHASE){
@@ -405,7 +413,7 @@ public class AIPlayer extends Player {
 					}
 				}
 			}
-			/*for(PhaseGroup p: partial){
+			for(PhaseGroup p: partial){
 				if()
 			}
 			for(Card c: single){
@@ -414,8 +422,8 @@ public class AIPlayer extends Player {
 				}else{
 					
 				}
-			}*/
-		}
+			}
+		}*/
 		 
 		private void singleAndConflictingGroup(){
 			ArrayList<ArrayList<PhaseGroup>> conflict = new ArrayList<ArrayList<PhaseGroup>>(); 
@@ -423,14 +431,13 @@ public class AIPlayer extends Player {
 			for(int x = 0; x < cardValues.length; x++){ // WHY??
 				conflict.add(new ArrayList<PhaseGroup>());
 			}
-			for(PhaseGroup g: complete){ // only possible with both sets and phases
+			for(PhaseGroup g: complete){ 
 				for(int x = 0; x < g.getNumberOfCards(); x++){
 					tempCard = g.getCard(x);
 					int y = 0;
 					for(;y < cardValues.length; y++){
 						if(tempCard == cardValues[y]){
 							conflict.get(y).add(g);
-							break;
 						}
 					}
 				}
@@ -442,7 +449,6 @@ public class AIPlayer extends Player {
 					for(;y < cardValues.length; y++){
 						if(tempCard == cardValues[y]){
 							conflict.get(y).add(g);
-							break;
 						}
 					}
 				}
@@ -512,13 +518,69 @@ public class AIPlayer extends Player {
 			}
 		}
 		
-		private void dealWithConflicts(){
-			
+		//TODO set wild value
+		private void resolveConflicts(){
+			while(conflictingCards.size() != 0){
+				//if it's valid
+				int maxPointValue = -1;
+				PhaseGroup maxPhaseGroup = null;
+				int tempPointValue;
+				
+				for(Iterator<PhaseGroup> iterator = conflicting.get(0).iterator(); iterator.hasNext();){
+					PhaseGroup p = iterator.next();
+					p.removeCard(conflictingCards.get(0));
+					if(partial.remove(p))
+						continue;
+					
+					tempPointValue = 0;
+					 
+					//point value if removed
+					if(!((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), setsNeeded()[0])) || 
+							(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), numLengthRun())) ||
+							(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7)))){
+						for(int x = 0; x < p.getNumberOfCards(); x++){
+							tempPointValue += p.getCard(x).getPointValue();
+						}
+					}
+					if(tempPointValue > maxPointValue){
+						maxPointValue = tempPointValue;
+						maxPhaseGroup = p;
+					}
+				}
+				if(maxPhaseGroup != null)
+					maxPhaseGroup.addCard(conflictingCards.get(0));
+				conflictingCards.remove(0);
+				conflicting.remove(0);
+			}
+		}
+		
+		// TODO single if there are more than one wild
+		private void dealWithWilds(){
+			wildLoop:
+			for(Card w: single){
+				if(w.getValue() != Configuration.WILD_VALUE){
+					continue wildLoop;
+				}
+				for(PhaseGroup p: partial){
+					p.addCard(w);
+					if((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), setsNeeded()[0])) || 
+							(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), numLengthRun())) ||
+							(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7))){
+						complete.add(p);
+						partial.remove(p);
+						continue wildLoop;
+					}
+				}
+				for(PhaseGroup c: complete){
+					c.addCard(w);
+				}
+				
+			}
 		}
 		
 		//TODO fill in, this method used for finding which cards are needed, use difficulty
 		private int[] cardsForConnectedGroups(){
-			return new int[1];
+			return new int[1]; // change name
 		}
 		
 		//TODO fill in
