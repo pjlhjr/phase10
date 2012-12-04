@@ -212,7 +212,7 @@ public final class Round implements Serializable {
 			}
 		}
 		for (int i = 0; i < Configuration.NUM_WILDS; i++)
-			deck.add(new WildCard(Configuration.WILD_VALUE));
+			deck.add(new WildCard());
 		for (int i = 0; i < Configuration.NUM_SKIPS; i++)
 			deck.add(new Card(Configuration.SKIP_VALUE));
 
@@ -274,7 +274,7 @@ public final class Round implements Serializable {
 			try {
 				game.getGameManager().getGui().newTurnWindowUpdate();
 			} catch (NullPointerException e) {
-				System.out.println("Too early");
+				//System.out.println("Too early");
 			}
 		}
 
