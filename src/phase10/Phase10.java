@@ -8,6 +8,7 @@ package phase10;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import phase10.ai.AIPlayer;
 import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
 import phase10.util.Log;
@@ -101,7 +102,15 @@ public final class Phase10 implements Serializable {
 	public void addPlayer(Player p) {
 		if (!started) {
 			players.add(p);
-			log.addEntry(new LogEntry(-1, p, "New player added"));
+			if (p instanceof AIPlayer) {
+				AIPlayer ap = (AIPlayer) p;
+				log.addEntry(new LogEntry(-1, p,
+						"New AI player added. Difficulty: "
+								+ ap.getDifficulty()));
+			} else {
+				log.addEntry(new LogEntry(-1, p, "New human player added"));
+			}
+
 		} else
 			throw new Phase10Exception(
 					"Cannot add player after game has started");
@@ -132,6 +141,7 @@ public final class Phase10 implements Serializable {
 			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
+				log.addEntry(new LogEntry(-1, null, "STARTING GAME"));
 				return nextRound();
 			} else
 				throw new Phase10Exception(
@@ -145,11 +155,14 @@ public final class Phase10 implements Serializable {
 	 * Resets the necessary player data and checks to see if there is a winner
 	 */
 	ArrayList<Player> nextRound() {
-		finishRound();
+		if (roundNumber != 0)
+			finishRound();
 		ArrayList<Player> winners = checkWinners();
 		if (winners.size() == 0) {
 			roundNumber++;
 			nextDealer();
+
+			log.addEntry(new LogEntry(-1, null, "Now on round #" + roundNumber));
 
 			// TODO Call Gui- say new round has started
 			round = new Round(this);
@@ -208,18 +221,17 @@ public final class Phase10 implements Serializable {
 	 * score.
 	 */
 	private void finishRound() {
+		log.addEntry(new LogEntry(-1, null, "Finishing round#" + roundNumber));
 		for (Player p : players) {
 			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			log.addEntry(new LogEntry(-1, p, "Finshing round#" + roundNumber
-					+ " phase#" + p.getPhase() + ": " + hand));
+			log.addEntry(new LogEntry(-1, p, "Cards in hand: " + hand));
 
 			while (hand.getNumberOfCards() > 0) {
 				p.addToScore(hand.getAnyCard(0).getPointValue());
 				hand.removeCard(0);
 			}
-			log.addEntry(new LogEntry(-1, p, "New score: " + p.getScore()
-					+ " Hand: " + hand));
+			log.addEntry(new LogEntry(-1, p, "New score: " + p.getScore()));
 
 			// clear phasegroups
 			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
@@ -229,7 +241,10 @@ public final class Phase10 implements Serializable {
 			if (p.hasLaidDownPhase()) {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
+				log.addEntry(new LogEntry(-1, p, "Now on phase #"
+						+ p.getPhase()));
 			}
+
 			// reset has drawn card
 			p.setHasDrawnCard(false);
 		}

@@ -56,9 +56,9 @@ public class LogEntry implements Serializable {
 		Formatter format = new Formatter(out);
 
 		if (player != null) {
-			format.format("%3d %10.9s %s", turnNumber, player, event);
+			format.format("%3d %-10.9s  %s", turnNumber, player, event);
 		} else {
-			System.out.printf("%3d          %s", turnNumber, event);
+			format.format("%3d             %s", turnNumber, event);
 		}
 		return out.toString();
 	}
