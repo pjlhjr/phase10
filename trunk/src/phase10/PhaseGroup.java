@@ -80,23 +80,44 @@ public final class PhaseGroup implements Serializable {
 			temp.addCard(c);
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
+				if (c.getValue() == Configuration.WILD_VALUE) {
+					WildCard wc = (WildCard) c;
+					wc.setChangeable(false);
+				}
 				game.getCurrentPlayer().getHand().removeCard(c);
-				
+
 				game.getLog().addEntry(
 						new LogEntry(game.getRound().getTurnNumber(), game
 								.getCurrentPlayer(),
 								"Added card to a laid down phase group: "
 										+ this));
-				
-				if (game.getCurrentPlayer().getHand().getNumberOfCards()==0){
+
+				if (game.getCurrentPlayer().getHand().getNumberOfCards() == 0) {
 					game.nextRound();
 				}
-				
+
 				return true;
 			}
 			return false;
 		}
 
+	}
+
+	/**
+	 * Removes the card from the phase group
+	 * 
+	 * @param c
+	 *            the card to remove
+	 * @throws Phase10Exception
+	 *             if the phase is laid down
+	 */
+	public void removeCard(Card c) {
+		if (!laidDown) {
+			cards.remove(c);
+		} else {
+			throw new Phase10Exception(
+					"Cannot remove card from laid down phase group");
+		}
 	}
 
 	/**
@@ -131,6 +152,10 @@ public final class PhaseGroup implements Serializable {
 		type = t;
 		for (int i = 0; i < cards.size(); i++) {
 			game.getCurrentPlayer().getHand().removeCard(cards.get(i));
+			if (cards.get(i).getValue() == Configuration.WILD_VALUE) {
+				WildCard wc = (WildCard) cards.get(i);
+				wc.setChangeable(false);
+			}
 		}
 	}
 
@@ -182,14 +207,20 @@ public final class PhaseGroup implements Serializable {
 				pg.getNumberOfCards());
 		int min = pg.getCard(0).getValue();
 		int numWilds = 0;
+		ArrayList<WildCard> wilds = new ArrayList<WildCard>();
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
 			int curValue = pg.getCard(i).getValue();
 			if (curValue == Configuration.WILD_VALUE) {
 				WildCard curWild = (WildCard) pg.getCard(i);
-				if (curWild.getHiddenValue() < 0)
+				if (curWild.getHiddenValue() < 0 || curWild.isChangeable()) {
+					System.out.println("adding wild");
 					numWilds++;
-				else
+					wilds.add(curWild);
+				} else {
 					values.add(curWild.getHiddenValue());
+					System.out.println("adding hidden value wild "
+							+ curWild.getHiddenValue());
+				}
 			} else {
 				values.add(curValue);
 			}
@@ -202,23 +233,27 @@ public final class PhaseGroup implements Serializable {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
+					System.out.println("found " + curValue);
 					values.remove(i);
 					found = true;
+					break;
 				}
 			}
 			if (!found && numWilds > 0) {
 				numWilds--;
+				wilds.get(numWilds).setHiddenValue(curValue);
+				System.out.println("using a wild for " + curValue);
 			} else if (!found && numWilds == 0) {
 				return false;
 			}
 			curValue++;
-
 		}
 		return true;
 	}
 
 	private static boolean validateSet(PhaseGroup pg) {
 		int valueToMatch = -1;
+
 		for (int i = 0; i < pg.getNumberOfCards(); i++) {
 			int curValue = pg.getCard(i).getValue();
 
@@ -265,4 +300,23 @@ public final class PhaseGroup implements Serializable {
 		}
 		return out.toString();
 	}
+
+	// public static void main(String[] args) {
+	// PhaseGroup pg = new PhaseGroup(null);
+	// pg.addCard(new Card(Configuration.COLORS[0], 1));
+	// pg.addCard(new Card(Configuration.COLORS[0], 2));
+	// WildCard wc = new WildCard();
+	// pg.addCard(wc);
+	// pg.addCard(new Card(Configuration.COLORS[0], 4));
+	//
+	// System.out.println(wc.getHiddenValue());
+	// PhaseGroup.validate(pg, Configuration.RUN_PHASE, 4);
+	// System.out.println(wc.getHiddenValue());
+	//
+	// pg.laidDown = true;
+	// pg.type = Configuration.RUN_PHASE;
+	//
+	// System.out.println(pg.addCard(new Card(Configuration.COLORS[0], 3)));
+	// System.out.println(wc.getHiddenValue());
+	// }
 }

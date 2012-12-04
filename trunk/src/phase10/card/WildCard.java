@@ -5,6 +5,8 @@
  */
 package phase10.card;
 
+import phase10.util.Configuration;
+
 /**
  * This class represents the wild card
  * @author Evan Forbes
@@ -14,10 +16,12 @@ public class WildCard extends Card {
 
 	private static final long serialVersionUID = 20121L;
 	private int hiddenValue;
+	private boolean changeable;
 	
-	public WildCard(int v) {
-		super(v);
+	public WildCard() {
+		super(Configuration.WILD_VALUE);
 		hiddenValue=-1;
+		changeable = true;
 	}
 
 	/**
@@ -33,5 +37,20 @@ public class WildCard extends Card {
 	public void setHiddenValue(int hiddenValue) {
 		this.hiddenValue = hiddenValue;
 	}
+
+	/**
+	 * @return the changeable
+	 */
+	public boolean isChangeable() {
+		return changeable;
+	}
+
+	/**
+	 * @param changeable the changeable to set
+	 */
+	public void setChangeable(boolean changeable) {
+		this.changeable = changeable;
+	}
+	
 
 }

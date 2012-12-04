@@ -14,6 +14,7 @@ public class Configuration {
 	public static final int RUN_PHASE = 1;
 	public static final int COLOR_PHASE = 2;
 
+	//Set these to false when not testing
 	public static final boolean PRINT_LOG = true;
 	public static final boolean SAVE_LOG = true;
 	public static final String LOG_FILE = "log.txt";
@@ -24,6 +25,7 @@ public class Configuration {
 	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green",
 			"Yellow"};
 
+	//The number of phase groups required for each phase
 	private static int[] numPhasesExpected = {2, 2, 2, 1, 1, 1, 2, 1, 2, 2};
 
 	/**
