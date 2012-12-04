@@ -324,11 +324,13 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(pg2End);
 
 		addToPG1 = new JButton("add to phase");
+		addToPG1.addActionListener(new AddPhasesListener(0));
 		addToPG1.setVisible(false);
 		addToPG1.setBounds(277, 27, 117, 52);
 		yourPhasesPanel.add(addToPG1);
 
 		addToPG2 = new JButton("add to phase");
+		addToPG2.addActionListener(new AddPhasesListener(0));
 		addToPG2.setVisible(false);
 		addToPG2.setBounds(580, 27, 117, 52);
 		yourPhasesPanel.add(addToPG2);
@@ -350,6 +352,76 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(lblTo2);
 
 		updateCardImages();
+	}
+
+	protected void updateYourPhasesPanel() {
+		if(current.hasLaidDownPhase()) {
+			if(current.getNumberOfPhaseGroups() == 1) { //first phase group is visible
+				pg1Start.setVisible(true);
+				lblTo.setVisible(true);
+				pg1End.setVisible(true);
+				addToPG1.setVisible(true);
+
+				pg2Start.setVisible(false);
+				lblTo2.setVisible(false);
+				pg2End.setVisible(false);
+				addToPG2.setVisible(false);
+
+				btnNewPhase.setVisible(false);
+
+				pg1Start.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(0).getCard(0)))));
+
+				pg1End.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(0).getCard(current.getPhaseGroup(0).getNumberOfCards() - 1)))));
+			}
+			else { //first and second phase groups are visible
+				pg1Start.setVisible(true);
+				lblTo.setVisible(true);
+				pg1End.setVisible(true);
+				addToPG1.setVisible(true);
+
+				pg2Start.setVisible(true);
+				lblTo2.setVisible(true);
+				pg2End.setVisible(true);
+				addToPG2.setVisible(true);
+
+				btnNewPhase.setVisible(true);
+
+				pg1Start.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(0).getCard(0)))));
+
+				pg1End.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(0).getCard(current.getPhaseGroup(0).getNumberOfCards() - 1)))));
+
+				pg2Start.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(1).getCard(0)))));
+
+				pg2End.setIcon(new ImageIcon(GameFrame.class.getResource(
+						getCardFile(current.getPhaseGroup(1).getCard(current.getPhaseGroup(1).getNumberOfCards() - 1)))));
+			}
+		}
+		else { //no phase groups are visible
+			pg1Start.setVisible(false);
+			lblTo.setVisible(false);
+			pg1End.setVisible(false);
+			addToPG1.setVisible(false);
+
+			pg2Start.setVisible(false);
+			lblTo2.setVisible(false);
+			pg2End.setVisible(false);
+			addToPG2.setVisible(false);
+
+			btnNewPhase.setVisible(true);
+		}
+	}
+
+	protected void hideAndClearSelectedCards() {
+		for(int i = 0; i < handButtons.length; i++) {
+			handButtons[i].setVisible(true);
+			handButtons[i].setSelected(false);
+		}
+		selectedCards.clear();
 	}
 
 	private void resetYourPhasesPanel() {
@@ -657,13 +729,13 @@ public class GameFrame extends JFrame {
 						if(!isValid) {
 							MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
 							notAGoodPhase.setVisible(true);
-							
+
 							for(int i = 0; i < handButtons.length; i++) {
 								handButtons[i].setVisible(true);
 							}
-							
+
 							selectedCards.clear();
-							
+
 							isPhasing = false;
 							isSecondPhaseGroup = false;
 						}
@@ -685,7 +757,7 @@ public class GameFrame extends JFrame {
 
 							btnNewPhase.setVisible(false);
 							btnNewPhase.setText("Add a Phase!");
-							
+
 							isPhasing = false;
 							isSecondPhaseGroup = false;
 							break;
@@ -706,13 +778,9 @@ public class GameFrame extends JFrame {
 					if(!isValid) {
 						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
 						notAGoodPhase.setVisible(true);
-						
+
 						//set all buttons to visible and clear all selections
-						for(int i = 0; i < handButtons.length; i++) {
-							handButtons[i].setVisible(true);
-							handButtons[i].setSelected(false);
-						}
-						selectedCards.clear();
+						hideAndClearSelectedCards();
 						isPhasing = false;
 						isSecondPhaseGroup = false;
 					}
@@ -749,7 +817,7 @@ public class GameFrame extends JFrame {
 
 						btnNewPhase.setVisible(false);
 						btnNewPhase.setText("Add a Phase!");
-						
+
 						isPhasing = false;
 						isSecondPhaseGroup = false;
 					}
@@ -795,6 +863,35 @@ public class GameFrame extends JFrame {
 					break;
 				}
 			}
+		}
+
+	}
+
+	protected class AddPhasesListener implements ActionListener {
+
+		private int phaseGroupIndex;
+
+		public AddPhasesListener(int phaseGroup) {
+			this.phaseGroupIndex = phaseGroup;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//TODO new listener
+			for(int x = 0; x < selectedCards.size(); x++) {
+				boolean isValid = current.getPhaseGroup(phaseGroupIndex).addCard(selectedCards.get(x));
+				if(!isValid) {
+					MessageFrame invalidAdd = new MessageFrame("A card you are trying to add is invlaid", "Invalid move");
+					invalidAdd.setVisible(true);
+					break;
+				}
+				else {
+					hideAndClearSelectedCards();
+					updateFrame(gManage.mainManager.getGame());
+					updateYourPhasesPanel();
+				}
+			}
+
 		}
 
 	}
