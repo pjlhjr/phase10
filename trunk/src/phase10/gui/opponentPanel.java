@@ -43,6 +43,7 @@ public class opponentPanel extends JPanel {
 	private JButton phaseGroup2End;
 	private JButton phaseGroup1End;
 	private GameFrame gameWindow;
+	private Phase10 currentGame;
 
 	/**
 	 * Create the panel.
@@ -50,6 +51,7 @@ public class opponentPanel extends JPanel {
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
 		this.opponent = opponent;
 		this.gameWindow = gameWindow;
+		this.currentGame = currentGame;
 		
 		//begin panel setup
 		setLayout(new BorderLayout(0, 0));
@@ -92,24 +94,7 @@ public class opponentPanel extends JPanel {
 		add(panel, BorderLayout.CENTER);
 		
 		addToPhase_1 = new JButton("Add to Phase");
-		addToPhase_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				PhaseGroup cardsToAdd = new PhaseGroup(currentGame);
-				ArrayList<Card> cardsToAddList = gameWindow.selectedCards;
-				
-				for(Card x : cardsToAddList) {
-					cardsToAdd.addCard(x);
-				}
-
-				boolean canAddToPhase = opponent.addPhaseGroups(cardsToAdd);
-				if(canAddToPhase == false) {
-					MessageFrame invalidAdd = new MessageFrame("The card(s) you are trying to add do not fit within this phase", "Invalid move");
-					invalidAdd.setVisible(true);
-				}
-			}
-		});
+		addToPhase_1.addActionListener(new AddPhasesListener(0));
 		
 		phaseGroup1Begin = new JButton("");
 		
@@ -132,24 +117,8 @@ public class opponentPanel extends JPanel {
 		phaseGroup2End = new JButton("");
 		
 		addToPhase_2 = new JButton("Add to Phase");
-		addToPhase_2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				PhaseGroup cardsToAdd = new PhaseGroup(currentGame);
-				ArrayList<Card> cardsToAddList = gameWindow.selectedCards;
-				
-				for(Card x : cardsToAddList) {
-					cardsToAdd.addCard(x);
-				}
-				
-
-				boolean canAddToPhase = opponent.addPhaseGroups(cardsToAdd);
-				if(canAddToPhase == false) {
-					MessageFrame invalidAdd = new MessageFrame("The card(s) you are trying to add do not fit within this phase", "Invalid move");
-					invalidAdd.setVisible(true);
-				}
-			}
-		});
+		addToPhase_2.addActionListener(new AddPhasesListener(1));
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -289,5 +258,34 @@ public class opponentPanel extends JPanel {
 			phaseGroup2End.setVisible(false);
 			addToPhase_2.setVisible(false);
 		}
+	}
+	
+	private class AddPhasesListener implements ActionListener {
+
+		private int phaseGroupIndex;
+
+		public AddPhasesListener(int phaseGroup) {
+			this.phaseGroupIndex = phaseGroup;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//TODO new listener
+			for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
+				boolean isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
+				if(!isValid) {
+					MessageFrame invalidAdd = new MessageFrame("A card you are trying to add is invlaid", "Invalid move");
+					invalidAdd.setVisible(true);
+					break;
+				}
+				else {
+					gameWindow.hideAndClearSelectedCards();
+					gameWindow.updateFrame(currentGame);
+					gameWindow.updateYourPhasesPanel();
+				}
+			}
+
+		}
+
 	}
 }

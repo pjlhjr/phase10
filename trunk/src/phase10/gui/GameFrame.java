@@ -870,7 +870,7 @@ public class GameFrame extends JFrame {
 		}
 	}
 
-	protected class AddPhasesListener implements ActionListener {
+	private class AddPhasesListener implements ActionListener {
 
 		private int phaseGroupIndex;
 
