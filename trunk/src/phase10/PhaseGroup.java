@@ -73,6 +73,12 @@ public final class PhaseGroup implements Serializable {
 			cards.add(c);
 			return true;
 		} else {
+			Player p = game.getCurrentPlayer();
+			
+			//cannot add to a phase unless you have laid one down this round
+			if (!p.hasLaidDownPhase()){
+				return false;
+			}
 			PhaseGroup temp = new PhaseGroup(game);
 			for (int i = 0; i < getNumberOfCards(); i++) {
 				temp.addCard(getCard(i));
@@ -84,15 +90,14 @@ public final class PhaseGroup implements Serializable {
 					WildCard wc = (WildCard) c;
 					wc.setChangeable(false);
 				}
-				game.getCurrentPlayer().getHand().removeCard(c);
+				p.getHand().removeCard(c);
 
 				game.getLog().addEntry(
-						new LogEntry(game.getRound().getTurnNumber(), game
-								.getCurrentPlayer(),
+						new LogEntry(game.getRound().getTurnNumber(), p,
 								"Added card to a laid down phase group: "
 										+ this));
 
-				if (game.getCurrentPlayer().getHand().getNumberOfCards() == 0) {
+				if (p.getHand().getNumberOfCards() == 0) {
 					game.nextRound();
 				}
 

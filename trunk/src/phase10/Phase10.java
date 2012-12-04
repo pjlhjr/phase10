@@ -104,11 +104,11 @@ public final class Phase10 implements Serializable {
 			players.add(p);
 			if (p instanceof AIPlayer) {
 				AIPlayer ap = (AIPlayer) p;
-				log.addEntry(new LogEntry(-1, p,
+				log.addEntry(new LogEntry(0, p,
 						"New AI player added. Difficulty: "
 								+ ap.getDifficulty()));
 			} else {
-				log.addEntry(new LogEntry(-1, p, "New human player added"));
+				log.addEntry(new LogEntry(0, p, "New human player added"));
 			}
 
 		} else
@@ -141,7 +141,7 @@ public final class Phase10 implements Serializable {
 			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
-				log.addEntry(new LogEntry(-1, null, "STARTING GAME"));
+				log.addEntry(new LogEntry(0, null, "STARTING GAME"));
 				return nextRound();
 			} else
 				throw new Phase10Exception(
@@ -162,7 +162,7 @@ public final class Phase10 implements Serializable {
 			roundNumber++;
 			nextDealer();
 
-			log.addEntry(new LogEntry(-1, null, "Now on round #" + roundNumber));
+			log.addEntry(new LogEntry(0, null, "Now on round #" + roundNumber));
 
 			// TODO Call Gui- say new round has started
 			round = new Round(this);
@@ -170,7 +170,7 @@ public final class Phase10 implements Serializable {
 
 		} else {
 			for (Player e : winners) {
-				log.addEntry(new LogEntry(-1, e, " Won the game with "
+				log.addEntry(new LogEntry(0, e, " Won the game with "
 						+ e.getScore() + " points"));
 			}
 			if (Configuration.PRINT_LOG) {
@@ -221,17 +221,17 @@ public final class Phase10 implements Serializable {
 	 * score.
 	 */
 	private void finishRound() {
-		log.addEntry(new LogEntry(-1, null, "Finishing round#" + roundNumber));
+		log.addEntry(new LogEntry(0, null, "Finishing round#" + roundNumber));
 		for (Player p : players) {
 			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			log.addEntry(new LogEntry(-1, p, "Cards in hand: " + hand));
+			log.addEntry(new LogEntry(0, p, "Cards in hand: " + hand));
 
 			while (hand.getNumberOfCards() > 0) {
 				p.addToScore(hand.getAnyCard(0).getPointValue());
 				hand.removeCard(0);
 			}
-			log.addEntry(new LogEntry(-1, p, "New score: " + p.getScore()));
+			log.addEntry(new LogEntry(0, p, "New score: " + p.getScore()));
 
 			// clear phasegroups
 			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
@@ -241,7 +241,7 @@ public final class Phase10 implements Serializable {
 			if (p.hasLaidDownPhase()) {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
-				log.addEntry(new LogEntry(-1, p, "Now on phase #"
+				log.addEntry(new LogEntry(0, p, "Now on phase #"
 						+ p.getPhase()));
 			}
 
