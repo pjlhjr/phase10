@@ -213,13 +213,13 @@ public final class PhaseGroup implements Serializable {
 			if (curValue == Configuration.WILD_VALUE) {
 				WildCard curWild = (WildCard) pg.getCard(i);
 				if (curWild.getHiddenValue() < 0 || curWild.isChangeable()) {
-					System.out.println("adding wild");
+					//System.out.println("adding wild");
 					numWilds++;
 					wilds.add(curWild);
 				} else {
 					values.add(curWild.getHiddenValue());
-					System.out.println("adding hidden value wild "
-							+ curWild.getHiddenValue());
+//					System.out.println("adding hidden value wild "
+//							+ curWild.getHiddenValue());
 				}
 			} else {
 				values.add(curValue);
@@ -242,7 +242,7 @@ public final class PhaseGroup implements Serializable {
 			if (!found && numWilds > 0) {
 				numWilds--;
 				wilds.get(numWilds).setHiddenValue(curValue);
-				System.out.println("using a wild for " + curValue);
+//				System.out.println("using a wild for " + curValue);
 			} else if (!found && numWilds == 0) {
 				return false;
 			}
