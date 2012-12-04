@@ -22,9 +22,9 @@ public class AITester {
 				ten.addPlayer(new AIPlayer(ten, p2Diff, "p2"));
 				ArrayList<Player> winners = ten.startGame();
 				if(winners.get(0).getName().compareTo("p1") == 0)
-					System.out.print("1 ");
+					System.out.print("1");
 				else
-					System.out.print("0 ");
+					System.out.print("0");
 					//p1WinPercent[p1Diff][p2Diff] += 1;
 			}
 			System.out.println();
