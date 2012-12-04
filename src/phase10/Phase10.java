@@ -211,7 +211,8 @@ public final class Phase10 implements Serializable {
 		for (Player p : players) {
 			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			log.addEntry(new LogEntry(-1, p, "Finshing round: " + hand));
+			log.addEntry(new LogEntry(-1, p, "Finshing round#" + roundNumber
+					+ " phase#" + p.getPhase() + ": " + hand));
 
 			while (hand.getNumberOfCards() > 0) {
 				p.addToScore(hand.getAnyCard(0).getPointValue());
