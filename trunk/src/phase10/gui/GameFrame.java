@@ -233,7 +233,13 @@ public class GameFrame extends JFrame {
 					}
 				}
 				else {
-					gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
+					if(selectedCards.size() == 0) {
+						MessageFrame noCard = new MessageFrame("You must select a card to discard", "Invalid move");
+						noCard.setVisible(true);
+					}
+					else {
+						gManage.mainManager.getGame().getRound().discard(selectedCards.get(0));
+					}
 					updateFrame(gManage.mainManager.getGame());
 					deckButton.setEnabled(true);
 					discardButton.setEnabled(true);	
