@@ -219,6 +219,8 @@ public class opponentPanel extends JPanel {
 				phaseGroup1End.setVisible(true);
 				addToPhase_1.setVisible(true);
 				
+				lblTo.setToolTipText(opponent.getPhaseGroup(0).toString());
+				
 				phaseGroup2Begin.setVisible(false);
 				labelTo_2.setVisible(false);
 				phaseGroup2End.setVisible(false);
@@ -243,6 +245,9 @@ public class opponentPanel extends JPanel {
 				lblTo.setVisible(true);
 				phaseGroup1End.setVisible(true);
 				addToPhase_1.setVisible(true);
+				
+				lblTo.setToolTipText(opponent.getPhaseGroup(0).toString());
+				labelTo_2.setToolTipText(opponent.getPhaseGroup(1).toString());
 				
 				phaseGroup2Begin.setVisible(true);
 				labelTo_2.setVisible(true);
