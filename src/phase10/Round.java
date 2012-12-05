@@ -90,7 +90,13 @@ public final class Round implements Serializable {
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Draw from discard: " + card));
 		player.getHand().addCard(card);
-		player.getHand().sortByValue();
+		
+		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
+			player.getHand().sortByColor();
+		} else {
+			player.getHand().sortByValue();
+		}
+
 		player.setHasDrawnCard(true);
 		return true;
 	}
@@ -116,7 +122,11 @@ public final class Round implements Serializable {
 
 		player.setHasDrawnCard(true);
 
-		player.getHand().sortByValue();
+		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
+			player.getHand().sortByColor();
+		} else {
+			player.getHand().sortByValue();
+		}
 
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Draw from deck: " + card));
@@ -149,17 +159,21 @@ public final class Round implements Serializable {
 
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Discard: " + card));
-		
-		
+
 		discardStack.push(card);
 		player.getHand().removeCard(card);
 
 		player.setHasDrawnCard(false);
 
-		player.getHand().sortByValue();
-		
+		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
+			player.getHand().sortByColor();
+		} else {
+			player.getHand().sortByValue();
+		}
+
 		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Current Hand: " + player.getHand()));
+				new LogEntry(turnNumber, player, "Current Hand: "
+						+ player.getHand()));
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
 			int nextPlayer = curPlayerNum + 1;
@@ -168,7 +182,8 @@ public final class Round implements Serializable {
 			}
 			game.getPlayer(nextPlayer).setSkip(true);
 			game.getLog().addEntry(
-					new LogEntry(turnNumber, player, "Skipping player: " + game.getPlayer(nextPlayer)));
+					new LogEntry(turnNumber, player, "Skipping player: "
+							+ game.getPlayer(nextPlayer)));
 		}
 
 		nextTurn();
@@ -277,7 +292,7 @@ public final class Round implements Serializable {
 			try {
 				game.getGameManager().getGui().newTurnWindowUpdate();
 			} catch (NullPointerException e) {
-				//System.out.println("Too early");
+				// System.out.println("Too early");
 			}
 		}
 
