@@ -46,7 +46,11 @@ public class opponentPanel extends JPanel {
 	private Phase10 currentGame;
 
 	/**
-	 * Create the panel.
+	 * Constructs a panel to display information about an opponent to the current player.
+	 * 
+	 * @param opponent The player who's game statistics will be displayed in the window
+	 * @param currentGame The current phase10 game
+	 * @param gameWindow the window in which this panel will reside
 	 */
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
 		this.opponent = opponent;
@@ -178,6 +182,7 @@ public class opponentPanel extends JPanel {
 		phaseAreaUpdate();
 		//end panel setup
 	}
+	
 	
 	void updatePanel(Player nextOpponent) {
 		

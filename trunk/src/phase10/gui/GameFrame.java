@@ -14,7 +14,6 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.Toolkit;
 import phase10.*;
 import phase10.card.Card;
@@ -33,64 +32,32 @@ public class GameFrame extends JFrame {
 
 
 	Player current;
-
 	ArrayList<Card> selectedCards = new ArrayList<Card>();
 	private boolean isDiscarding = false;
 
 	//begin components
-	private JPanel infoPanel = new JPanel();
-	private JPanel deckPanel = new JPanel();
-	private JPanel handPanel = new JPanel();
-	private JPanel playersPanel = new JPanel();
-	private JPanel yourPhasesPanel = new JPanel();
-
-	private JButton[] handButtons = new JButton[11];
-
-
-	private JButton discardButton;
-
-
-	private JLabel lblPlayername;
-
-
-	private JTextArea phaseNumber;
-
-
-	private JButton deckButton;
-
-
-	private JButton btnNewPhase;
-
-
-	private ArrayList<opponentPanel> oppPanels;
-
-
-	private GuiManager gManage;
-
-
-	private JButton pg1Start;
-
-
-	private JLabel lblTo;
-
-
-	private JButton pg1End;
-
-
-	private JButton addToPG1;
-
-
-	private JButton addToPG2;
-
-
-	private JLabel lblTo2;
-
-
-	private JButton pg2End;
-
-
-	private JButton pg2Start;
-
+	private JPanel infoPanel = new JPanel(); //Panel that displays on the right side of GameFrame. Displays basic info about the current player
+	private JPanel deckPanel = new JPanel(); //includes the deck and discard buttons. Displays on bottom-right corner
+	private JPanel handPanel = new JPanel(); //displays all the cards in a player's hand
+	private JPanel playersPanel = new JPanel(); //displays all of the current player's opponents
+	private JPanel yourPhasesPanel = new JPanel(); //displays the current player's phases, or a button to add a phase if the current player has not yet laid down a phase in a round
+	
+	private JButton[] handButtons = new JButton[11]; //an array of buttons representing each card in the current player's hand
+	private JLabel lblPlayername; //Displays the current player's name in infoPanel
+	private JTextArea phaseNumber; //Displays the phase of the current player in infoPanel
+	private JButton deckButton; //JButton that represents the top of the deck
+	private JButton discardButton; //JButton that represents the top of the discard stack
+	private JButton btnNewPhase; //a button in yourPhasesPanel that allows a player to lay down a phase
+	private ArrayList<opponentPanel> oppPanels; //an arrayList of all the opponent panels
+	private GuiManager gManage; //Reference to the GuiManager object
+	private JButton pg1Start; //the first card of the current player's first phase group
+	private JLabel lblTo; //a label that says to
+	private JButton pg1End; //the last card of the current player's first phase group
+	private JButton addToPG1; //a button that allows the user to add a card to their own phase group
+	private JButton addToPG2; //a button that allows the user to add a card to their own phase group
+	private JLabel lblTo2; //a label that says to
+	private JButton pg2End; //the first card of the current player's second phase group
+	private JButton pg2Start; //the last card of the current player's second phase group
 	//end components
 
 	/**
@@ -106,7 +73,6 @@ public class GameFrame extends JFrame {
 		current = gManage.mainManager.getGame().getCurrentPlayer();
 
 		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
-		final GuiManager guiManage = gManage; //quick fix for ActionListener in Phase Description button
 
 
 		setTitle(current.getName() + " - Phase 10");
@@ -145,8 +111,13 @@ public class GameFrame extends JFrame {
 		infoPanel.add(phaseNumber);
 
 		JButton btnPhaseDescription = new JButton("Phase Descriptions");
+		btnPhaseDescription.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				gManage.displayPhaseDescriptionFrame();
+			}
+		});
 		btnPhaseDescription.setBounds(10, 184, 149, 23);
-		btnPhaseDescription.addMouseListener(new pdListener(guiManage));
 		infoPanel.add(btnPhaseDescription);
 
 		JButton btnScoreboard = new JButton("Scoreboard");
@@ -424,42 +395,6 @@ public class GameFrame extends JFrame {
 		selectedCards.clear();
 	}
 
-	/*
-	 * begin button listeners
-	 */
-	private class pdListener implements MouseListener {
-		private final GuiManager gm;
-
-		public pdListener(GuiManager guiManage) {
-			gm = guiManage;
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			gm.displayPhaseDescriptionFrame();
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
-
-	}
-	/*
-	 * end button listeners
-	 */
-	//	{
-	//	for(opponentPanel x : oppPanels)
-	//		x.update();
-	//	}
-	/*
-	 * begin functional methods
-	 */
-
 	/**
 	 * Will read information from a Card object and return the path to the correct
 	 * image for that Card.
@@ -471,13 +406,13 @@ public class GameFrame extends JFrame {
 
 		String filename = "/images/cardImages/";
 
-		if(aCard.getColor() == Color.RED)
+		if(aCard.getColor().equals(Color.RED))
 			filename += "Red";
-		else if(aCard.getColor() == Color.BLUE)
+		else if(aCard.getColor().equals(Color.BLUE))
 			filename += "Blue";
-		else if(aCard.getColor() == Color.YELLOW)
+		else if(aCard.getColor().equals(Color.YELLOW))
 			filename += "Yellow";
-		else if(aCard.getColor() == Color.GREEN)
+		else if(aCard.getColor().equals(Color.GREEN))
 			filename += "Green";
 
 		if(aCard.getValue() == 13)
