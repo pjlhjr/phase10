@@ -1,7 +1,16 @@
+/**
+ * CS2003 Lab Project Fall 2012
+ * Paul Harris, Matt Hruz, Evan Forbes
+ * 
+ */
 package phase10.util;
 
 import java.awt.Color;
 
+/**
+ * Utility class that holds static final constants and static methods to retrieve constants
+ *
+ */
 public class Configuration {
 
 	public static final int TIMES_TO_SHUFFLE = 5;
@@ -15,15 +24,16 @@ public class Configuration {
 	public static final int SET_PHASE = 0;
 	public static final int RUN_PHASE = 1;
 	public static final int COLOR_PHASE = 2;
+	
+	public static final Color[] COLORS = {Color.RED, Color.BLUE, Color.GREEN,
+		Color.YELLOW};
 
 	// Set these to false when not testing
 	public static final boolean PRINT_LOG = true;
 	public static final boolean SAVE_LOG = true;
 	public static final String LOG_FILE = "log.txt";
 
-	public static final Color[] COLORS = {Color.RED, Color.BLUE, Color.GREEN,
-			Color.YELLOW};
-
+	// For logging
 	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green",
 			"Yellow"};
 

@@ -53,6 +53,7 @@ public class LogEntry implements Serializable {
 
 	public String toString() {
 		StringBuffer out = new StringBuffer();
+		@SuppressWarnings("resource")
 		Formatter format = new Formatter(out);
 
 		if (player != null) {
@@ -60,6 +61,7 @@ public class LogEntry implements Serializable {
 		} else {
 			format.format("%3d             %s", turnNumber, event);
 		}
+		
 		return out.toString();
 	}
 }
