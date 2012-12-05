@@ -25,7 +25,27 @@ public class CardValueComparator implements Comparator<Card> {
 	 */
 	@Override
 	public int compare(Card c1, Card c2) {
-		int comp = c1.getValue() - c2.getValue();
+		int value1 = -1;
+		int value2 = -1;
+		if (c1 instanceof WildCard){
+			WildCard wc = (WildCard) c1;
+			if (!wc.isChangeable()){
+				value1 = wc.getHiddenValue();
+			}
+		}
+		if (c2 instanceof WildCard){
+			WildCard wc = (WildCard) c2;
+			if (!wc.isChangeable()){
+				value2 = wc.getHiddenValue();
+			}
+		}
+		if (value1<0){
+			value1 = c1.getValue();
+		}
+		if (value2<0){
+			value2 = c2.getValue();
+		}
+		int comp = value1 - value2;
 		if (comp != 0)
 			return comp;
 		else{
