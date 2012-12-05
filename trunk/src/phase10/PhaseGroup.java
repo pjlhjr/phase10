@@ -95,7 +95,7 @@ public final class PhaseGroup implements Serializable {
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
 				Collections.sort(cards, new CardValueComparator());
-				
+
 				if (c.getValue() == Configuration.WILD_VALUE) {
 					WildCard wc = (WildCard) c;
 					wc.setChangeable(false);
@@ -309,12 +309,13 @@ public final class PhaseGroup implements Serializable {
 	}
 
 	public String toString() {
-		StringBuilder out = new StringBuilder("Type: " + type + " Length: "
-				+ cards.size() + " Cards: ");
+		StringBuilder out = new StringBuilder();
 		for (Card e : cards) {
 			out.append(e + ", ");
 		}
-		return out.toString();
+
+		return out.length() > 3 ? out.substring(0, out.length() - 2) : out
+				.toString();
 	}
 
 	// public static void main(String[] args) {

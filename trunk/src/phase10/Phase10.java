@@ -176,6 +176,7 @@ public final class Phase10 implements Serializable {
 			if (Configuration.PRINT_LOG) {
 				log.printLog();
 			}
+			gameManager.getGui().endGame(winners);
 			return winners;
 			// TODO call gui- winner(s)
 		}
