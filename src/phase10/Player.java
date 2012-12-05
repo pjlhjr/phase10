@@ -128,128 +128,53 @@ public class Player implements Serializable {
 		if (hasLaidDownPhase)
 			return false;
 
-		if (!(pg.length == Configuration.getNumberOfPhaseGroupsRequired(phase)))
+		if (!(pg.length == Configuration.getNumberRequired(phase))) {
+			game.getLog().addEntry(
+					new LogEntry(game.getRound().getTurnNumber(), this,
+							"Attempted to lay down an incorrect number of phase groups: "
+									+ pg.length));
 			return false;
+		}
 
 		boolean success = false;
-		switch (phase) {
-			case 1 :
-				if (PhaseGroup.validate(pg[0], 0, 3)
-						&& PhaseGroup.validate(pg[1], 0, 3)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
-			case 2 :
-				if (PhaseGroup.validate(pg[0], 1, 3)
-						&& PhaseGroup.validate(pg[1], 0, 4)) {
-					pg[0].setLaidDown(1);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				} else if (PhaseGroup.validate(pg[1], 1, 4)
-						&& PhaseGroup.validate(pg[0], 0, 3)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(1);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
-			case 3 :
-				if (PhaseGroup.validate(pg[0], 1, 4)
-						&& PhaseGroup.validate(pg[1], 0, 4)) {
-					pg[0].setLaidDown(1);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				} else if (PhaseGroup.validate(pg[1], 1, 4)
-						&& PhaseGroup.validate(pg[0], 0, 4)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(1);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
-			case 4 :
-				if (PhaseGroup.validate(pg[0], 1, 7)) {
-					pg[0].setLaidDown(1);
-					phaseGroups.add(pg[0]);
-					success = true;
-				}
-				break;
-			case 5 :
-				if (PhaseGroup.validate(pg[0], 1, 8)) {
-					pg[0].setLaidDown(1);
-					phaseGroups.add(pg[0]);
-					success = true;
-				}
-				break;
-			case 6 :
-				if (PhaseGroup.validate(pg[0], 1, 9)) {
-					pg[0].setLaidDown(1);
-					phaseGroups.add(pg[0]);
-					success = true;
-				}
-				break;
-			case 7 :
-				if (PhaseGroup.validate(pg[0], 0, 4)
-						&& PhaseGroup.validate(pg[1], 0, 4)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
-			case 8 :
-				if (PhaseGroup.validate(pg[0], 2, 7)) {
-					pg[0].setLaidDown(2);
-					phaseGroups.add(pg[0]);
-					success = true;
-				}
-				break;
-			case 9 :
-				if (PhaseGroup.validate(pg[0], 0, 5)
-						&& PhaseGroup.validate(pg[1], 0, 2)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				} else if (PhaseGroup.validate(pg[1], 0, 5)
-						&& PhaseGroup.validate(pg[0], 0, 2)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
-			case 10 :
-				if (PhaseGroup.validate(pg[0], 0, 5)
-						&& PhaseGroup.validate(pg[1], 0, 3)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				} else if (PhaseGroup.validate(pg[1], 0, 5)
-						&& PhaseGroup.validate(pg[0], 0, 3)) {
-					pg[0].setLaidDown(0);
-					phaseGroups.add(pg[0]);
-					pg[1].setLaidDown(0);
-					phaseGroups.add(pg[1]);
-					success = true;
-				}
-				break;
+
+		if (Configuration.getNumberRequired(phase) == 1) {
+			
+			PhaseGroup phaseGroup = pg[0];
+			int type = Configuration.getTypeRequired(phase, 0);
+			int length = Configuration.getLengthRequired(phase, 0);
+			
+			if (PhaseGroup.validate(phaseGroup, type, length)) {
+				phaseGroup.setLaidDown(type);
+				phaseGroups.add(phaseGroup);
+				success = true;
+			}
+		} else {
+			
+			PhaseGroup phaseGroup1 = pg[0];
+			PhaseGroup phaseGroup2 = pg[1];
+			int typeA = Configuration.getTypeRequired(phase, 0);
+			int typeB = Configuration.getTypeRequired(phase, 1);
+			int lengthA = Configuration.getLengthRequired(phase, 0);
+			int lengthB = Configuration.getLengthRequired(phase, 1);
+			
+			if (PhaseGroup.validate(phaseGroup1, typeA, lengthA)
+					&& PhaseGroup.validate(phaseGroup2, typeB, lengthB)) {
+				phaseGroup1.setLaidDown(typeA);
+				phaseGroups.add(phaseGroup1);
+				phaseGroup2.setLaidDown(typeB);
+				phaseGroups.add(phaseGroup2);
+				success = true;
+			} else if (PhaseGroup.validate(phaseGroup1, typeB, lengthB)
+					&& PhaseGroup.validate(phaseGroup2, typeA, lengthA)) {
+				phaseGroup1.setLaidDown(typeB);
+				phaseGroups.add(phaseGroup1);
+				phaseGroup2.setLaidDown(typeA);
+				phaseGroups.add(phaseGroup2);
+				success = true;
+			}
 		}
+
 		if (success) {
 			setLaidDownPhase(true);
 			game.getLog().addEntry(
