@@ -8,8 +8,10 @@ package phase10;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import phase10.card.Card;
+import phase10.card.CardValueComparator;
 import phase10.card.WildCard;
 import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
@@ -92,6 +94,8 @@ public final class PhaseGroup implements Serializable {
 
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
+				Collections.sort(cards, new CardValueComparator());
+				
 				if (c.getValue() == Configuration.WILD_VALUE) {
 					WildCard wc = (WildCard) c;
 					wc.setChangeable(false);
@@ -168,6 +172,7 @@ public final class PhaseGroup implements Serializable {
 				wc.setChangeable(false);
 			}
 		}
+		Collections.sort(cards, new CardValueComparator());
 	}
 
 	boolean getLaidDown() {

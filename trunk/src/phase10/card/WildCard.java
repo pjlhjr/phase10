@@ -52,5 +52,12 @@ public class WildCard extends Card {
 		this.changeable = changeable;
 	}
 	
+	/**
+	 * @return string representation of a wild card
+	 */
+	public String toString() {
+		return "Wild";
+	}
+	
 
 }
