@@ -102,14 +102,23 @@ public class GuiManager {
 	}
 	
 	public void endGame(ArrayList<Player> winner) {
+		String endMessage;
 		
+		if(winner.size() == 1)
+			endMessage = "Congratulations " + winner.get(0).getName() + "! You Won!";
+		else {
+			endMessage = "It's a tie! The winners are: ";
+			for(Player x : winner)
+				endMessage += x.getName() + ", ";
+		}
+			
 		
+		displayMessageFrame(endMessage, "End Game");
 		
-		//String endMessage = "Congratulations " + winner.getName() + "! You Won!";
-		
-		//displayMessageFrame(endMessage, "End Game");
+		gameWindow.dispose();
 		
 		displayScoreFrame();
+		
 		
 	}
 	
