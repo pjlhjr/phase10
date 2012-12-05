@@ -164,7 +164,6 @@ public final class Phase10 implements Serializable {
 
 			log.addEntry(new LogEntry(0, null, "Now on round #" + roundNumber));
 
-			// TODO Call Gui- say new round has started
 			round = new Round(this);
 			round.startRound();
 
@@ -178,7 +177,6 @@ public final class Phase10 implements Serializable {
 			}
 			gameManager.getGui().endGame(winners);
 			return winners;
-			// TODO call gui- winner(s)
 		}
 		return winners;
 	}
