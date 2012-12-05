@@ -23,6 +23,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import java.awt.Component;
+import javax.swing.Box;
 public class opponentPanel extends JPanel {
 
 	/**
@@ -44,6 +47,10 @@ public class opponentPanel extends JPanel {
 	private JButton phaseGroup1End;
 	private GameFrame gameWindow;
 	private Phase10 currentGame;
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
+	private Component horizontalStrut_2;
+	private Component horizontalStrut_3;
 
 	/**
 	 * Constructs a panel to display information about an opponent to the current player.
@@ -97,14 +104,20 @@ public class opponentPanel extends JPanel {
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.CENTER);
 		
-		addToPhase_1 = new JButton("Add to Phase");
-		addToPhase_1.addActionListener(new AddPhasesListener(0));
-		
 		phaseGroup1Begin = new JButton("");
+		panel.setLayout(new GridLayout(4, 3, 0, 0));
+		panel.add(phaseGroup1Begin);
+		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut);
+		
+		phaseGroup2Begin = new JButton("");
+		panel.add(phaseGroup2Begin);
 		
 		lblTo = new JLabel("to");
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblTo);
 		
 		phaseGroup1End = new JButton("");
 		phaseGroup1End.addActionListener(new ActionListener() {
@@ -112,72 +125,31 @@ public class opponentPanel extends JPanel {
 			}
 		});
 		
-		phaseGroup2Begin = new JButton("");
+		horizontalStrut_1 = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut_1);
 		
 		labelTo_2 = new JLabel("to");
 		labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTo_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel.add(labelTo_2);
+		panel.add(phaseGroup1End);
+		
+		addToPhase_1 = new JButton("Add to Phase");
+		addToPhase_1.addActionListener(new AddPhasesListener(0));
+		
+		horizontalStrut_2 = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut_2);
 		
 		phaseGroup2End = new JButton("");
+		panel.add(phaseGroup2End);
+		panel.add(addToPhase_1);
 		
 		addToPhase_2 = new JButton("Add to Phase");
 		addToPhase_2.addActionListener(new AddPhasesListener(1));
 		
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(26)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(32)
-							.addComponent(lblTo, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(12)
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-								.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGap(10)
-									.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-								.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-							.addGap(2))
-						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-							.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
-							.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-					.addGap(25))
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-						.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblTo, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-						.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-								.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-							.addGap(64))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(125)
-							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-								.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
-					.addGap(114))
-		);
-		panel.setLayout(gl_panel);
+		horizontalStrut_3 = Box.createHorizontalStrut(20);
+		panel.add(horizontalStrut_3);
+		panel.add(addToPhase_2);
 		
 		phaseAreaUpdate();
 		//end panel setup

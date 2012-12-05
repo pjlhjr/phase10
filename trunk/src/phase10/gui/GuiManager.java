@@ -1,5 +1,7 @@
 package phase10.gui;
 
+import java.util.ArrayList;
+
 import phase10.GameManager;
 import phase10.Player;
 
@@ -99,17 +101,13 @@ public class GuiManager {
 		gameWindow.updateFrame(mainManager.getGame());
 	}
 	
-	public void endGame() {
+	public void endGame(ArrayList<Player> winner) {
 		
-		Player winner = mainManager.getGame().getPlayer(1);
-		for(int i = 2; i < mainManager.getGame().getNumberOfPlayers(); i++) {
-			if(mainManager.getGame().getPlayer(i).getScore() > winner.getScore())
-				winner = mainManager.getGame().getPlayer(i);
-		}
 		
-		String endMessage = "Congratulations " + winner.getName() + "! You Won!";
 		
-		displayMessageFrame(endMessage, "End Game");
+		//String endMessage = "Congratulations " + winner.getName() + "! You Won!";
+		
+		//displayMessageFrame(endMessage, "End Game");
 		
 		displayScoreFrame();
 		
