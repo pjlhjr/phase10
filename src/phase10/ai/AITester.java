@@ -12,7 +12,7 @@ public class AITester {
 	}
 	
 	public AITester() {
-		 p1WinPercent = new int[101][101];
+		p1WinPercent = new int[101][101];
 		Phase10 ten;
 		 
 		for(int p1Diff = 0; p1Diff <= 100; p1Diff++){
