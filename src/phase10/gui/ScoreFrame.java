@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
+import java.awt.Point;
 
 public class ScoreFrame extends JFrame {
 
@@ -26,6 +27,7 @@ public class ScoreFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ScoreFrame(GuiManager gManage) {
+		setLocation(new Point(15, 15));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ScoreFrame.class.getResource("/images/GameIcon.png")));
 		setResizable(false);
 		setTitle("Scores after round " + gManage.mainManager.getGame().getRoundNumber());
