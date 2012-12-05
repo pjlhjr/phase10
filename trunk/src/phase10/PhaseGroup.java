@@ -74,16 +74,22 @@ public final class PhaseGroup implements Serializable {
 			return true;
 		} else {
 			Player p = game.getCurrentPlayer();
-			
-			//cannot add to a phase unless you have laid one down this round
-			if (!p.hasLaidDownPhase()){
+
+			// cannot add to a phase unless you have laid one down this round
+			if (!p.hasLaidDownPhase()) {
 				return false;
 			}
 			PhaseGroup temp = new PhaseGroup(game);
 			for (int i = 0; i < getNumberOfCards(); i++) {
 				temp.addCard(getCard(i));
 			}
+			game.getLog().addEntry(
+					new LogEntry(game.getRound().getTurnNumber(), p,
+							"Attempting to add card (" + c
+									+ ") to a laid down phase group: " + temp));
+
 			temp.addCard(c);
+
 			if (PhaseGroup.validate(temp, type, 0)) {
 				cards.add(c);
 				if (c.getValue() == Configuration.WILD_VALUE) {
@@ -218,13 +224,13 @@ public final class PhaseGroup implements Serializable {
 			if (curValue == Configuration.WILD_VALUE) {
 				WildCard curWild = (WildCard) pg.getCard(i);
 				if (curWild.getHiddenValue() < 0 || curWild.isChangeable()) {
-					//System.out.println("adding wild");
+					// System.out.println("adding wild");
 					numWilds++;
 					wilds.add(curWild);
 				} else {
 					values.add(curWild.getHiddenValue());
-//					System.out.println("adding hidden value wild "
-//							+ curWild.getHiddenValue());
+					// System.out.println("adding hidden value wild "
+					// + curWild.getHiddenValue());
 				}
 			} else {
 				values.add(curValue);
@@ -238,7 +244,7 @@ public final class PhaseGroup implements Serializable {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
-					//System.out.println("found " + curValue);
+					// System.out.println("found " + curValue);
 					values.remove(i);
 					found = true;
 					break;
@@ -247,7 +253,7 @@ public final class PhaseGroup implements Serializable {
 			if (!found && numWilds > 0) {
 				numWilds--;
 				wilds.get(numWilds).setHiddenValue(curValue);
-//				System.out.println("using a wild for " + curValue);
+				// System.out.println("using a wild for " + curValue);
 			} else if (!found && numWilds == 0) {
 				return false;
 			}

@@ -244,7 +244,7 @@ public class Player implements Serializable {
 		hasDrawnCard = state;
 	}
 
-	boolean getHasDrawnCard() {
+	public boolean getHasDrawnCard() {
 		return hasDrawnCard;
 	}
 
