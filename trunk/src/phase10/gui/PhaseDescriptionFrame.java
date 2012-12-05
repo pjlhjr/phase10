@@ -72,12 +72,20 @@ public class PhaseDescriptionFrame extends JFrame {
 		contentPane.add(btnOkay);
 		
 		//Initialize table contents
-		String[][] phaseDescriptionTable = new String[10][gm.mainManager.getGame().getNumberOfPlayers() + 2];
-		for(int r = 0; r < 10; r++) {
-			phaseDescriptionTable[r][0] = Integer.toString(r + 1);
-			phaseDescriptionTable[r][1] = setPhaseDescriptionString(r+1);
+		String[][] phaseDescriptionTable = new String[11][gm.mainManager.getGame().getNumberOfPlayers() + 2];
+			//Initialize the first row
+		phaseDescriptionTable[0][0] = "Phase";
+		phaseDescriptionTable[0][1] = "Phase Description";
+		for(int r = 2; r < gm.mainManager.getGame().getNumberOfPlayers()+2; r++) {
+			phaseDescriptionTable[0][r] = gm.mainManager.getGame().getPlayer(r-2).getName();
+		}
+		
+		
+		for(int r = 1; r < 11; r++) {
+			phaseDescriptionTable[r][0] = Integer.toString(r);
+			phaseDescriptionTable[r][1] = setPhaseDescriptionString(r);
 			for(int c = 2; c < phaseDescriptionTable[r].length; c++) {
-				if(gm.mainManager.getGame().getPlayer(c-2).getPhase() == r+1){
+				if(gm.mainManager.getGame().getPlayer(c-2).getPhase() == r){
 					phaseDescriptionTable[r][c] = "X";
 				}
 				else {
@@ -100,18 +108,13 @@ public class PhaseDescriptionFrame extends JFrame {
 		//end table header
 		
 		table = new JTable(phaseDescriptionTable, tableHead);
-		table.setModel(new DefaultTableModel(
-			phaseDescriptionTable, tableHead
-		));
 		table.getColumnModel().getColumn(1).setPreferredWidth(180);
 		table.getColumnModel().getColumn(1).setMinWidth(150);
 		table.setBounds(10, 128, 445, 220);
 		contentPane.add(table);
-		contentPane.add(table.getTableHeader());
 	}
 	private void initLanguage(Language langSetter) {
 		
-		//TODO GET LANGUAGE FILE STRAIGHTENED UP THEN WORK THIS OUT!!!
 		title = langSetter.getEntry("PD_FRAME_TITLE");
 		langSetter.getEntry("CURRENT_PHASE");
 		okayButtonLabel = langSetter.getEntry("OKAY");

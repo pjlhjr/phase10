@@ -28,7 +28,7 @@ public class ScoreFrame extends JFrame {
 	public ScoreFrame(GuiManager gManage) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ScoreFrame.class.getResource("/images/GameIcon.png")));
 		setResizable(false);
-		setTitle("Scores after round + roundNum");
+		setTitle("Scores after round " + gManage.mainManager.getGame().getRoundNumber());
 		setBounds(100, 100, 458, 396);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
