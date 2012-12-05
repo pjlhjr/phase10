@@ -12,7 +12,6 @@ import phase10.Player;
 import phase10.card.Card;
 import phase10.card.WildCard;
 import phase10.util.Configuration;
-import phase10.ai.Groups;
 
 /**
  * @author Paul Harris
@@ -33,8 +32,7 @@ public class AIPlayer extends Player {
 	}
 	
 	public static void main(String[] args){
-		//new AITester();
-		System.out.print(!(true^true) + " " + !(true^false) + " " + !(false^true) + " " + !(false^false));
+		new AITester();
 	}
 	
 	/**
@@ -60,8 +58,8 @@ public class AIPlayer extends Player {
 		// the AIPlayer will not draw a card and the program will freeze
 		try{
 			if(!(drawOrPickUp()^bestChoice(BEST_CHOICE_AT_FIFTY))){ // choose whether to draw from the deck or pick up from the stack
-				if(!game.getRound().drawFromDiscard())
-					game.getRound().drawFromDeck();
+				if(!game.getRound().drawFromDiscard()) // If picking up from the discard is not possible,
+					game.getRound().drawFromDeck(); // draw from the deck instead
 			}else{
 				game.getRound().drawFromDeck();
 			}
@@ -101,55 +99,32 @@ public class AIPlayer extends Player {
 	 */
 	//TODO use evan's array in config.
 	int[] setsNeeded(){
-		int[] need;
-		if(getPhase() == 1){
-			need = new int[2];
-			need[0] = 3;
-			need[1] = 3;
+		int numNeed = 0; // figure out the size of the array needed
+		for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
+			if(Configuration.getTypeRequired(getPhase(), x) == Configuration.SET_PHASE)
+				numNeed++;
 		}
-		else if(getPhase() == 2){
-			need = new int[1];
-			need[0] = 3;
+		
+		int[] need = new int[numNeed]; // fill the array with the size of the sets that are needed
+		numNeed = 0;
+		for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
+			if(Configuration.getTypeRequired(getPhase(), x) == Configuration.SET_PHASE)
+				need[numNeed++] = Configuration.getLengthRequired(getPhase(), x);
 		}
-		else if(getPhase() == 3){
-			need = new int[1];
-			need[0] = 4;
-		}
-		else if(getPhase() == 7){
-			need = new int[2];
-			need[0] = 4;
-			need[1] = 4;
-		}
-		else if(getPhase() == 9){
-			need = new int[2];
-			need[0] = 5;
-			need[1] = 2;
-		}
-		else if(getPhase() == 10){
-			need = new int[2];
-			need[0] = 5;
-			need[1] = 3;
-		}
-		else{
-			need = new int[1];
-			need[0] = 0;
-		}
+		
 		return need;
 	}
 	
+		
 	
-	/**
+/**
 	 * @return the length of the run needed on this phase. Or 0 if there is no run needed.
 	 */
 	int lengthOfRunNeeded(){
-		if(getPhase() == 2 || getPhase() == 3)
-			return 4;
-		else if(getPhase() == 4)
-			return 7;
-		else if(getPhase() == 5)
-			return 8;
-		else if(getPhase() == 6)
-			return 9;
+		for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
+			if(Configuration.getTypeRequired(getPhase(), x) == Configuration.RUN_PHASE)
+				return Configuration.getLengthRequired(getPhase(), x);
+		}
 		return 0;
 	}
 	
@@ -157,7 +132,7 @@ public class AIPlayer extends Player {
 	 * @return true if it is the color phase, or false if it is not 
 	 */
 	boolean colorPhase(){
-		if(getPhase() == 7)
+		if(Configuration.getTypeRequired(getPhase(), 0) == Configuration.COLOR_PHASE)
 			return true;
 		return false;
 	}
@@ -353,9 +328,7 @@ public class AIPlayer extends Player {
 	/**
 	 * @return the best complete grouping of the cards in the AIPlayer's hand
 	 */
-	/**
-	 * @return the complete phase groups from Groups
-	 */
+	// TODO look at the length, only give the right types
 	private PhaseGroup[] getPhaseGroups(){
 		group = new Groups(this, getHand());
 		return group.getCompletePhaseGroups();

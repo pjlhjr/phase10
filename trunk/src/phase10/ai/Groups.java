@@ -8,6 +8,8 @@ import phase10.Hand;
 import phase10.PhaseGroup;
 import phase10.ai.AIPlayer;
 import phase10.card.Card;
+import phase10.card.CardColorComparator;
+import phase10.card.CardValueComparator;
 import phase10.util.Configuration;
 
 class Groups{
@@ -51,31 +53,21 @@ class Groups{
 	 * @param h the hand the player is hold
 	 * @param c a card to be added to the hand
 	 */
-	//TODO sort by Color?
 	Groups(AIPlayer p, Hand h, Card c){
 		this(p);
 		cards = new Card[h.getNumberOfCards()+1];
 		for(int index = 0; index < h.getNumberOfCards(); index++){
 			cards[index] = h.getCard(index);
 		}
+		cards[cards.length - 1] = c;
 		
-		// insert the new card in sorted order
-		int index = 0;
-		Card 	lastCard = c,
-				nextCard = c;
-		while(cards[index] != null && cards[index].getValue() > c.getValue()){
-			index++;
-		}
-		while(cards[index] != null){
-			nextCard = cards[index];
-			cards[index++] = lastCard;
-			lastCard = nextCard;
-		}
-		cards[index] = lastCard;
+		if(player.colorPhase())
+			Arrays.sort(cards, new CardColorComparator());
+		else
+			Arrays.sort(cards, new CardValueComparator());
 		
 		group();
 	}
-	
 	
 	/** 
 	 * @param card the that you want to see if it's in a complete group
@@ -126,6 +118,7 @@ class Groups{
 		dealWithWilds();
 		singleAndConflictingGroup();
 		resolveConflicts();
+		finalizeCompleteGroups();
 	}
 	
 	/* figure out some way, break this problem down,  
@@ -285,7 +278,7 @@ class Groups{
 		}
 	}
 	
-	//TODO set wild value, does it work?? If the card is lost to another group, is it still a complete group?
+	//TODO set wild value, does it work?? Can the single card of the same value be used instead?
 	/**
 	 * makes sure every card is only in one PhaseGroup.
 	 */
@@ -304,10 +297,7 @@ class Groups{
 				}
 				
 				tempPointValue = 0; //point value if the card is removed from the hand
-				 
-				if(!((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), player.setsNeeded()[0])) || 
-						(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), player.lengthOfRunNeeded())) ||
-						(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7)))){ // if it not still a complete group after removing the card
+				if(!validComplete(p)){ // if it not still a complete group after removing the card
 					for(int x = 0; x < p.getNumberOfCards(); x++){
 						tempPointValue += p.getCard(x).getPointValue(); // get the point value of all the other cards
 					}
@@ -319,12 +309,35 @@ class Groups{
 			}
 			if(maxPhaseGroup != null) // the group that would be the most costly after removing the card, gets to keep the card 
 				maxPhaseGroup.addCard(cardConflict.get(0));
+			
+			for(PhaseGroup g: conflictingGroups.get(0)){ // make sure no partial groups are left in complete groups
+				if(!validComplete(g) && !partial.contains(g)){
+					complete.remove(g);
+					partial.add(g);
+				}
+			}
+			
 			cardConflict.remove(0); // move on to the next one
 			conflictingGroups.remove(0);
 		}
 	}
 	
+	// TODO make this right make sure there is not another phase that is already the length needed
+	/**
+	 * @param p The phase group that will be checked
+	 * @return True if it is a complete phaseGroup in this player's phase. False if not.
+	 */
+	private boolean validComplete(PhaseGroup p){
+		return ((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), player.setsNeeded()[0])) || 
+				(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), player.lengthOfRunNeeded())) ||
+				(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7)));
+	}
+	
 	// TODO single if there are more than one wild
+	/**
+	 * This method adds wilds to every possible phase group.
+	 * The conflicts created are later resolved.
+	 */
 	private void dealWithWilds(){
 		wildLoop:
 		for(Card w: single){
@@ -333,9 +346,7 @@ class Groups{
 			}
 			for(PhaseGroup p: partial){
 				p.addCard(w);
-				if((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), player.setsNeeded()[0])) || 
-						(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), player.lengthOfRunNeeded())) ||
-						(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7))){
+				if(validComplete(p)){
 					complete.add(p);
 					partial.remove(p);
 					continue wildLoop;
@@ -348,14 +359,27 @@ class Groups{
 		}
 	}
 	
+	/**
+	 * make the complet groups fit the specifications of the phase
+	 */
+	//TODO finish this, use Config.
+	private void finalizeCompleteGroups(){
+		
+	}
+	
 	//TODO fill in, this method used for finding which cards are needed, use difficulty
+	/**
+	 * @return the cards needed in between partial runs
+	 */
 	private int[] cardsForConnectedGroups(){
 		return new int[1]; // change name
 	}
 	
-	//TODO fill in
+	/**
+	 * @return the complete phase groups, empty array size 1 if no complete groups
+	 */
 	public PhaseGroup[] getCompletePhaseGroups(){
-		if(complete.size() > 0){
+		if(complete.size() > 0){ // transform from ArrayList to an array (toArray does work with generics)
 			PhaseGroup[] temp = new PhaseGroup[complete.size()];
 			int x = 0;
 			for(PhaseGroup c: complete)
@@ -366,44 +390,44 @@ class Groups{
 		}
 	}
 	
-	//TODO figure out discard value.
-	// on run phases with higher diff don't discard certain
 	public Card[] recommendDiscard(){
 		double[] discardValue = new double[cards.length];
 		
-		bigLoop:
+		bigLoop: // this loop assigns a "discard value" to each card, the higher the value more likely it will be discarded
 		for(int x = 0; x < cards.length; x++){
-			if(cards[x].getValue() == Configuration.WILD_VALUE){
+			if(cards[x].getValue() == Configuration.WILD_VALUE){ // don't discard wilds
 				discardValue[x] = Double.MAX_VALUE * -1;
 				continue bigLoop;
-			}else if(cards[x].getValue() == Configuration.SKIP_VALUE){
+			}else if(cards[x].getValue() == Configuration.SKIP_VALUE){ // discard skips
 				discardValue[x] = Double.MAX_VALUE;
 				continue bigLoop;
-			}else{
-				discardValue[x] = cards[x].getPointValue() + cards[x].getValue()/100.0;
+			}else{ // give the cards their on point value + a "tie breaker" value, 1/100th of the face value
+				discardValue[x] = cards[x].getPointValue() + cards[x].getValue()/100.0; 
 			}
 			
-			for(Card s: single){
+			// a hard player knows that on the 
+			// TODO look for duplicates
+			if(player.getDifficulty() > 70 && player.lengthOfRunNeeded() > 4){
+				if((cards[x].getValue() == 6 || cards[x].getValue() == 7)||
+				((cards[x].getValue() == 5 || cards[x].getValue() == 8) && player.lengthOfRunNeeded() >= 8) ||
+				((cards[x].getValue() == 4 || cards[x].getValue() == 9) && player.lengthOfRunNeeded() == 9)){
+					discardValue[x] -= cards[x].getPointValue();
+				}	
+			}			
+			
+			for(Card s: single){  // If the card is not in a group that's all you do for that card
 				if(cards[x] == s){
 					continue bigLoop;
 				}
 			}
 			
-			if(player.getDifficulty() > 70 && player.lengthOfRunNeeded() > 4){
-				if(cards[x].getValue() == 6 || cards[x].getValue() == 7)
-					continue;
-				if((cards[x].getValue() == 5 || cards[x].getValue() == 8) && player.lengthOfRunNeeded() >= 8)
-					continue;
-				if((cards[x].getValue() == 4 || cards[x].getValue() == 9) && player.lengthOfRunNeeded() == 9)
-					continue;
-			}
-			
-			for(PhaseGroup c: complete){ // what about excess groups
+			for(PhaseGroup c: complete){ // TODO what about excess groups
 				for(int completeIndex = 0; completeIndex < c.getNumberOfCards(); completeIndex++){
 					if(c.getCard(completeIndex) == cards[x]){
 						for(int restOfComplete = 0; restOfComplete < c.getNumberOfCards(); restOfComplete++){
 							discardValue[x] -= c.getCard(restOfComplete).getPointValue();
 						}
+						discardValue[x] *= 5;
 						continue bigLoop;
 					}
 				}
@@ -419,11 +443,6 @@ class Groups{
 					}
 				}
 			}
-			//don't count things in connected groups
-			//subtract for the point values of other cards in phase group (would be added if the card was taken out)
-			//partial:
-			// if not in a group add the point value
-			// always discard skips, never wild
 		}
 		
 		//insertion sort, sorting sortedResults according to the discardValue
@@ -445,5 +464,5 @@ class Groups{
 		}
 		
 		return sortedResults;
-	} // keep cards that opponents are using in groups
+	} // TODO keep cards that opponents are using in groups
 }
