@@ -193,13 +193,14 @@ public final class Phase10 implements Serializable {
 		ArrayList<Player> winners = new ArrayList<Player>();
 		int winnerScore = Integer.MAX_VALUE;
 		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).getPhase() == 11) {
-				if (players.get(i).getScore() < winnerScore) {
+			Player p = players.get(i);
+			if (p.getPhase() == 11) {
+				if (p.getScore() < winnerScore) {
 					winners = new ArrayList<Player>();
-					winnerScore = players.get(i).getScore();
-					winners.add(players.get(i));
-				} else if (players.get(i).getScore() == winnerScore) {
-					winners.add(players.get(i));
+					winnerScore = p.getScore();
+					winners.add(p);
+				} else if (p.getScore() == winnerScore) {
+					winners.add(p);
 				}
 			}
 		}
@@ -234,14 +235,16 @@ public final class Phase10 implements Serializable {
 			log.addEntry(new LogEntry(0, p, "New score: " + p.getScore()));
 
 			// clear phasegroups
-			for (int pg = 0; pg < p.getNumberOfPhaseGroups(); pg++) {
-				p.removePhaseGroup(pg);
+			while (p.getNumberOfPhaseGroups() != 0) {
+				p.removePhaseGroup(0);
 			}
 			// increment phase if has laid down
 			if (p.hasLaidDownPhase()) {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
-				log.addEntry(new LogEntry(0, p, "Now on phase #"
+				log.addEntry(new LogEntry(0, p, "Now on phase #" + p.getPhase()));
+			} else {
+				log.addEntry(new LogEntry(0, p, "Still on phase #"
 						+ p.getPhase()));
 			}
 
