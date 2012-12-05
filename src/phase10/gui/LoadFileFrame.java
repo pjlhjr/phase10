@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
@@ -23,6 +25,7 @@ public class LoadFileFrame extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField filenameField;
 	private String filename;
+	private GuiManager gManage;
 
 	public String getFilename() {
 		return filename;
@@ -35,7 +38,7 @@ public class LoadFileFrame extends JDialog {
 		setTitle("Load Game");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 
-		final GuiManager gManage = guiM;
+		gManage = guiM;
 
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -61,43 +64,54 @@ public class LoadFileFrame extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-
-						filename = filenameField.getText();
-						boolean flag = gManage.mainManager.loadGame(filename);
-
-						if(flag == false) 
-						{
-							dispose();
-							LoadFileFrame tryAgain = new LoadFileFrame(gManage);
-							tryAgain.setVisible(true);
-							MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
-							invalidMessage.setVisible(true);
-						}
-						else {
-							
-							gManage.initGameWindow();
-							dispose();
-						}
-					}
-				});
+				okButton.addActionListener(new OKListener());
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						dispose();
-					}
-				});
+				cancelButton.addActionListener(new CancelListener());
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	private class OKListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			filename = filenameField.getText();
+			boolean flag = gManage.mainManager.loadGame(filename);
+
+			if(flag == false) 
+			{
+				dispose();
+				LoadFileFrame tryAgain = new LoadFileFrame(gManage);
+				tryAgain.setVisible(true);
+				MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
+				invalidMessage.setVisible(true);
+			}
+			else {
+				gManage.initGameWindow();
+				dispose();
+			}
+		
+			
+		}
+		
+	}
+	
+	private class CancelListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			gManage.initGui();
+			dispose();
+		}
+		
 	}
 }
