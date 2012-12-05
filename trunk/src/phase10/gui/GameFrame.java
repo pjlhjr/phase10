@@ -58,6 +58,7 @@ public class GameFrame extends JFrame {
 	private JLabel lblTo2; //a label that says to
 	private JButton pg2End; //the first card of the current player's second phase group
 	private JButton pg2Start; //the last card of the current player's second phase group
+	private JTextArea playerScore; //displays the current player's score in infoPanel
 	//end components
 
 	/**
@@ -127,7 +128,7 @@ public class GameFrame extends JFrame {
 				gManage.displayScoreFrame();
 			}
 		});
-		btnScoreboard.setBounds(25, 291, 118, 23);
+		btnScoreboard.setBounds(28, 300, 118, 23);
 		infoPanel.add(btnScoreboard);
 
 		JButton btnSave = new JButton("Save");
@@ -151,6 +152,20 @@ public class GameFrame extends JFrame {
 		});
 		btnExit.setBounds(5, 392, 154, 25);
 		infoPanel.add(btnExit);
+		
+		JLabel lblScore = new JLabel("Score");
+		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblScore.setBounds(58, 218, 53, 25);
+		infoPanel.add(lblScore);
+		
+		playerScore = new JTextArea();
+		playerScore.setText(Integer.toString(current.getScore()));
+		playerScore.setRows(1);
+		playerScore.setFont(new Font("Century Gothic", Font.BOLD, 36));
+		playerScore.setEditable(false);
+		playerScore.setColumns(1);
+		playerScore.setBounds(47, 240, 69, 49);
+		infoPanel.add(playerScore);
 
 		handPanel.setBounds(0, 533, 976, 107);
 		getContentPane().add(handPanel);
@@ -295,13 +310,13 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(pg2End);
 
 		addToPG1 = new JButton("add to phase");
-		addToPG1.addActionListener(new AddPhasesListener(0));
+		addToPG1.addActionListener(new AddToPhaseListener(0));
 		addToPG1.setVisible(false);
 		addToPG1.setBounds(277, 27, 117, 52);
 		yourPhasesPanel.add(addToPG1);
 
 		addToPG2 = new JButton("add to phase");
-		addToPG2.addActionListener(new AddPhasesListener(1));
+		addToPG2.addActionListener(new AddToPhaseListener(1));
 		addToPG2.setVisible(false);
 		addToPG2.setBounds(580, 27, 117, 52);
 		yourPhasesPanel.add(addToPG2);
@@ -488,6 +503,7 @@ public class GameFrame extends JFrame {
 
 		lblPlayername.setText(current.getName());
 		phaseNumber.setText(Integer.toString(current.getPhase()));
+		playerScore.setText(Integer.toString(current.getScore()));
 
 		//end update of infoPanel
 
@@ -571,8 +587,6 @@ public class GameFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
 			
 			
 			if(isPhasing) {
@@ -633,9 +647,10 @@ public class GameFrame extends JFrame {
 
 							isPhasing = false;
 							isSecondPhaseGroup = false;
+							
+							btnNewPhase.setText("Add a Phase!");
 						}
 						else { //the player played a valid phase with only one phase group in the phase
-							//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
 							pg1Start.setVisible(true);
 							lblTo.setVisible(true);
 							pg1End.setVisible(true);
@@ -678,9 +693,9 @@ public class GameFrame extends JFrame {
 						hideAndClearSelectedCards();
 						isPhasing = false;
 						isSecondPhaseGroup = false;
+						btnNewPhase.setText("Add a Phase!");
 					}
 					else { //the player played a valid phase
-						//make the buttons on the right side of yourPhasesPanel visible and showing the correct card images TODO
 						pg1Start.setVisible(true);
 						lblTo.setVisible(true);
 						pg1End.setVisible(true);
@@ -706,7 +721,6 @@ public class GameFrame extends JFrame {
 								getCardFile(newPhaseGroup2.getCard(newPhaseGroup2.getNumberOfCards()-1)))
 								)));
 
-						//TODO update the frame
 						updateFrame(gManage.mainManager.getGame());
 						selectedCards.clear();
 
@@ -761,17 +775,16 @@ public class GameFrame extends JFrame {
 		}
 	}
 
-	private class AddPhasesListener implements ActionListener {
+	private class AddToPhaseListener implements ActionListener {
 
 		private int phaseGroupIndex;
 
-		public AddPhasesListener(int phaseGroup) {
+		public AddToPhaseListener(int phaseGroup) {
 			this.phaseGroupIndex = phaseGroup;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//TODO new listener
 			for(int x = 0; x < selectedCards.size(); x++) {
 				boolean isValid = current.getPhaseGroup(phaseGroupIndex).addCard(selectedCards.get(x));
 				if(!isValid) {
