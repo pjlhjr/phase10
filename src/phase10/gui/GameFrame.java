@@ -59,6 +59,7 @@ public class GameFrame extends JFrame {
 	private JButton pg2End; //the first card of the current player's second phase group
 	private JButton pg2Start; //the last card of the current player's second phase group
 	private JTextArea playerScore; //displays the current player's score in infoPanel
+	private JLabel lblTurnMode;
 	//end components
 
 	/**
@@ -166,6 +167,10 @@ public class GameFrame extends JFrame {
 		playerScore.setColumns(1);
 		playerScore.setBounds(47, 240, 69, 49);
 		infoPanel.add(playerScore);
+		
+		lblTurnMode = new JLabel("You may draw");
+		lblTurnMode.setBounds(28, 509, 118, 14);
+		infoPanel.add(lblTurnMode);
 
 		handPanel.setBounds(0, 533, 976, 107);
 		getContentPane().add(handPanel);
@@ -353,6 +358,8 @@ public class GameFrame extends JFrame {
 				lblTo.setVisible(true);
 				pg1End.setVisible(true);
 				addToPG1.setVisible(true);
+				
+				lblTo.setToolTipText(current.getPhaseGroup(0).toString());
 
 				pg2Start.setVisible(false);
 				lblTo2.setVisible(false);
@@ -372,13 +379,17 @@ public class GameFrame extends JFrame {
 				lblTo.setVisible(true);
 				pg1End.setVisible(true);
 				addToPG1.setVisible(true);
+				
+				lblTo.setToolTipText(current.getPhaseGroup(0).toString());
 
 				pg2Start.setVisible(true);
 				lblTo2.setVisible(true);
 				pg2End.setVisible(true);
 				addToPG2.setVisible(true);
+				
+				lblTo2.setToolTipText(current.getPhaseGroup(1).toString());
 
-				btnNewPhase.setVisible(true);
+				btnNewPhase.setVisible(false);
 
 				pg1Start.setIcon(new ImageIcon(GameFrame.class.getResource(
 						getCardFile(current.getPhaseGroup(0).getCard(0)))));
@@ -472,9 +483,7 @@ public class GameFrame extends JFrame {
 
 		//end update of opponent panels
 
-		//begin yourPhasesPanel update
 		updateYourPhasesPanel();
-		//end yourPhasesPanel update
 
 		/*
 		 * begin update of cards
@@ -510,6 +519,13 @@ public class GameFrame extends JFrame {
 		lblPlayername.setText(current.getName());
 		phaseNumber.setText(Integer.toString(current.getPhase()));
 		playerScore.setText(Integer.toString(current.getScore()));
+		
+		if(current.getHasDrawnCard())
+			lblTurnMode.setText("You may discard");
+		else {
+			lblTurnMode.setText("you may draw");
+			btnNewPhase.setVisible(false);
+		}
 
 		//end update of infoPanel
 
