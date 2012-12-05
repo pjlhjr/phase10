@@ -139,25 +139,25 @@ public class Player implements Serializable {
 		boolean success = false;
 
 		if (Configuration.getNumberRequired(phase) == 1) {
-			
+
 			PhaseGroup phaseGroup = pg[0];
 			int type = Configuration.getTypeRequired(phase, 0);
 			int length = Configuration.getLengthRequired(phase, 0);
-			
+
 			if (PhaseGroup.validate(phaseGroup, type, length)) {
 				phaseGroup.setLaidDown(type);
 				phaseGroups.add(phaseGroup);
 				success = true;
 			}
 		} else {
-			
+
 			PhaseGroup phaseGroup1 = pg[0];
 			PhaseGroup phaseGroup2 = pg[1];
 			int typeA = Configuration.getTypeRequired(phase, 0);
 			int typeB = Configuration.getTypeRequired(phase, 1);
 			int lengthA = Configuration.getLengthRequired(phase, 0);
 			int lengthB = Configuration.getLengthRequired(phase, 1);
-			
+
 			if (PhaseGroup.validate(phaseGroup1, typeA, lengthA)
 					&& PhaseGroup.validate(phaseGroup2, typeB, lengthB)) {
 				phaseGroup1.setLaidDown(typeA);
@@ -180,6 +180,12 @@ public class Player implements Serializable {
 			game.getLog().addEntry(
 					new LogEntry(game.getRound().getTurnNumber(), this,
 							"Laid down phase"));
+			
+			// Move on to the next round if laying down the phase group makes
+			// the player run out of cards
+			if (getHand().getNumberOfCards() == 0) {
+				game.nextRound();
+			}
 			return true;
 		} else
 			return false;
