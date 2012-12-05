@@ -60,7 +60,7 @@ public class GameManager {
 	 * @return true if the load was successful, otherwise false
 	 */
 	public boolean loadGame(String fileName) {
-		if (!fileName.substring(fileName.length() - 4).equals(".p10")) {
+		if (fileName.length() < 5 || !fileName.substring(fileName.length() - 4).equals(".p10")) {
 			fileName = fileName + ".p10";
 		}
 		try {
@@ -71,7 +71,7 @@ public class GameManager {
 			if (obj instanceof Phase10) {
 				game = (Phase10) obj;
 				game.setGameManager(this);
-				
+
 				ois.close();
 				return true;
 			}
@@ -91,7 +91,8 @@ public class GameManager {
 	 * @return true if the save was successful, otherwise false
 	 */
 	public boolean saveGame(String fileName) {
-		if (!fileName.substring(fileName.length() - 4).equals(".p10")) {
+		if (fileName.length() < 5
+				|| !fileName.substring(fileName.length() - 4).equals(".p10")) {
 			fileName = fileName + ".p10";
 		}
 		try {
