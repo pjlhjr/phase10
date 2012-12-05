@@ -8,16 +8,19 @@ package phase10.util;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Logging utility to keep track of what happens during the game
  * 
  * @author Evan Forbes
- *
+ * 
  */
-public class Log {
+public class Log implements Serializable {
 
+	private static final long serialVersionUID = 20121L;
+	
 	ArrayList<LogEntry> log;
 
 	public Log() {
