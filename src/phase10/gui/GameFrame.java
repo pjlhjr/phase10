@@ -33,7 +33,6 @@ public class GameFrame extends JFrame {
 
 	Player current;
 	ArrayList<Card> selectedCards = new ArrayList<Card>();
-	private boolean isDiscarding = false;
 
 	//begin components
 	private JPanel infoPanel = new JPanel(); //Panel that displays on the right side of GameFrame. Displays basic info about the current player
@@ -200,17 +199,14 @@ public class GameFrame extends JFrame {
 		deckButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(isDiscarding == false) {
+				if(current.getHasDrawnCard() == false) {
 					gManage.mainManager.getGame().getRound().drawFromDeck();
 					updateFrame(gManage.mainManager.getGame());
-					deckButton.setEnabled(false);
+//					deckButton.setEnabled(false); TODO
 					discardButton.setEnabled(false);
-					btnNewPhase.setEnabled(true);
-					discardButton.setIcon(null);
-					discardButton.setText("discard selected card");
-					isDiscarding = true;
+//					discardButton.setIcon(null);
+//					discardButton.setText("discard selected card");
 				}
-
 			}
 		});
 		deckButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/card back.png")));
@@ -221,23 +217,21 @@ public class GameFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				if(isDiscarding == false) {
+				if(!current.getHasDrawnCard()) {
 					boolean isValidCard = gManage.mainManager.getGame().getRound().drawFromDiscard();
 					if(isValidCard) {
 						updateFrame(gManage.mainManager.getGame());
 						deckButton.setEnabled(false);
 						discardButton.setEnabled(false);
-						btnNewPhase.setEnabled(true);
-						discardButton.setIcon(null);
-						discardButton.setText("discard selected card");
-						isDiscarding = true;
+//						discardButton.setIcon(null); TODO
+//						discardButton.setText("discard selected card");
 					}
 					else {
 						MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
 						skipPickup.setVisible(true);
 					}
 				}
-				else {
+				else { //player is discarding
 					if(selectedCards.size() == 0) {
 						MessageFrame noCard = new MessageFrame("You must select a card to discard", "Invalid move");
 						noCard.setVisible(true);
@@ -248,10 +242,6 @@ public class GameFrame extends JFrame {
 					updateFrame(gManage.mainManager.getGame());
 					deckButton.setEnabled(true);
 					discardButton.setEnabled(true);	
-					isDiscarding = false;
-
-					btnNewPhase.setVisible(true);
-					btnNewPhase.setText("Add a Phase!");
 				}
 			}
 		});
@@ -280,7 +270,6 @@ public class GameFrame extends JFrame {
 
 		btnNewPhase = new JButton("Add a Phase!");
 		btnNewPhase.addActionListener(new PhaseActionListener());
-		btnNewPhase.setEnabled(false);
 		btnNewPhase.setBounds(413, 42, 146, 23);
 		yourPhasesPanel.add(btnNewPhase);
 
@@ -524,7 +513,7 @@ public class GameFrame extends JFrame {
 			lblTurnMode.setText("You may discard");
 		else {
 			lblTurnMode.setText("you may draw");
-			btnNewPhase.setVisible(false);
+			//btnNewPhase.setVisible(false); TODO
 		}
 
 		//end update of infoPanel
@@ -689,7 +678,9 @@ public class GameFrame extends JFrame {
 
 							btnNewPhase.setVisible(false);
 							btnNewPhase.setText("Add a Phase!");
-
+							
+							updateFrame(gManage.mainManager.getGame());
+							
 							isPhasing = false;
 							isSecondPhaseGroup = false;
 							break;
