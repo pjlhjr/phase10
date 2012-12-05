@@ -398,15 +398,13 @@ class Groups{
 					continue;
 			}
 			
-			foundComplete:
-			for(PhaseGroup c: complete){ // what about excess groups/conflicting?
+			for(PhaseGroup c: complete){ // what about excess groups
 				for(int completeIndex = 0; completeIndex < c.getNumberOfCards(); completeIndex++){
 					if(c.getCard(completeIndex) == cards[x]){
 						for(int restOfComplete = 0; restOfComplete < c.getNumberOfCards(); restOfComplete++){
-							if(c.getCard(restOfComplete) != cards[x])
-								discardValue[x] -= c.getCard(restOfComplete).getPointValue();
+							discardValue[x] -= c.getCard(restOfComplete).getPointValue();
 						}
-						break foundComplete;
+						continue bigLoop;
 					}
 				}
 			}
@@ -415,11 +413,9 @@ class Groups{
 				for(int partialIndex = 0; partialIndex < p.getNumberOfCards(); partialIndex++){
 					if(p.getCard(partialIndex) == cards[x]){
 						for(int restOfPartial = 0; restOfPartial < p.getNumberOfCards(); restOfPartial++){
-							if(p.getCard(restOfPartial) != cards[x]){
-								discardValue[x] -= Configuration.WILD_VALUE - p.getCard(restOfPartial).getPointValue();
-							}
+							discardValue[x] -= Configuration.WILD_VALUE - p.getCard(restOfPartial).getPointValue();
 						}
-						break;
+						continue bigLoop;
 					}
 				}
 			}
