@@ -24,6 +24,7 @@ import phase10.ai.Groups;
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private final int difficulty;
+	private static final double BEST_CHOICE_AT_FIFTY = 0.0;
 	transient private Groups group;
 	
 	public AIPlayer(Phase10 game, int difficulty, String name){
@@ -32,7 +33,8 @@ public class AIPlayer extends Player {
 	}
 	
 	public static void main(String[] args){
-		new AITester();
+		//new AITester();
+		System.out.print(!(true^true) + " " + !(true^false) + " " + !(false^true) + " " + !(false^false));
 	}
 	
 	/**
@@ -57,11 +59,11 @@ public class AIPlayer extends Player {
 		// all exceptions in this method are caught, because if this method throws an exception
 		// the AIPlayer will not draw a card and the program will freeze
 		try{
-			if(!(drawOrPickUp()^bestChoice(10))){ // choose whether to draw from the deck or pick up from the stack
-				game.getRound().drawFromDeck();
-			}else{
+			if(!(drawOrPickUp()^bestChoice(BEST_CHOICE_AT_FIFTY))){ // choose whether to draw from the deck or pick up from the stack
 				if(!game.getRound().drawFromDiscard())
 					game.getRound().drawFromDeck();
+			}else{
+				game.getRound().drawFromDeck();
 			}
 		}catch(Exception e){
 			System.out.println("AIPlayer, draw: " + e.toString());
@@ -97,6 +99,7 @@ public class AIPlayer extends Player {
 	 * If there are two sets needed the array will be length two. The first element will be the bigger set needed.
 	 * If there are no sets needed it will return null 
 	 */
+	//TODO use evan's array in config.
 	int[] setsNeeded(){
 		int[] need;
 		if(getPhase() == 1){
@@ -163,6 +166,7 @@ public class AIPlayer extends Player {
 	 * @return true if it is recommended to pick up a card, 
 	 * or false if it is recommended to draw a card 
 	 */
+	// TODO look to see if the card could be played off other phases
 	private boolean drawOrPickUp(){
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(cardOnTopOfPile.getValue() == Configuration.WILD_VALUE) // pick up a wild
@@ -237,7 +241,7 @@ public class AIPlayer extends Player {
 			if(current.hasLaidDownPhase()){
 				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
 					for(int hand = 0; hand < getHand().getNumberOfCards(); hand++){
-						if(bestChoice(10) && current.getPhaseGroup(group).addCard(getHand().getCard(hand))){
+						if(bestChoice(BEST_CHOICE_AT_FIFTY) && current.getPhaseGroup(group).addCard(getHand().getCard(hand))){
 							playOffPhases();
 							return true;
 						}
@@ -262,7 +266,7 @@ public class AIPlayer extends Player {
 		group = new Groups(this, getHand());
 		int x = 0;
 		Card[] c = group.recommendDiscard();
-		//while(!bestChoice(10)){
+		//while(!bestChoice(BEST_CHOICE_AT_FIFTY)){
 			//something else
 			//x++;
 		//}
