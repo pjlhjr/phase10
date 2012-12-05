@@ -424,51 +424,6 @@ public class GameFrame extends JFrame {
 		selectedCards.clear();
 	}
 
-	private void resetYourPhasesPanel() {
-		if(current.hasLaidDownPhase()) {
-			if(current.getNumberOfPhaseGroups() == 1) {
-				pg1Start.setVisible(true);
-				lblTo.setVisible(true);
-				pg1End.setVisible(true);
-				addToPG1.setVisible(true);
-
-				pg2Start.setVisible(false);
-				lblTo2.setVisible(false);
-				pg2End.setVisible(false);
-				addToPG2.setVisible(false);
-
-				btnNewPhase.setVisible(false);
-			}
-			else {
-				pg1Start.setVisible(true);
-				lblTo.setVisible(true);
-				pg1End.setVisible(true);
-				addToPG1.setVisible(true);
-
-				pg2Start.setVisible(true);
-				lblTo2.setVisible(true);
-				pg2End.setVisible(true);
-				addToPG2.setVisible(true);
-
-				btnNewPhase.setVisible(true);
-			}
-		}
-		else { //make the new phase button visible and make everything else invisible
-			pg1Start.setVisible(false);
-			lblTo.setVisible(false);
-			pg1End.setVisible(false);
-			addToPG1.setVisible(false);
-
-			pg2Start.setVisible(false);
-			lblTo2.setVisible(false);
-			pg2End.setVisible(false);
-			addToPG2.setVisible(false);
-
-			btnNewPhase.setVisible(true);
-		}
-
-	}
-
 	/*
 	 * begin button listeners
 	 */
@@ -611,6 +566,7 @@ public class GameFrame extends JFrame {
 	private void updateCardImages() {
 
 		Hand currentHand = current.getHand();
+		
 		//begin hand button update
 		int i = 0;
 		for(; i < currentHand.getNumberOfCards(); i++) {

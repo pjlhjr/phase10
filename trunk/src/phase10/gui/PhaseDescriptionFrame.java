@@ -27,7 +27,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	private String okayButtonLabel;
 	GuiManager gManage;
 	Language gLang;
-	private JTable phaseDescriptionJTable;
+	private JTable table;
 	
 	/**
 	 * Create the frame.
@@ -81,7 +81,7 @@ public class PhaseDescriptionFrame extends JFrame {
 					phaseDescriptionTable[r][c] = "X";
 				}
 				else {
-					phaseDescriptionTable[r][1] = "";
+					phaseDescriptionTable[r][c] = "";
 				}
 			}
 		}
@@ -93,21 +93,22 @@ public class PhaseDescriptionFrame extends JFrame {
 		String[] tableHead = new String[gm.mainManager.getGame().getNumberOfPlayers() + 2];
 		tableHead[0] = "Phase #";
 		tableHead[1] = "Phase Description";
-		//end table header
 		
 		for(int i = 0; i < gm.mainManager.getGame().getNumberOfPlayers(); i++) {
 			tableHead[i+2] = gm.mainManager.getGame().getPlayer(i).getName();
 		}
+		//end table header
 		
-		phaseDescriptionJTable = new JTable();
-		phaseDescriptionJTable.setModel(new DefaultTableModel(phaseDescriptionTable, tableHead));
-		phaseDescriptionJTable.getColumnModel().getColumn(0).setPreferredWidth(65);
-		phaseDescriptionJTable.getColumnModel().getColumn(1).setPreferredWidth(250);
-		phaseDescriptionJTable.getTableHeader().setVisible(true);
-		phaseDescriptionJTable.setBounds(48, 74, 334, 296);
-		contentPane.add(phaseDescriptionJTable);
+		table = new JTable(phaseDescriptionTable, tableHead);
+		table.setModel(new DefaultTableModel(
+			phaseDescriptionTable, tableHead
+		));
+		table.getColumnModel().getColumn(1).setPreferredWidth(180);
+		table.getColumnModel().getColumn(1).setMinWidth(150);
+		table.setBounds(10, 128, 445, 220);
+		contentPane.add(table);
+		contentPane.add(table.getTableHeader());
 	}
-
 	private void initLanguage(Language langSetter) {
 		
 		//TODO GET LANGUAGE FILE STRAIGHTENED UP THEN WORK THIS OUT!!!
