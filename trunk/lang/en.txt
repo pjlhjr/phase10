@@ -6,7 +6,7 @@ GAME_FRAME_TITLE = Phase 10
 
 SETTINGS_FRAME_TITLE = Settings
 YOUR_NAME = Your Name
-OPPONENT = opponent
+OPPONENT = Opponent
 SETTINGS_FRAME_MESSAGE = Welcome to Phase 10! Select your options for the game and we will begin!
 HUMAN = Human
 COMPUTER = Computer
