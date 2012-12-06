@@ -90,7 +90,7 @@ public final class Round implements Serializable {
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Draw from discard: " + card));
 		player.getHand().addCard(card);
-		
+
 		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
 			player.getHand().sortByColor();
 		} else {
@@ -258,7 +258,12 @@ public final class Round implements Serializable {
 		}
 
 		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
-			game.getPlayer(p).getHand().sortByValue();
+			if (Configuration.getTypeRequired(game.getPlayer(p).getPhase(),0)==Configuration.COLOR_PHASE){
+				game.getPlayer(p).getHand().sortByColor();
+			} else{
+				game.getPlayer(p).getHand().sortByValue();
+			}
+			
 		}
 		// Add the next card to the discard pile
 		discardStack = new Stack<Card>();
@@ -272,7 +277,6 @@ public final class Round implements Serializable {
 	 * invoked.
 	 */
 	private void nextTurn() {
-		// System.out.println("next turn");
 		if (roundIsComplete()) {
 			game.nextRound();
 		} else {
@@ -283,10 +287,10 @@ public final class Round implements Serializable {
 				advanceTurn();
 			}
 			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
-				// System.out.println("ai player's turn: "+curPlayerNum);
 				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
 				// TODO call gui?
 				p.playTurn();
+
 			}
 
 			try {
@@ -302,13 +306,11 @@ public final class Round implements Serializable {
 	 * Increases the turn counter by 1, or wraps around back to 0
 	 */
 	private void advanceTurn() {
-		// System.out.print("Advancing player turn from "+curPlayerNum);
 		turnNumber++;
 		curPlayerNum++;
 		if (curPlayerNum >= game.getNumberOfPlayers()) {
 			curPlayerNum = 0;
 		}
-		// System.out.println(" to "+curPlayerNum);
 	}
 
 	/**
