@@ -322,6 +322,9 @@ public final class PhaseGroup implements Serializable {
 				} else if (valueToMatch != curValue) {
 					return false;
 				}
+			} else {
+				WildCard wc = (WildCard) pg.getCard(i);
+				wc.setHiddenValue(valueToMatch);
 			}
 		}
 		return true;

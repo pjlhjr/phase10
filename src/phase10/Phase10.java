@@ -169,7 +169,7 @@ public final class Phase10 implements Serializable {
 
 		} else {
 			for (Player e : winners) {
-				log.addEntry(new LogEntry(0, e, " Won the game with "
+				log.addEntry(new LogEntry(0, e, "Won the game with "
 						+ e.getScore() + " points"));
 			}
 			if (Configuration.PRINT_LOG) {

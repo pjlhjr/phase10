@@ -39,7 +39,7 @@ public class Language {
 	 */
 	void setLanguage(String fileName) {
 		try {
-			Scanner file = new Scanner(new File(fileName));
+			Scanner file = new Scanner(new File(fileName), "UTF-8");
 			name = file.next();
 			entries = new HashMap<String, String>();
 
@@ -80,4 +80,5 @@ public class Language {
 	String getName() {
 		return name;
 	}
+	
 }

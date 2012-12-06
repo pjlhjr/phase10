@@ -52,8 +52,8 @@ public class CardValueComparator implements Comparator<Card> {
 			int val1=-1;
 			int val2=-1;
 			for (int i=0;i<Configuration.COLORS.length;i++){
-				if (c1.getColor()==Configuration.COLORS[i]) val1 = i;
-				if (c2.getColor()==Configuration.COLORS[i]) val2 = i;
+				if (c1.getColor().equals(Configuration.COLORS[i])) val1 = i;
+				if (c2.getColor().equals(Configuration.COLORS[i])) val2 = i;
 			}
 			return val1 - val2;
 		}
