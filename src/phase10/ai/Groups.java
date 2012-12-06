@@ -27,12 +27,10 @@ class Groups{
 	private Groups(AIPlayer p){
 		player = p;
 		complete = new ArrayList<PhaseGroup>();
-		if(!player.colorPhase()){
-			partial = new ArrayList<PhaseGroup>();
-			conflictingGroups = new ArrayList<ArrayList<PhaseGroup>>();
-			single = new ArrayList<Card>();
-			cardConflict = new ArrayList<Card>();
-		}
+		partial = new ArrayList<PhaseGroup>();
+		conflictingGroups = new ArrayList<ArrayList<PhaseGroup>>();
+		single = new ArrayList<Card>();
+		cardConflict = new ArrayList<Card>();
 	}
 
 	/**
@@ -374,10 +372,11 @@ class Groups{
 			}
 		}
 		if(player.colorPhase()){ // The hand will be sorted by color
-			int color = 0; // make a group for each color
 			for(int index = 0; index < cards.length && cards[index].getValue() < Configuration.WILD_VALUE; index++){
 				PhaseGroup colorGroup = new PhaseGroup(player.getGame());
-				while(cards[index].getValue() == color && index < cards.length && cards[index].getValue() < Configuration.WILD_VALUE){
+				colorGroup.addCard(cards[index++]);
+				while(cards[index].getColor() == colorGroup.getCard(0).getColor() &&
+						index < cards.length && cards[index].getValue() < Configuration.WILD_VALUE){
 					colorGroup.addCard(cards[index++]);
 				}
 				colorGroup.setType(Configuration.COLOR_PHASE);
@@ -385,7 +384,6 @@ class Groups{
 					complete.add(colorGroup);
 				else
 					partial.add(colorGroup);
-				color++;
 			}
 		}
 	}

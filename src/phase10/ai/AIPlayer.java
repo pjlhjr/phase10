@@ -368,6 +368,7 @@ public class AIPlayer extends Player {
 	
 	ArrayList<Card> cardsThatCanBeLaidDown(){
 		ArrayList<Card> layDownAble = new ArrayList<Card>(); 
+		layDownAble.add(new WildCard());
 		for(int x = 0; x < getGame().getNumberOfPlayers(); x++){
 			Player current = getGame().getPlayer(x);
 			if(current.hasLaidDownPhase()){
