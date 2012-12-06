@@ -27,7 +27,7 @@ public class MessageFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MessageFrame frame = new MessageFrame("This is a test!", "test frame");
+					MessageFrame frame = new MessageFrame("This is a test!", "test frame", new Language());
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +39,7 @@ public class MessageFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MessageFrame(String message, String title) {
+	public MessageFrame(String message, String title, Language gameLang) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MessageFrame.class.getResource("/images/GameIcon.png")));
 		
 		setTitle(title);
@@ -58,7 +58,7 @@ public class MessageFrame extends JFrame {
 		messagePane.setBounds(54, 39, 315, 125);
 		contentPane.add(messagePane);
 
-		JButton okayButton = new JButton("Okay");
+		JButton okayButton = new JButton(gameLang.getEntry("OKAY"));
 		okayButton.setBounds(158, 209, 107, 35);
 		contentPane.add(okayButton);
 		okayButton.addMouseListener(new OkayClicked(this));

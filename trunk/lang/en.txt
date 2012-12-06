@@ -1,9 +1,8 @@
 English
+
 WELCOME_MESSAGE = Welcome to Phase 10
 GAME_FRAME_TITLE = Phase 10
-PD_BUTTON_LABEL = Phase Description
-SB_BUTTON_LABEL = Score board
-EWS_BUTTON_LABEL = Exit without Saving
+
 
 SETTINGS_FRAME_TITLE = Settings
 YOUR_NAME = Your Name
@@ -12,13 +11,14 @@ SETTINGS_FRAME_MESSAGE = Welcome to Phase 10! Select your options for the game a
 HUMAN = Human
 COMPUTER = Computer
 ADD_PLAYER = Add Player
+REMOVE_LAST_OPPONENT = Remove last opponent
 BEGIN = Begin!
 LANGUAGE = Language
 EASY = Easy
 MEDIUM = Medium
 HARD = Hard
 
-PD_FRAME_TITLE = Description for Phase
+PD_FRAME_TITLE = Phases: Round
 PHASE_1_STRING = "2 sets of 3"
 PHASE_2_STRING = "1 set of 3 and 1 run of 4"
 PHASE_3_STRING = "1 set of 4 and 1 run of 4"
@@ -32,3 +32,46 @@ PHASE_10_STRING = "1 set of 5 and 1 set of 3"
 OKAY = Okay
 CURRENT_PHASE = Current Phase
 PHASE = Phase
+
+SCORES_AFTER_ROUND = Scores after round
+PLACE = Place
+NAME = Name
+SCORE = Score
+
+PHASE_10 = Phase 10
+PHASE_DESCRIPTIONS = Phase Descriptions
+SCOREBOARD = Scoreboard
+SAVE = Save
+EXIT = Exit
+YOU_MAY_DRAW = You may draw
+YOU_MAY_DISCARD = You may discard
+ADD_A_PHASE = Add a Phase!
+ADD_TO_PHASE = Add to Phase
+TO = to
+
+INVALID_MOVE = Invalid move
+SKIP_PICKUP_MESSAGE = You cannot pick up a Skip card from the discard pile
+NO_CARD_MESSAGE = You must select a card to discard
+NOT_A_GOOD_PHASE_MESSAGE = The phase you are trying to add is not valid for your phase
+INVALID_ADD_MESSAGE = A card you are trying to add is invalid
+
+ADD_A = add a
+SET_OF = set of
+RUN_OF = run of
+PHASE_8_ADD_BUTTON = add 7 cards of the same color
+
+ENTER_A_FILENAME = Enter a filename:
+LOAD_GAME = Load Game
+SAVE_GAME = Save Game
+
+INVALID_FILENAME = Invalid filename
+INVALID_FILE_MESSAGE = That filename is invalid. Please input another filename
+CANCEL = Cancel
+
+CARDS_IN_HAND = Cards in Hand
+
+NO_NAME_MESSAGE = Please put in a name for yourself
+NO_NAME_1_MESSAGE = Please put in a name for player 1
+NO_NAME_2_MESSAGE = Please put in a name for player 2
+NO_NAME_3_MESSAGE = Please put in a name for player 3
+

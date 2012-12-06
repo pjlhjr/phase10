@@ -26,7 +26,7 @@ public class PhaseDescriptionFrame extends JFrame {
 	private String title;
 	private String okayButtonLabel;
 	GuiManager gManage;
-	Language gLang;
+	Language gameLang;
 	private JTable table;
 	
 	/**
@@ -36,17 +36,9 @@ public class PhaseDescriptionFrame extends JFrame {
 		setResizable(false);
 		
 		gManage = gm;
-		gLang = gManage.getGameLang();
+		gameLang = gManage.getGameLang();
 		
-		//TODO change constant String values to language variables
-		initLanguage(gManage.getGameLang());
-		
-		int currentPhase = gManage.mainManager.getGame().getCurrentPlayer().getPhase();
-		
-		title = gLang.getEntry("PD_FRAME_TITLE") + " " + currentPhase;
-		okayButtonLabel = "Okay";
-		
-		setTitle(title);
+		setTitle(gameLang.getEntry("PD_FRAME_TITLE") + " " + gManage.mainManager.getGame().getRoundNumber());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 471, 488);
 		contentPane = new JPanel();
@@ -54,13 +46,13 @@ public class PhaseDescriptionFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel phaseLabel = new JLabel("Phase Descriptions");
+		JLabel phaseLabel = new JLabel(gameLang.getEntry("PHASE_DESCRIPTIONS"));
 		phaseLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
 		phaseLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		phaseLabel.setBounds(83, 11, 254, 52);
 		contentPane.add(phaseLabel);
 		
-		JButton btnOkay = new JButton(okayButtonLabel);
+		JButton btnOkay = new JButton(gameLang.getEntry("OKAY"));
 		btnOkay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//next two commands cause the window to close
@@ -74,8 +66,8 @@ public class PhaseDescriptionFrame extends JFrame {
 		//Initialize table contents
 		String[][] phaseDescriptionTable = new String[11][gm.mainManager.getGame().getNumberOfPlayers() + 2];
 			//Initialize the first row
-		phaseDescriptionTable[0][0] = "Phase";
-		phaseDescriptionTable[0][1] = "Phase Description";
+		phaseDescriptionTable[0][0] = gameLang.getEntry("PHASE");
+		phaseDescriptionTable[0][1] = gameLang.getEntry("PHASE_DESCRIPTIONS");
 		for(int r = 2; r < gm.mainManager.getGame().getNumberOfPlayers()+2; r++) {
 			phaseDescriptionTable[0][r] = gm.mainManager.getGame().getPlayer(r-2).getName();
 		}
@@ -113,36 +105,30 @@ public class PhaseDescriptionFrame extends JFrame {
 		table.setBounds(10, 128, 445, 220);
 		contentPane.add(table);
 	}
-	private void initLanguage(Language langSetter) {
-		
-		title = langSetter.getEntry("PD_FRAME_TITLE");
-		langSetter.getEntry("CURRENT_PHASE");
-		okayButtonLabel = langSetter.getEntry("OKAY");
-		langSetter.getEntry("PHASE_1_STRING");
-	}
+	
 
 	private String setPhaseDescriptionString(int phaseNum) {
 		switch (phaseNum) {
 		case 1:
-			return gLang.getEntry("PHASE_1_STRING");
+			return gameLang.getEntry("PHASE_1_STRING");
 		case 2:
-			return gLang.getEntry("PHASE_2_STRING");
+			return gameLang.getEntry("PHASE_2_STRING");
 		case 3:
-			return gLang.getEntry("PHASE_3_STRING");
+			return gameLang.getEntry("PHASE_3_STRING");
 		case 4:
-			return gLang.getEntry("PHASE_4_STRING");
+			return gameLang.getEntry("PHASE_4_STRING");
 		case 5:
-			return gLang.getEntry("PHASE_5_STRING");
+			return gameLang.getEntry("PHASE_5_STRING");
 		case 6:
-			return gLang.getEntry("PHASE_6_STRING");
+			return gameLang.getEntry("PHASE_6_STRING");
 		case 7:
-			return gLang.getEntry("PHASE_7_STRING");
+			return gameLang.getEntry("PHASE_7_STRING");
 		case 8:
-			return gLang.getEntry("PHASE_8_STRING");
+			return gameLang.getEntry("PHASE_8_STRING");
 		case 9:
-			return gLang.getEntry("PHASE_9_STRING");
+			return gameLang.getEntry("PHASE_9_STRING");
 		case 10:
-			return gLang.getEntry("PHASE_10_STRING");
+			return gameLang.getEntry("PHASE_10_STRING");
 		default:
 			System.out.println("Error! Phase number is out of bounds!");
 			return "Internal error occured! Phase number is out of bounds!";

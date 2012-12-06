@@ -51,6 +51,7 @@ public class opponentPanel extends JPanel {
 	private Component horizontalStrut_1;
 	private Component horizontalStrut_2;
 	private Component horizontalStrut_3;
+	private Language gameLang;
 
 	/**
 	 * Constructs a panel to display information about an opponent to the current player.
@@ -63,6 +64,8 @@ public class opponentPanel extends JPanel {
 		this.opponent = opponent;
 		this.gameWindow = gameWindow;
 		this.currentGame = currentGame;
+		
+		gameLang = gameWindow.gameLang;
 		
 		//begin panel setup
 		setLayout(new BorderLayout(0, 0));
@@ -134,7 +137,7 @@ public class opponentPanel extends JPanel {
 		panel.add(labelTo_2);
 		panel.add(phaseGroup1End);
 		
-		addToPhase_1 = new JButton("Add to Phase");
+		addToPhase_1 = new JButton(gameLang.getEntry("ADD_TO_PHASE"));
 		addToPhase_1.addActionListener(new AddPhasesListener(0));
 		
 		horizontalStrut_2 = Box.createHorizontalStrut(20);
@@ -144,7 +147,7 @@ public class opponentPanel extends JPanel {
 		panel.add(phaseGroup2End);
 		panel.add(addToPhase_1);
 		
-		addToPhase_2 = new JButton("Add to Phase");
+		addToPhase_2 = new JButton(gameLang.getEntry("ADD_TO_PHASE"));
 		addToPhase_2.addActionListener(new AddPhasesListener(1));
 		
 		horizontalStrut_3 = Box.createHorizontalStrut(20);
@@ -163,10 +166,9 @@ public class opponentPanel extends JPanel {
 		opponent = nextOpponent;
 		
 		this.namePane.setText(opponent.getName());
-		this.txtPhase.setText("Phase: " + opponent.getPhase());
-		this.txtpnScore.setText("Score: " + opponent.getScore());
-		this.txtPhase.setText("Phase: " + opponent.getPhase());
-		this.numCardsPane.setText("Cards in Hand: " + opponent.getHand().getNumberOfCards());
+		this.txtPhase.setText(gameLang.getEntry("PHASE") + ": " + opponent.getPhase());
+		this.txtpnScore.setText(gameLang.getEntry("SCORE") + ": " + opponent.getScore());
+		this.numCardsPane.setText(gameLang.getEntry("CARDS_IN_HAND") + ": " + opponent.getHand().getNumberOfCards());
 		
 		//TODO add update for the phases area
 		phaseAreaUpdate();
@@ -256,7 +258,7 @@ public class opponentPanel extends JPanel {
 			for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
 				boolean isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
 				if(!isValid) {
-					MessageFrame invalidAdd = new MessageFrame("A card you are trying to add is invlaid", "Invalid move");
+					MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 					invalidAdd.setVisible(true);
 					break;
 				}
