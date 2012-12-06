@@ -44,11 +44,16 @@ public class SettingsFrame extends JFrame {
 	private JComboBox<String> comboBox_1;
 	private JComboBox<String> comboBox_2;
 	private JComboBox<String> comboBox_3;
-	private JLabel name1Label;
+	private JLabel nameLabel;
 	private JLabel languageLabel;
 	private JButton btnAddPlayer;
 	private JButton beginButton;
-
+	private JRadioButton humanRadio1;
+	private JRadioButton humanRadio2;
+	private JRadioButton humanRadio3;
+	private JLabel opponentLabel_1;
+	private JLabel opponentLabel_2;
+	private JLabel opponentLabel_3;
 	/**
 	 * Launch the application.
 	 */
@@ -88,9 +93,9 @@ public class SettingsFrame extends JFrame {
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
-		name1Label = new JLabel(lang.getEntry("YOUR_NAME"));
-		name1Label.setBounds(27, 64, 92, 14);
-		contentPane.add(name1Label);
+		nameLabel = new JLabel(lang.getEntry("YOUR_NAME"));
+		nameLabel.setBounds(27, 64, 92, 14);
+		contentPane.add(nameLabel);
 
 		languageLabel = new JLabel(lang.getEntry("LANGUAGE"));
 		languageLabel.setBounds(314, 64, 90, 14);
@@ -99,12 +104,18 @@ public class SettingsFrame extends JFrame {
 		final JComboBox languageBox = new JComboBox();
 		languageBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				System.out.println("Item state has changed!");
 				if(languageBox.getSelectedItem().equals("English")) {
-					gManage.setGameLang(new Language());
+					gManage.getGameLang().setLanguage("lang/en.txt");
 					updateLabelsForLanguage();
 				}
-				
+				else if(languageBox.getSelectedItem().equals("Español")) {
+					gManage.getGameLang().setLanguage("lang/es.txt");
+					updateLabelsForLanguage();
+				}
+				else if(languageBox.getSelectedItem().equals("Deutsch")) {
+					gManage.getGameLang().setLanguage("lang/de.txt");
+					updateLabelsForLanguage();
+				}
 				
 				/*
 				 * TODO Other language files may be added here: else if's
@@ -112,7 +123,7 @@ public class SettingsFrame extends JFrame {
 				
 			}
 		});
-		languageBox.setModel(new DefaultComboBoxModel(new String[] {"English"/*, "Español", "Français", "Deutsch"*/}));
+		languageBox.setModel(new DefaultComboBoxModel(new String[] {"English", "Español", /*"Français",*/ "Deutsch"}));
 		languageBox.setBounds(438, 58, 92, 20);
 		contentPane.add(languageBox);
 
@@ -161,19 +172,19 @@ public class SettingsFrame extends JFrame {
 		contentPane.add(opponentField_3);
 		opponentField_3.setColumns(10);
 
-		final JLabel lblOpponent = new JLabel(lang.getEntry("OPPONENT") + " 1:");
-		lblOpponent.setBounds(27, 132, 92, 14);
-		contentPane.add(lblOpponent);
+		opponentLabel_1 = new JLabel(lang.getEntry("OPPONENT") + " 1:");
+		opponentLabel_1.setBounds(27, 132, 92, 14);
+		contentPane.add(opponentLabel_1);
 
-		final JLabel lblOpponent_1 = new JLabel(lang.getEntry("OPPONENT") + " 2:");
-		lblOpponent_1.setVisible(false);
-		lblOpponent_1.setBounds(27, 185, 92, 14);
-		contentPane.add(lblOpponent_1);
+		opponentLabel_2 = new JLabel(lang.getEntry("OPPONENT") + " 2:");
+		opponentLabel_2.setVisible(false);
+		opponentLabel_2.setBounds(27, 185, 92, 14);
+		contentPane.add(opponentLabel_2);
 
-		final JLabel lblOpponent_2 = new JLabel(lang.getEntry("OPPONENT") + " 3:");
-		lblOpponent_2.setVisible(false);
-		lblOpponent_2.setBounds(27, 247, 92, 14);
-		contentPane.add(lblOpponent_2);
+		opponentLabel_3 = new JLabel(lang.getEntry("OPPONENT") + " 3:");
+		opponentLabel_3.setVisible(false);
+		opponentLabel_3.setBounds(27, 247, 92, 14);
+		contentPane.add(opponentLabel_3);
 
 		JTextArea txtrWelcomeToPhase = new JTextArea();
 		txtrWelcomeToPhase.setEditable(false);
@@ -188,7 +199,7 @@ public class SettingsFrame extends JFrame {
 
 		//opponent 1 set
 		ButtonGroup opp1Group = new ButtonGroup();
-		final JRadioButton humanRadio1 = new JRadioButton(lang.getEntry("HUMAN"));
+		humanRadio1 = new JRadioButton(lang.getEntry("HUMAN"));
 		humanRadio1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -214,7 +225,7 @@ public class SettingsFrame extends JFrame {
 
 		//opponent 2 set
 		ButtonGroup opp2Group = new ButtonGroup();
-		final JRadioButton humanRadio2 = new JRadioButton(lang.getEntry("HUMAN"));
+		humanRadio2 = new JRadioButton(lang.getEntry("HUMAN"));
 		humanRadio2.setVisible(false);
 		humanRadio2.addMouseListener(new MouseAdapter() {
 			@Override
@@ -241,7 +252,7 @@ public class SettingsFrame extends JFrame {
 
 		//opponent 3 set
 		ButtonGroup opp3Group = new ButtonGroup();
-		final JRadioButton humanRadio3 = new JRadioButton(lang.getEntry("HUMAN"));
+		humanRadio3 = new JRadioButton(lang.getEntry("HUMAN"));
 		humanRadio3.setVisible(false);
 		humanRadio3.addMouseListener(new MouseAdapter() {
 			@Override
@@ -284,14 +295,14 @@ public class SettingsFrame extends JFrame {
 					invisibleSetter(opponentField_2,true);
 					invisibleSetter(humanRadio2, true);
 					invisibleSetter(computerRadio2, true);
-					invisibleSetter(lblOpponent_1, true);
+					invisibleSetter(opponentLabel_2, true);
 					invisibleSetter(comboBox_2, true);
 				}
 				else if(opponentField_3.isVisible() == false) {
 					invisibleSetter(opponentField_3,true);
 					invisibleSetter(humanRadio3, true);
 					invisibleSetter(computerRadio3, true);
-					invisibleSetter(lblOpponent_2, true);
+					invisibleSetter(opponentLabel_3, true);
 					invisibleSetter(comboBox_3, true);
 					invisibleSetter(btnAddPlayer, false);
 				}
@@ -312,7 +323,7 @@ public class SettingsFrame extends JFrame {
 					invisibleSetter(opponentField_3,false);
 					invisibleSetter(humanRadio3, false);
 					invisibleSetter(computerRadio3, false);
-					invisibleSetter(lblOpponent_2, false);
+					invisibleSetter(opponentLabel_3, false);
 					invisibleSetter(comboBox_3, false);
 					invisibleSetter(btnAddPlayer, true);
 				}
@@ -320,7 +331,7 @@ public class SettingsFrame extends JFrame {
 					invisibleSetter(opponentField_2, false);
 					invisibleSetter(humanRadio2, false);
 					invisibleSetter(computerRadio2, false);
-					invisibleSetter(lblOpponent_1, false);
+					invisibleSetter(opponentLabel_2, false);
 					invisibleSetter(comboBox_2, false);
 					invisibleSetter(btnRemovePlayer, false);
 				}
@@ -375,11 +386,38 @@ public class SettingsFrame extends JFrame {
 		//TODO complete this method
 		
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
-		name1Label.setText(lang.getEntry("YOUR_NAME"));
+		nameLabel.setText(lang.getEntry("YOUR_NAME"));
 		languageLabel.setText(lang.getEntry("LANGUAGE"));
 		btnRemovePlayer.setText(lang.getEntry("REMOVE_LAST_OPPONENT"));
 		btnAddPlayer.setText(lang.getEntry("ADD_PLAYER"));
 		beginButton.setText(lang.getEntry("BEGIN"));
+		humanRadio1.setText(lang.getEntry("HUMAN"));
+		humanRadio2.setText(lang.getEntry("HUMAN"));
+		humanRadio3.setText(lang.getEntry("HUMAN"));
+		computerRadio1.setText(lang.getEntry("COMPUTER"));
+		computerRadio2.setText(lang.getEntry("COMPUTER"));
+		computerRadio3.setText(lang.getEntry("COMPUTER"));
+		
+		
+		comboBox_1.removeAllItems();
+		comboBox_1.addItem(lang.getEntry("EASY"));
+		comboBox_1.addItem(lang.getEntry("MEDIUM"));
+		comboBox_1.addItem(lang.getEntry("HARD"));
+		
+		comboBox_2.removeAllItems();
+		comboBox_2.addItem(lang.getEntry("EASY"));
+		comboBox_2.addItem(lang.getEntry("MEDIUM"));
+		comboBox_2.addItem(lang.getEntry("HARD"));
+		
+		comboBox_3.removeAllItems();
+		comboBox_3.addItem(lang.getEntry("EASY"));
+		comboBox_3.addItem(lang.getEntry("MEDIUM"));
+		comboBox_3.addItem(lang.getEntry("HARD"));
+		
+		nameLabel.setText(lang.getEntry("YOUR_NAME"));
+		opponentLabel_1.setText(lang.getEntry("OPPONENT") + " 1:");
+		opponentLabel_2.setText(lang.getEntry("OPPONENT") + " 2:");
+		opponentLabel_3.setText(lang.getEntry("OPPONENT") + " 3:");
 	}
 
 	private class BeginListener implements MouseListener {
