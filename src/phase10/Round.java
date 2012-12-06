@@ -258,12 +258,12 @@ public final class Round implements Serializable {
 		}
 
 		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
-			if (Configuration.getTypeRequired(game.getPlayer(p).getPhase(),0)==Configuration.COLOR_PHASE){
+			if (Configuration.getTypeRequired(game.getPlayer(p).getPhase(), 0) == Configuration.COLOR_PHASE) {
 				game.getPlayer(p).getHand().sortByColor();
-			} else{
+			} else {
 				game.getPlayer(p).getHand().sortByValue();
 			}
-			
+
 		}
 		// Add the next card to the discard pile
 		discardStack = new Stack<Card>();

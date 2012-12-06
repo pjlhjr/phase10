@@ -47,6 +47,8 @@ public class Language {
 				String id = file.next();
 				file.next();
 				String entry = file.nextLine();
+				
+				System.out.println(id+" "+entry);
 
 				entries.put(id, entry.substring(1));
 			}
