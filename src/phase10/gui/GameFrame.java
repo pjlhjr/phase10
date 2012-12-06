@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
+import java.awt.Component;
 
 
 public class GameFrame extends JFrame {
@@ -70,8 +71,6 @@ public class GameFrame extends JFrame {
 	public GameFrame(final GuiManager gManage) {
 
 		gameLang = gManage.getGameLang();
-
-		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
 
 		this.gManage = gManage;
@@ -85,6 +84,7 @@ public class GameFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
 		getContentPane().setLayout(null);
+		infoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
 		infoPanel.setBounds(982, 0, 169, 534);
 		getContentPane().add(infoPanel);
@@ -178,6 +178,7 @@ public class GameFrame extends JFrame {
 		lblTurnMode = new JLabel(gameLang.getEntry("YOU_MAY_DRAW"));
 		lblTurnMode.setBounds(28, 509, 118, 14);
 		infoPanel.add(lblTurnMode);
+		handPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 
 		handPanel.setBounds(0, 533, 976, 107);
 		getContentPane().add(handPanel);
@@ -191,6 +192,8 @@ public class GameFrame extends JFrame {
 			handButtons[i].addActionListener(new HandActionListener(i));
 			handPanel.add(handButtons[i]);
 		}
+		deckPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		deckPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
 
 		//begin deck panel
@@ -281,6 +284,25 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(btnNewPhase);
 
 		pg1Start = new JButton("");
+		pg1Start.addMouseListener(new MouseAdapter() {
+			@Override
+			//TODO fix
+			public void mouseClicked(MouseEvent e) {
+				for(Card x : selectedCards) {
+					boolean isValid = current.getPhaseGroup(0).addCardToBeginning(x);
+					if(!isValid) {
+						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
+						invalidAdd.setVisible(true);
+						break;
+					}
+					else {
+						hideAndClearSelectedCards();
+						updateFrame(gManage.mainManager.getGame());
+						updateYourPhasesPanel();
+					}
+				}
+			}
+		});
 		pg1Start.setVisible(false);
 		pg1Start.setPreferredSize(new Dimension(100, 23));
 		pg1Start.setMaximumSize(new Dimension(114, 40));
@@ -299,6 +321,25 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.add(pg1End);
 
 		pg2Start = new JButton("");
+		pg2Start.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO fix
+				for(Card x : selectedCards) {
+					boolean isValid = current.getPhaseGroup(1).addCard(x);
+					if(!isValid) {
+						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
+						invalidAdd.setVisible(true);
+						break;
+					}
+					else {
+						hideAndClearSelectedCards();
+						updateFrame(gManage.mainManager.getGame());
+						updateYourPhasesPanel();
+					}
+				}
+			}
+		});
 		pg2Start.setVisible(false);
 		pg2Start.setPreferredSize(new Dimension(100, 23));
 		pg2Start.setMaximumSize(new Dimension(114, 40));
