@@ -1,0 +1,76 @@
+Español
+
+WELCOME_MESSAGE = Bienvenido a Phase 10
+GAME_FRAME_TITLE = Phase 10
+
+
+SETTINGS_FRAME_TITLE = Configuración
+YOUR_NAME = Su nombre
+OPPONENT = Adversario
+SETTINGS_FRAME_MESSAGE = Bienvenidos a la Phase 10! Seleccione las opciones para el juego y comenzaremos!
+HUMAN = Humano
+COMPUTER = Computadora
+ADD_PLAYER = Agregar Jugador
+REMOVE_LAST_OPPONENT = Retire último oponente
+BEGIN = Begin!
+LANGUAGE = Idioma
+EASY = Fácil
+MEDIUM = Medio
+HARD = Difícil
+
+PD_FRAME_TITLE = Fases: Ronda
+PHASE_1_STRING = 2 conjuntos de 3
+PHASE_2_STRING = 1 juego de 3 y 1 escalera de 4
+PHASE_3_STRING = 1 juego de 3 y 1 escalera de 4
+PHASE_4_STRING = 1 escalera de 7
+PHASE_5_STRING = 1 escalera de 8
+PHASE_6_STRING = 1 escalera de 9
+PHASE_7_STRING = 2 conjuntos de 4
+PHASE_8_STRING = 7 tarjetas de 1 color
+PHASE_9_STRING = 1 juego de 5 y 1 juego de 2
+PHASE_10_STRING = 1 juego de 5 y 1 juego de 3
+OKAY = Bueno
+CURRENT_PHASE = Fase actual
+PHASE = Fase
+
+SCORES_AFTER_ROUND = Resultados después de ronda
+PLACE = Posición
+NAME = Nombre
+SCORE = Puntuación
+
+PHASE_10 = Phase 10
+PHASE_DESCRIPTIONS = Descripciones de fase
+SCOREBOARD = Marcador
+SAVE = Ahorrar
+EXIT = Salida
+YOU_MAY_DRAW = Usted puede dibujar
+YOU_MAY_DISCARD = Puedes descartar
+ADD_A_PHASE = Añadir un ensayo de fase!
+ADD_TO_PHASE = Añadir a la Fase
+TO = a
+
+INVALID_MOVE = Movimiento no válido
+SKIP_PICKUP_MESSAGE = No se puede recoger una tarjeta Saltar a la pila de descartes
+NO_CARD_MESSAGE = Debe seleccionar una carta para descartar
+NOT_A_GOOD_PHASE_MESSAGE = La fase que está intentando agregar no es válido para la fase de
+INVALID_ADD_MESSAGE = Una tarjeta que está intentando agregar no es válido
+
+ADD_A = Añadir una
+SET_OF = conjunto de
+RUN_OF = ejecutar de
+PHASE_8_ADD_BUTTON = agregar 7 cartas del mismo color
+
+ENTER_A_FILENAME = Escriba un nombre de archivo:
+LOAD_GAME = Carga de Juegos
+SAVE_GAME = Guardar partida
+
+INVALID_FILENAME = Nombre de archivo no válido
+INVALID_FILE_MESSAGE = Ese nombre de archivo no es válido. Por favor, introduzca otro nombre de archivo
+CANCEL = Cancelar
+
+CARDS_IN_HAND = Las cartas en la mano
+
+NO_NAME_MESSAGE = Por favor, ponga un nombre para sí mismo
+NO_NAME_1_MESSAGE = Por favor, ponga un nombre para el jugador 1
+NO_NAME_2_MESSAGE = Por favor, ponga un nombre para el jugador 2
+NO_NAME_3_MESSAGE = Por favor, ponga un nombre para el jugador 3
