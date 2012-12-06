@@ -78,9 +78,12 @@ public final class PhaseGroup implements Serializable {
 
 				if (c.getValue() == Configuration.WILD_VALUE) {
 					WildCard wc = (WildCard) c;
-					wc.setChangeable(false);
+					if (wc.isChangeable()) {
+						wc.setHiddenValue(Configuration.WILD_VALUE);
+						wc.setChangeable(false);
+					}
 				}
-				
+
 				Collections.sort(cards, new CardValueComparator());
 
 				p.getHand().removeCard(c);
@@ -191,7 +194,12 @@ public final class PhaseGroup implements Serializable {
 			game.getCurrentPlayer().getHand().removeCard(cards.get(i));
 			if (cards.get(i).getValue() == Configuration.WILD_VALUE) {
 				WildCard wc = (WildCard) cards.get(i);
-				wc.setChangeable(false);
+				if (wc.isChangeable() && !(type == Configuration.RUN_PHASE)) {
+					wc.setHiddenValue(Configuration.WILD_VALUE);
+					wc.setChangeable(false);
+				} else {
+					wc.setChangeable(false);
+				}
 			}
 		}
 		Collections.sort(cards, new CardValueComparator());
@@ -254,16 +262,17 @@ public final class PhaseGroup implements Serializable {
 			if (curValue == Configuration.WILD_VALUE) {
 				WildCard curWild = (WildCard) pg.getCard(i);
 				if (curWild.getHiddenValue() < 0 || curWild.isChangeable()) {
-//					System.out.println("adding wild");
+					// System.out.println("adding wild");
 					numWilds++;
 					wilds.add(curWild);
 					if (i == 0) {
 						setFirstAsWild = true;
 					}
 				} else {
-					values.add(curWild.getHiddenValue());
-//					System.out.println("adding hidden value wild "
-//							+ curWild.getHiddenValue());
+					curValue = curWild.getHiddenValue();
+					values.add(curValue);
+					// System.out.println("adding hidden value wild "
+					// + curWild.getHiddenValue());
 				}
 			} else {
 				values.add(curValue);
@@ -272,13 +281,14 @@ public final class PhaseGroup implements Serializable {
 				min = curValue;
 		}
 
-		if (min + values.size() > 12 && numWilds > 0) {
+		if (min + values.size() + numWilds > Configuration.WILD_VALUE
+				&& numWilds > 0) {
 			setFirstAsWild = true;
 		}
 
 		if (setFirstAsWild) {
 			min--;
-//			System.out.println("setting first as wild: "+ (min));
+			System.out.println("setting first as wild: " + (min));
 			numWilds--;
 			wilds.get(0).setHiddenValue(min);
 			wilds.remove(0);
@@ -292,7 +302,7 @@ public final class PhaseGroup implements Serializable {
 			boolean found = false;
 			for (int i = 0; i < values.size(); i++) {
 				if (values.get(i) == curValue) {
-//					System.out.println("found " + curValue);
+					// System.out.println("found " + curValue);
 					values.remove(i);
 					found = true;
 					break;
@@ -301,7 +311,7 @@ public final class PhaseGroup implements Serializable {
 			if (!found && numWilds > 0) {
 				numWilds--;
 				wilds.get(numWilds).setHiddenValue(curValue);
-//				System.out.println("using a wild for " + curValue);
+				// System.out.println("using a wild for " + curValue);
 			} else if (!found && numWilds == 0) {
 				return false;
 			}
@@ -364,22 +374,22 @@ public final class PhaseGroup implements Serializable {
 				.toString();
 	}
 
-//	public static void main(String[] args) {
-//		PhaseGroup pg = new PhaseGroup(null);
-//
-//		pg.addCard(new Card(Configuration.COLORS[0], 3));
-//		pg.addCard(new Card(Configuration.COLORS[0], 2));
-//		pg.addCard(new Card(Configuration.COLORS[0], 4));
-//		WildCard wc = new WildCard();
-//		pg.addCard(wc);
-//		System.out.println(wc.getHiddenValue());
-//		System.out.println(PhaseGroup.validate(pg, Configuration.RUN_PHASE, 1));
-//		System.out.println(wc.getHiddenValue());
-//
-//		pg.laidDown = true;
-//		pg.type = Configuration.RUN_PHASE;
-//
-//		System.out.println(pg.addCard(new Card(Configuration.COLORS[0], 6)));
-//		System.out.println(wc.getHiddenValue());
-//	}
+	// public static void main(String[] args) {
+	// PhaseGroup pg = new PhaseGroup(null);
+	//
+	// pg.addCard(new Card(Configuration.COLORS[0], 3));
+	// pg.addCard(new Card(Configuration.COLORS[0], 2));
+	// pg.addCard(new Card(Configuration.COLORS[0], 4));
+	// WildCard wc = new WildCard();
+	// pg.addCard(wc);
+	// System.out.println(wc.getHiddenValue());
+	// System.out.println(PhaseGroup.validate(pg, Configuration.RUN_PHASE, 1));
+	// System.out.println(wc.getHiddenValue());
+	//
+	// pg.laidDown = true;
+	// pg.type = Configuration.RUN_PHASE;
+	//
+	// System.out.println(pg.addCard(new Card(Configuration.COLORS[0], 6)));
+	// System.out.println(wc.getHiddenValue());
+	// }
 }
