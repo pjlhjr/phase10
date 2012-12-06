@@ -115,15 +115,10 @@ public class SettingsFrame extends JFrame {
 				else if(languageBox.getSelectedItem().equals("Deutsch")) {
 					gManage.getGameLang().setLanguage("lang/de.txt");
 					updateLabelsForLanguage();
-				}
-				
-				/*
-				 * TODO Other language files may be added here: else if's
-				 */
-				
+				}	
 			}
 		});
-		languageBox.setModel(new DefaultComboBoxModel(new String[] {"English", "Español", /*"Français",*/ "Deutsch"}));
+		languageBox.setModel(new DefaultComboBoxModel(new String[] {"English", "Español", "Deutsch"}));
 		languageBox.setBounds(438, 58, 92, 20);
 		contentPane.add(languageBox);
 
@@ -382,8 +377,6 @@ public class SettingsFrame extends JFrame {
 	}
 	
 	private void updateLabelsForLanguage() {
-		
-		//TODO complete this method
 		
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
 		nameLabel.setText(lang.getEntry("YOUR_NAME"));
