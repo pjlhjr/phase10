@@ -459,7 +459,7 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					if(computerRadio1.isSelected()) {
+					if(computerRadio2.isSelected()) {
 						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
 					}
 					else
@@ -475,7 +475,7 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 				else {
-					if(computerRadio1.isSelected()) {
+					if(computerRadio3.isSelected()) {
 						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_3), settingsFrm.getOpponent_3()));
 					}
 					else
