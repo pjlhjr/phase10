@@ -5,6 +5,7 @@
  */
 package phase10.card;
 
+import java.awt.Color;
 import java.util.Comparator;
 
 import phase10.util.Configuration;
@@ -29,6 +30,12 @@ public class CardColorComparator implements Comparator<Card> {
 		for (int i=0;i<Configuration.COLORS.length;i++){
 			if (c1.getColor().equals(Configuration.COLORS[i])) val1 = i;
 			if (c2.getColor().equals(Configuration.COLORS[i])) val2 = i;
+		}
+		if (c1.getColor().equals(Color.BLACK)){
+			val1 = 5;
+		}
+		if (c2.getColor().equals(Color.BLACK)){
+			val2 = 5;
 		}
 		int comp = val1-val2;
 		if (comp != 0)
