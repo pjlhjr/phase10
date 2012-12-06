@@ -1,6 +1,7 @@
 /*
  * Difficulty Ranges:
  * drawOrPickUp(): 0-29, 30-69, 70-100
+ * LosingAfterTwo.p10, Impressed.p10
  */
 package phase10.ai;
 

@@ -117,8 +117,9 @@ class Groups{
 		completeAndPartialGroup();
 		dealWithWilds();
 		singleAndConflictingGroup();
+		validateCompleteGroups();
 		resolveConflicts();
-		finalizeCompleteGroups();
+		validateCompleteGroups();
 	}
 	
 	/* figure out some way, break this problem down,  
@@ -167,6 +168,89 @@ class Groups{
 		}
 	}*/
 	 
+	//TODO promote partials to complete on last sets, if you delete one with a wild
+	private void validateCompleteGroups(){ 
+		if(!player.colorPhase()){
+			ArrayList<PhaseGroup> completeRuns = new ArrayList<PhaseGroup>();
+			ArrayList<PhaseGroup> completeSets = new ArrayList<PhaseGroup>();
+	
+			for(PhaseGroup c: complete){
+				if(c.getType() == Configuration.RUN_PHASE)
+					completeRuns.add(c);
+				else
+					completeSets.add(c);
+			}
+			
+			if(completeRuns.size() > 1){ 
+				double 	highestValue = -1,
+						tempValue = 0;
+				PhaseGroup highestGroup = completeRuns.get(0);
+				for(int x = 0; x < completeRuns.size(); x++){
+					tempValue = 0;
+					for(int y = 0; y < completeRuns.get(x).getNumberOfCards(); y++){
+						tempValue += cardValue(completeRuns.get(x).getCard(y));
+					} 
+					
+					// subtract a value off for any conflicts, because it will have somewhere else to go
+					for(ArrayList<PhaseGroup> c: conflictingGroups){
+						for(int y = 0; y < c.size(); y++){
+							if(completeRuns.get(x) == c.get(y)){
+								for(PhaseGroup g: c){
+									if(g != completeRuns.get(x)){
+										for(int a = 0; a < g.getNumberOfCards(); a++){
+											tempValue -= cardValue(g.getCard(a));
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					if(tempValue > highestValue){
+						highestValue = tempValue;
+						complete.remove(highestGroup);
+						highestGroup = completeRuns.get(x);
+					}else{
+						complete.remove(completeRuns.get(x));
+					}
+				}
+			}
+			
+			if(completeSets.size() > 0 && completeSets.size() != player.setsNeeded().length){//if too few, look to at partial on phases 9 & 10
+				while(completeSets.size() > player.setsNeeded().length){
+					int lowestSetNum = Configuration.WILD_VALUE;
+					PhaseGroup lowestGroup = completeSets.get(0);
+					for(PhaseGroup g: completeSets){
+						if(lowestSetNum > g.getCard(0).getValue()){
+							lowestSetNum = g.getCard(0).getValue();
+							lowestGroup = g;
+						}
+					}
+					complete.remove(lowestGroup);
+					completeSets.remove(lowestGroup);
+				}
+				
+				if(player.setsNeeded().length > 1 && completeSets.size() < player.setsNeeded().length){
+					for(PhaseGroup p: partial){
+						if(PhaseGroup.validate(p, Configuration.SET_PHASE, player.setsNeeded()[1])){
+							complete.add(p);
+							partial.remove(p);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param c the card that you want the point value of
+	 * @return the point value of the card + a "tie breaker" value, 1/100th of the face value
+	 */
+	private double cardValue(Card c){
+		return c.getPointValue() + (c.getValue()/100.0); 
+	}
+	
 	/**
 	 * This method finds conflicts where cards are in two different phase groups, 
 	 * and adds them to conflicting (which is deal with in resolveConflicts).
@@ -198,7 +282,7 @@ class Groups{
 				int cardIndex = 0;
 				for(;cardIndex < cards.length; cardIndex++){
 					if(tempCard == cards[cardIndex]){
-						cardIsUsed.get(cardIndex).add(g);
+						cardIsUsed.get(cardIndex).add(g);//break;
 					}
 				}
 			}
@@ -297,21 +381,21 @@ class Groups{
 				}
 				
 				tempPointValue = 0; //point value if the card is removed from the hand
-				if(!validComplete(p)){ // if it not still a complete group after removing the card
+				if(!validGroup(p)){ // if it not still a complete group after removing the card
 					for(int x = 0; x < p.getNumberOfCards(); x++){
 						tempPointValue += p.getCard(x).getPointValue(); // get the point value of all the other cards
 					}
-				}
+				}//TODO continue if false?
 				if(tempPointValue > maxPointValue){ // keep track of the phase group that would have the highest point value without the card 
 					maxPointValue = tempPointValue;
 					maxPhaseGroup = p;
 				}
-			}
+			}//TODO add to each if all were maxPhaseGroups
 			if(maxPhaseGroup != null) // the group that would be the most costly after removing the card, gets to keep the card 
 				maxPhaseGroup.addCard(cardConflict.get(0));
 			
 			for(PhaseGroup g: conflictingGroups.get(0)){ // make sure no partial groups are left in complete groups
-				if(!validComplete(g) && !partial.contains(g)){
+				if(!validGroup(g) && !partial.contains(g)){
 					complete.remove(g);
 					partial.add(g);
 				}
@@ -327,29 +411,28 @@ class Groups{
 	 * @param p The phase group that will be checked
 	 * @return True if it is a complete phaseGroup in this player's phase. False if not.
 	 */
-	private boolean validComplete(PhaseGroup p){
+	private boolean validGroup(PhaseGroup p){
 		return ((p.getType() == Configuration.SET_PHASE && PhaseGroup.validate(p, p.getType(), player.setsNeeded()[0])) || 
 				(p.getType() == Configuration.RUN_PHASE && PhaseGroup.validate(p, p.getType(), player.lengthOfRunNeeded())) ||
 				(p.getType() == Configuration.COLOR_PHASE && PhaseGroup.validate(p, p.getType(), 7)));
 	}
 	
-	// TODO single if there are more than one wild
+	// TODO single if there are more than one wild. connect runs with wilds
 	/**
 	 * This method adds wilds to every possible phase group.
 	 * The conflicts created are later resolved.
 	 */
 	private void dealWithWilds(){
 		wildLoop:
-		for(Card w: single){
+		for(Card w: cards){
 			if(w.getValue() != Configuration.WILD_VALUE){
 				continue wildLoop;
 			}
 			for(PhaseGroup p: partial){
 				p.addCard(w);
-				if(validComplete(p)){
+				if(validGroup(p)){
 					complete.add(p);
 					partial.remove(p);
-					continue wildLoop;
 				}
 			}
 			for(PhaseGroup c: complete){
@@ -357,14 +440,6 @@ class Groups{
 			}
 			
 		}
-	}
-	
-	/**
-	 * make the complet groups fit the specifications of the phase
-	 */
-	//TODO finish this, use Config.
-	private void finalizeCompleteGroups(){
-		
 	}
 	
 	//TODO fill in, this method used for finding which cards are needed, use difficulty
@@ -401,8 +476,8 @@ class Groups{
 			}else if(cards[x].getValue() == Configuration.SKIP_VALUE){ // discard skips
 				discardValue[x] = Double.MAX_VALUE;
 				continue bigLoop;
-			}else{ // give the cards their on point value + a "tie breaker" value, 1/100th of the face value
-				discardValue[x] = cards[x].getPointValue() + cards[x].getValue()/100.0; 
+			}else{ 
+				discardValue[x] = cardValue(cards[x]);
 			}
 			
 			// a hard player knows that on the 
