@@ -1,0 +1,76 @@
+Deutsch
+
+WELCOME_MESSAGE = Willkommen zum Phase 10
+GAME_FRAME_TITLE = Phase 10
+
+
+SETTINGS_FRAME_TITLE = Einstellungen
+YOUR_NAME = Ihr Name
+OPPONENT = Gegner
+SETTINGS_FRAME_MESSAGE = Willkommen zum Phase 10! Wählst deine Optionen für das Videospiel und wir werden anfangen!
+HUMAN = Mensch
+COMPUTER = Computer
+ADD_PLAYER = Hinzufügen eines Spielers
+REMOVE_LAST_OPPONENT = Entfernen letzten Gegner
+BEGIN = Fangen Sie an!
+LANGUAGE = Sprache
+EASY = Einfach
+MEDIUM = Mittlere
+HARD = Schwierig
+
+PD_FRAME_TITLE = Phasen: Runde
+PHASE_1_STRING = "2 Sätze 3"
+PHASE_2_STRING = "1 Sätze 3 und 1 Sequenz von 4"
+PHASE_3_STRING = "1 Sätze 4 und 1 Sequenz von 4"
+PHASE_4_STRING = "1 Sequenz von 7"
+PHASE_5_STRING = "1 Sequenz von 8"
+PHASE_6_STRING = "1 Sequenz von 9"
+PHASE_7_STRING = "2 Sätze 4"
+PHASE_8_STRING = "7 Karten einer Farbe"
+PHASE_9_STRING = "1 Sätze 5 und 1 Sätze 2"
+PHASE_10_STRING = "1 Sätze 5 und 1 Sätze 3"
+OKAY = Gut
+CURRENT_PHASE = Aktuellen Phase
+PHASE = Phase
+
+SCORES_AFTER_ROUND = Scores nach Runde
+PLACE = Stellung
+NAME = Name
+SCORE = Score
+
+PHASE_10 = Phase 10
+PHASE_DESCRIPTIONS = Phase Beschreibungen
+SCOREBOARD = Anzeigetafel
+SAVE = Speichern
+EXIT = Beenden
+YOU_MAY_DRAW = Du kannst zeichnen
+YOU_MAY_DISCARD = Du kannst wegwerfen
+ADD_A_PHASE = Fügen eine Phase!
+ADD_TO_PHASE = Ergänzen zum Phase
+TO = zu
+
+INVALID_MOVE = Falsche Bewegung
+SKIP_PICKUP_MESSAGE = Sie können nicht abholen ein Überspringen Karte aus dem Ablagestapel
+NO_CARD_MESSAGE = Du musst eine Karte zu verwerfen
+NOT_A_GOOD_PHASE_MESSAGE = The phase you are trying to add is not valid for your phase
+INVALID_ADD_MESSAGE = Eine Karte, die Sie hinzufügen möchten, ist ungültig
+ADD_A = Fügen Sie ein
+SET_OF = Set von
+RUN_OF = Sequenz von
+PHASE_8_ADD_BUTTON = Hinzufügen 7 Karten der gleichen Farbe
+
+ENTER_A_FILENAME = Geben Sie einen Dateinamen:
+LOAD_GAME = Spiel laden
+SAVE_GAME = Spiel speichern
+
+INVALID_FILENAME = Ungültiger Dateiname
+INVALID_FILE_MESSAGE = Das Dateiname ist ungültig. Bitte geben Sie einen anderen Dateinamen
+CANCEL = Cancel
+
+CARDS_IN_HAND = Karten in der Hand
+
+NO_NAME_MESSAGE = Bitte legen Sie einen Namen für sich selbst
+NO_NAME_1_MESSAGE = Bitte legen Sie einen Namen für Spieler 1
+NO_NAME_2_MESSAGE = Bitte legen Sie einen Namen für Spieler 2
+NO_NAME_3_MESSAGE = Bitte legen Sie einen Namen für Spieler 3
+
