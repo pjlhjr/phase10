@@ -61,10 +61,15 @@ public class GameFrame extends JFrame {
 	private JLabel lblTurnMode;
 	//end components
 
+
+	Language gameLang;
+
 	/**
 	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
+		
+		gameLang = gManage.getGameLang();
 
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
@@ -76,7 +81,7 @@ public class GameFrame extends JFrame {
 		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
 
 
-		setTitle(current.getName() + " - Phase 10");
+		setTitle(current.getName() + " - " + gameLang.getEntry("PHASE_10"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
 		getContentPane().setLayout(null);
@@ -91,9 +96,10 @@ public class GameFrame extends JFrame {
 		lblPlayername.setBounds(10, 37, 149, 38);
 		infoPanel.add(lblPlayername);
 
-		JLabel lblPhase = new JLabel("Phase");
+		JLabel lblPhase = new JLabel(gameLang.getEntry("PHASE"));
+		lblPhase.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhase.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPhase.setBounds(58, 91, 53, 25);
+		lblPhase.setBounds(20, 91, 126, 25);
 		infoPanel.add(lblPhase);
 
 
@@ -109,19 +115,20 @@ public class GameFrame extends JFrame {
 		}
 		phaseNumber.setEditable(false);
 		phaseNumber.setBounds(58, 120, 53, 53);
+		
 		infoPanel.add(phaseNumber);
 
-		JButton btnPhaseDescription = new JButton("Phase Descriptions");
+		JButton btnPhaseDescription = new JButton(gameLang.getEntry("PHASE_DESCRIPTIONS"));
 		btnPhaseDescription.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				gManage.displayPhaseDescriptionFrame();
 			}
 		});
-		btnPhaseDescription.setBounds(10, 184, 149, 23);
+		btnPhaseDescription.setBounds(5, 184, 154, 23);
 		infoPanel.add(btnPhaseDescription);
 
-		JButton btnScoreboard = new JButton("Scoreboard");
+		JButton btnScoreboard = new JButton(gameLang.getEntry("SCOREBOARD"));
 		btnScoreboard.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -131,7 +138,7 @@ public class GameFrame extends JFrame {
 		btnScoreboard.setBounds(28, 300, 118, 23);
 		infoPanel.add(btnScoreboard);
 
-		JButton btnSave = new JButton("Save");
+		JButton btnSave = new JButton(gameLang.getEntry("SAVE"));
 		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -143,7 +150,7 @@ public class GameFrame extends JFrame {
 		btnSave.setBounds(22, 347, 124, 23);
 		infoPanel.add(btnSave);
 
-		JButton btnExit = new JButton("Exit");
+		JButton btnExit = new JButton(gameLang.getEntry("EXIT"));
 		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -153,9 +160,10 @@ public class GameFrame extends JFrame {
 		btnExit.setBounds(5, 392, 154, 25);
 		infoPanel.add(btnExit);
 		
-		JLabel lblScore = new JLabel("Score");
+		JLabel lblScore = new JLabel(gameLang.getEntry("SCORE"));
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblScore.setBounds(58, 218, 53, 25);
+		lblScore.setBounds(20, 218, 111, 25);
 		infoPanel.add(lblScore);
 		
 		playerScore = new JTextArea();
@@ -167,7 +175,7 @@ public class GameFrame extends JFrame {
 		playerScore.setBounds(47, 240, 69, 49);
 		infoPanel.add(playerScore);
 		
-		lblTurnMode = new JLabel("You may draw");
+		lblTurnMode = new JLabel(gameLang.getEntry("YOU_MAY_DRAW"));
 		lblTurnMode.setBounds(28, 509, 118, 14);
 		infoPanel.add(lblTurnMode);
 
@@ -202,10 +210,7 @@ public class GameFrame extends JFrame {
 				if(current.getHasDrawnCard() == false) {
 					gManage.mainManager.getGame().getRound().drawFromDeck();
 					updateFrame(gManage.mainManager.getGame());
-//					deckButton.setEnabled(false); TODO
 					discardButton.setEnabled(false);
-//					discardButton.setIcon(null);
-//					discardButton.setText("discard selected card");
 				}
 			}
 		});
@@ -223,17 +228,15 @@ public class GameFrame extends JFrame {
 						updateFrame(gManage.mainManager.getGame());
 						deckButton.setEnabled(false);
 						discardButton.setEnabled(false);
-//						discardButton.setIcon(null); TODO
-//						discardButton.setText("discard selected card");
 					}
 					else {
-						MessageFrame skipPickup = new MessageFrame("You cannot pick up a Skip card from the discard pile", "Invalid Move");
+						MessageFrame skipPickup = new MessageFrame(gameLang.getEntry("SKIP_PICKUP_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 						skipPickup.setVisible(true);
 					}
 				}
 				else { //player is discarding
 					if(selectedCards.size() == 0) {
-						MessageFrame noCard = new MessageFrame("You must select a card to discard", "Invalid move");
+						MessageFrame noCard = new MessageFrame(gameLang.getEntry("NO_CARD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 						noCard.setVisible(true);
 					}
 					else {
@@ -268,7 +271,7 @@ public class GameFrame extends JFrame {
 		getContentPane().add(yourPhasesPanel);
 		yourPhasesPanel.setLayout(null);
 
-		btnNewPhase = new JButton("Add a Phase!");
+		btnNewPhase = new JButton(gameLang.getEntry("ADD_A_PHASE"));
 		btnNewPhase.addActionListener(new PhaseActionListener());
 		btnNewPhase.setBounds(413, 42, 146, 23);
 		yourPhasesPanel.add(btnNewPhase);
@@ -309,19 +312,19 @@ public class GameFrame extends JFrame {
 		pg2End.setBounds(884, 0, 88, 107);
 		yourPhasesPanel.add(pg2End);
 
-		addToPG1 = new JButton("add to phase");
+		addToPG1 = new JButton(gameLang.getEntry("ADD_TO_PHASE"));
 		addToPG1.addActionListener(new AddToPhaseListener(0));
 		addToPG1.setVisible(false);
 		addToPG1.setBounds(277, 27, 117, 52);
 		yourPhasesPanel.add(addToPG1);
 
-		addToPG2 = new JButton("add to phase");
+		addToPG2 = new JButton(gameLang.getEntry("ADD_TO_PHASE"));
 		addToPG2.addActionListener(new AddToPhaseListener(1));
 		addToPG2.setVisible(false);
 		addToPG2.setBounds(580, 27, 117, 52);
 		yourPhasesPanel.add(addToPG2);
 
-		lblTo = new JLabel("to");
+		lblTo = new JLabel(gameLang.getEntry("TO"));
 		lblTo.setVisible(false);
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTo.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -329,7 +332,7 @@ public class GameFrame extends JFrame {
 		lblTo.setBounds(108, 25, 61, 53);
 		yourPhasesPanel.add(lblTo);
 
-		lblTo2 = new JLabel("to");
+		lblTo2 = new JLabel(gameLang.getEntry("TO"));
 		lblTo2.setVisible(false);
 		lblTo2.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTo2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -510,10 +513,9 @@ public class GameFrame extends JFrame {
 		playerScore.setText(Integer.toString(current.getScore()));
 		
 		if(current.getHasDrawnCard())
-			lblTurnMode.setText("You may discard");
+			lblTurnMode.setText(gameLang.getEntry("YOU_MAY_DISCARD"));
 		else {
-			lblTurnMode.setText("you may draw");
-			//btnNewPhase.setVisible(false); TODO
+			lblTurnMode.setText(gameLang.getEntry("YOU_MAY_DRAW"));
 		}
 
 		//end update of infoPanel
@@ -618,36 +620,36 @@ public class GameFrame extends JFrame {
 
 					switch(current.getPhase()) {
 					case 1:
-						btnNewPhase.setText("add a set of 3");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 3");
 						isSecondPhaseGroup = true;
 						break;
 					case 2:
-						btnNewPhase.setText("add a run of 4");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("RUN_OF") + " " + " 4");
 						isSecondPhaseGroup = true;
 						break;
 					case 3:
-						btnNewPhase.setText("add a run of 4");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("RUN_OF") + " " + " 4");
 						isSecondPhaseGroup = true;
 						break;
 					case 7:
-						btnNewPhase.setText("add a set of 4");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 4");
 						isSecondPhaseGroup = true;
 						break;
 					case 9:
-						btnNewPhase.setText("add a set of 2");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 2");
 						isSecondPhaseGroup = true;
 						break;
 					case 10:
-						btnNewPhase.setText("add a set of 3");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 3");
 						isSecondPhaseGroup = true;
 						break;
 					default:
-						btnNewPhase.setText("Add a Phase!");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A_PHASE"));
 						btnNewPhase.setVisible(false);
 						isSecondPhaseGroup = false;
 						boolean isValid = current.addPhaseGroups(newPhaseGroup);
 						if(!isValid) {
-							MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
+							MessageFrame notAGoodPhase = new MessageFrame(gameLang.getEntry("NOT_A_GOOD_PHASE_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 							notAGoodPhase.setVisible(true);
 
 							for(int i = 0; i < handButtons.length; i++) {
@@ -699,7 +701,7 @@ public class GameFrame extends JFrame {
 					boolean isValid = current.addPhaseGroups(newPhaseGroup, newPhaseGroup2);
 					System.out.println("Phase Group Type: " + newPhaseGroup.getType());
 					if(!isValid) {
-						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move");
+						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move", gameLang);
 						notAGoodPhase.setVisible(true);
 
 						//set all buttons to visible and clear all selections
@@ -750,34 +752,34 @@ public class GameFrame extends JFrame {
 				isSecondPhaseGroup = false;
 				switch(current.getPhase()) {
 				case 1:
-					btnNewPhase.setText("add a set of 3");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 3");
 					break;
 				case 2:
-					btnNewPhase.setText("add a set of 3");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 3");
 					break;
 				case 3:
-					btnNewPhase.setText("add a set of 4");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 4");
 					break;
 				case 4:
-					btnNewPhase.setText("add a run of 7");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("RUN_OF") + " " + " 7");
 					break;
 				case 5:
-					btnNewPhase.setText("add a run of 8");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("RUN_OF") + " " + " 8");
 					break;
 				case 6:
-					btnNewPhase.setText("add a run of 9");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("RUN_OF") + " " + " 9");
 					break;
 				case 7:
-					btnNewPhase.setText("add a set of 4");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 4");
 					break;
 				case 8:
-					btnNewPhase.setText("add 7 cards of the same color");
+					btnNewPhase.setText(gameLang.getEntry("PHASE_8_ADD_BUTTON"));
 					break;
 				case 9:
-					btnNewPhase.setText("add a set of 5");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 5");
 					break;
 				case 10:
-					btnNewPhase.setText("add a set of 5");
+					btnNewPhase.setText(gameLang.getEntry("ADD_A") + " " + gameLang.getEntry("SET_OF") + " " + " 5");
 					break;
 
 				default:
@@ -801,7 +803,7 @@ public class GameFrame extends JFrame {
 			for(int x = 0; x < selectedCards.size(); x++) {
 				boolean isValid = current.getPhaseGroup(phaseGroupIndex).addCard(selectedCards.get(x));
 				if(!isValid) {
-					MessageFrame invalidAdd = new MessageFrame("A card you are trying to add is invlaid", "Invalid move");
+					MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 					invalidAdd.setVisible(true);
 					break;
 				}
@@ -816,5 +818,3 @@ public class GameFrame extends JFrame {
 
 	}
 }
-
-

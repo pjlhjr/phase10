@@ -41,6 +41,10 @@ public class GuiManager {
 		return gameLang;
 	}
 	
+	public void setGameLang(Language l) {
+		gameLang = l;
+	}
+	
 	void initGameWindow() {
 		gameWindow = new GameFrame(this);
 		displayGameFrame();
@@ -64,7 +68,7 @@ public class GuiManager {
 	}
 	
 	void displayMessageFrame(String message, String title) {
-		MessageFrame messageWindow = new MessageFrame(message, title);
+		MessageFrame messageWindow = new MessageFrame(message, title, getGameLang());
 		messageWindow.setVisible(true);
 	}
 	

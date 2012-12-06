@@ -27,10 +27,14 @@ public class ScoreFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public ScoreFrame(GuiManager gManage) {
+		
+		//Create a variable to access the game's language
+		Language gameLang = gManage.getGameLang();
+		
 		setLocation(new Point(15, 15));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ScoreFrame.class.getResource("/images/GameIcon.png")));
 		setResizable(false);
-		setTitle("Scores after round " + gManage.mainManager.getGame().getRoundNumber());
+		setTitle(gameLang.getEntry("SCORES_AFTER_ROUND") + " " + gManage.mainManager.getGame().getRoundNumber());
 		setBounds(100, 100, 458, 396);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,7 +64,7 @@ public class ScoreFrame extends JFrame {
 		table.setModel(new DefaultTableModel(
 			playersArray,
 			new String[] {
-				"Place", "Name", "Current Phase", "Score"
+				gameLang.getEntry("PLACE"), gameLang.getEntry("NAME"), gameLang.getEntry("CURRENT_PHASE"), gameLang.getEntry("SCORE")
 			}
 		) {
 			/**
@@ -90,23 +94,23 @@ public class ScoreFrame extends JFrame {
 		table.setBounds(36, 54, 370, 195);
 		contentPane.add(table);
 		
-		JLabel lblPlace = new JLabel("Place");
-		lblPlace.setBounds(53, 29, 46, 14);
+		JLabel lblPlace = new JLabel(gameLang.getEntry("PLACE"));
+		lblPlace.setBounds(53, 29, 64, 14);
 		contentPane.add(lblPlace);
 		
-		JLabel lblName = new JLabel("Name");
-		lblName.setBounds(142, 29, 46, 14);
+		JLabel lblName = new JLabel(gameLang.getEntry("NAME"));
+		lblName.setBounds(127, 29, 83, 14);
 		contentPane.add(lblName);
 		
-		JLabel lblCurrentPhase = new JLabel("Current Phase");
+		JLabel lblCurrentPhase = new JLabel(gameLang.getEntry("CURRENT_PHASE"));
 		lblCurrentPhase.setBounds(220, 29, 88, 14);
 		contentPane.add(lblCurrentPhase);
 		
-		JLabel lblScore = new JLabel("Score");
-		lblScore.setBounds(333, 29, 46, 14);
+		JLabel lblScore = new JLabel(gameLang.getEntry("SCORE"));
+		lblScore.setBounds(318, 29, 61, 14);
 		contentPane.add(lblScore);
 		
-		JButton btnOkay = new JButton("Okay");
+		JButton btnOkay = new JButton(gameLang.getEntry("OKAY"));
 		btnOkay.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -116,7 +120,7 @@ public class ScoreFrame extends JFrame {
 		btnOkay.setBounds(174, 300, 89, 23);
 		contentPane.add(btnOkay);
 	}
-
+	
 	private Player[] sortPlayers(Player[] thePlayers) {
 
 		for(int j = thePlayers.length-1; j > 0; j--){

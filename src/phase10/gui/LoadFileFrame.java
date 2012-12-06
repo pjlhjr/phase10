@@ -12,8 +12,6 @@ import javax.swing.JTextPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 
 public class LoadFileFrame extends JDialog {
@@ -26,6 +24,7 @@ public class LoadFileFrame extends JDialog {
 	private JTextField filenameField;
 	private String filename;
 	private GuiManager gManage;
+	private Language gameLang;
 
 	public String getFilename() {
 		return filename;
@@ -35,7 +34,9 @@ public class LoadFileFrame extends JDialog {
 	 * Create the dialog.
 	 */
 	public LoadFileFrame(GuiManager guiM) {
-		setTitle("Load Game");
+		gameLang = guiM.getGameLang();
+		
+		setTitle(gameLang.getEntry("LOAD_GAME"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 
 		gManage = guiM;
@@ -47,15 +48,15 @@ public class LoadFileFrame extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			filenameField = new JTextField();
-			filenameField.setBounds(114, 204, 315, 20);
+			filenameField.setBounds(142, 204, 287, 20);
 			contentPanel.add(filenameField);
 			filenameField.setColumns(10);
 		}
 		{
 			JTextPane promptField = new JTextPane();
-			promptField.setBounds(5, 204, 101, 20);
+			promptField.setBounds(5, 204, 122, 20);
 			promptField.setEditable(false);
-			promptField.setText("Enter a filename:");
+			promptField.setText(gameLang.getEntry("ENTER_A_FILENAME"));
 			contentPanel.add(promptField);
 		}
 		{
@@ -63,14 +64,14 @@ public class LoadFileFrame extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton(gameLang.getEntry("OKAY"));
 				okButton.addActionListener(new OKListener());
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton(gameLang.getEntry("CANCEL"));
 				cancelButton.addActionListener(new CancelListener());
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
@@ -91,8 +92,8 @@ public class LoadFileFrame extends JDialog {
 				dispose();
 				LoadFileFrame tryAgain = new LoadFileFrame(gManage);
 				tryAgain.setVisible(true);
-				MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
-				invalidMessage.setVisible(true);
+				MessageFrame invalidFile = new MessageFrame(gameLang.getEntry("INVALID_FILE_MESSAGE"), gameLang.getEntry("INVALID_FILENAME"), gameLang);
+				invalidFile.setVisible(true);
 			}
 			else {
 				gManage.initGameWindow();
@@ -108,7 +109,6 @@ public class LoadFileFrame extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			gManage.initGui();
 			dispose();
 		}

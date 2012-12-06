@@ -44,7 +44,10 @@ public class SettingsFrame extends JFrame {
 	private JComboBox<String> comboBox_1;
 	private JComboBox<String> comboBox_2;
 	private JComboBox<String> comboBox_3;
-
+	private JLabel name1Label;
+	private JLabel languageLabel;
+	private JButton btnAddPlayer;
+	private JButton beginButton;
 
 	/**
 	 * Launch the application.
@@ -66,10 +69,11 @@ public class SettingsFrame extends JFrame {
 	 */
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public SettingsFrame(GuiManager gManage) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
+	public SettingsFrame(final GuiManager gManage) {
+		
 		lang = gManage.getGameLang();
-
+		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
 		setResizable(false);
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -84,23 +88,33 @@ public class SettingsFrame extends JFrame {
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 
-		JLabel name1Label = new JLabel(lang.getEntry("YOUR_NAME"));
+		name1Label = new JLabel(lang.getEntry("YOUR_NAME"));
 		name1Label.setBounds(27, 64, 92, 14);
 		contentPane.add(name1Label);
 
-		JLabel languageLabel = new JLabel(lang.getEntry("LANGUAGE"));
+		languageLabel = new JLabel(lang.getEntry("LANGUAGE"));
 		languageLabel.setBounds(314, 64, 90, 14);
 		contentPane.add(languageLabel);
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.addItemListener(new ItemListener() {
+		final JComboBox languageBox = new JComboBox();
+		languageBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				System.out.println("Item state has changed!");
+				if(languageBox.getSelectedItem().equals("English")) {
+					gManage.setGameLang(new Language());
+					updateLabelsForLanguage();
+				}
+				
+				
+				/*
+				 * TODO Other language files may be added here: else if's
+				 */
+				
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"English", "Español", "Français", "Deutsch"}));
-		comboBox.setBounds(438, 58, 92, 20);
-		contentPane.add(comboBox);
+		languageBox.setModel(new DefaultComboBoxModel(new String[] {"English"/*, "Español", "Français", "Deutsch"*/}));
+		languageBox.setBounds(438, 58, 92, 20);
+		contentPane.add(languageBox);
 
 
 		comboBox_1 = new JComboBox<String>();
@@ -236,7 +250,6 @@ public class SettingsFrame extends JFrame {
 			}
 		});
 		humanRadio3.setBounds(295, 238, 109, 23);
-		//radioButton_4.setVisible(false);
 		opp3Group.add(humanRadio3);
 		contentPane.add(humanRadio3);
 
@@ -258,11 +271,11 @@ public class SettingsFrame extends JFrame {
 		 */
 
 
-		JButton beginButton = new JButton(lang.getEntry("BEGIN"));
+		beginButton = new JButton(lang.getEntry("BEGIN"));
 		beginButton.setBounds(227, 333, 109, 42);
 		contentPane.add(beginButton);
 
-		final JButton btnAddPlayer = new JButton(lang.getEntry("ADD_PLAYER"));
+		btnAddPlayer = new JButton(lang.getEntry("ADD_PLAYER"));
 		btnAddPlayer.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -287,10 +300,10 @@ public class SettingsFrame extends JFrame {
 				}
 			}
 		});
-		btnAddPlayer.setBounds(41, 292, 109, 23);
+		btnAddPlayer.setBounds(27, 288, 123, 23);
 		contentPane.add(btnAddPlayer);
 
-		btnRemovePlayer = new JButton("Remove last opponent");
+		btnRemovePlayer = new JButton(lang.getEntry("REMOVE_LAST_OPPONENT"));
 		btnRemovePlayer.setVisible(false);
 		btnRemovePlayer.addMouseListener(new MouseAdapter() {
 			@Override
@@ -316,14 +329,12 @@ public class SettingsFrame extends JFrame {
 				}
 			}
 		});
-		btnRemovePlayer.setBounds(160, 292, 141, 23);
+		btnRemovePlayer.setBounds(181, 288, 191, 23);
 		contentPane.add(btnRemovePlayer);
 		beginButton.addMouseListener(new BeginListener(this, gManage));
 	}
 
 	int getDifficulty(JComboBox<String> menu) {
-		//TODO write this method
-
 		if(menu.getSelectedItem() == lang.getEntry("EASY")) {
 			return 25;
 		}
@@ -358,6 +369,18 @@ public class SettingsFrame extends JFrame {
 	public void invisibleSetter(Component comp, boolean isVisible) {
 		comp.setVisible(isVisible);
 	}
+	
+	private void updateLabelsForLanguage() {
+		
+		//TODO complete this method
+		
+		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
+		name1Label.setText(lang.getEntry("YOUR_NAME"));
+		languageLabel.setText(lang.getEntry("LANGUAGE"));
+		btnRemovePlayer.setText(lang.getEntry("REMOVE_LAST_OPPONENT"));
+		btnAddPlayer.setText(lang.getEntry("ADD_PLAYER"));
+		beginButton.setText(lang.getEntry("BEGIN"));
+	}
 
 	private class BeginListener implements MouseListener {
 
@@ -375,8 +398,8 @@ public class SettingsFrame extends JFrame {
 			
 			//main user
 			if(settingsFrm.getUserName().isEmpty()) {
-				MessageFrame errorFrame = new MessageFrame("Please put in a name for yourself", "Phase 10");
-				errorFrame.setVisible(true);
+				MessageFrame noName = new MessageFrame(lang.getEntry("NO_NAME_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+				noName.setVisible(true);
 				return;
 			}
 			else {
@@ -385,8 +408,8 @@ public class SettingsFrame extends JFrame {
 			
 			//opponent 1
 			if(settingsFrm.getOpponent_1().isEmpty()) {
-				MessageFrame errorFrame = new MessageFrame("Please put in a name for player 1", "Phase 10");
-				errorFrame.setVisible(true);
+				MessageFrame noName1 = new MessageFrame(lang.getEntry("NO_NAME_1_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+				noName1.setVisible(true);
 				return;
 			}
 			else {
@@ -400,8 +423,8 @@ public class SettingsFrame extends JFrame {
 			//opponent 2
 			if(settingsFrm.opponentField_2.isVisible()) {
 				if(settingsFrm.getOpponent_2().isEmpty()) {
-					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 2", "Phase 10");
-					errorFrame.setVisible(true);
+					MessageFrame noName2 = new MessageFrame(lang.getEntry("NO_NAME_2_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+					noName2.setVisible(true);
 					return;
 				}
 				else {
@@ -416,8 +439,8 @@ public class SettingsFrame extends JFrame {
 			//opponent 3
 			if(settingsFrm.opponentField_3.isVisible()) {
 				if(settingsFrm.getOpponent_3().isEmpty()) {
-					MessageFrame errorFrame = new MessageFrame("Please put in a name for player 3", "Phase 10");
-					errorFrame.setVisible(true);
+					MessageFrame noName3 = new MessageFrame(lang.getEntry("NO_NAME_3_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+					noName3.setVisible(true);
 					return;
 				}
 				else {

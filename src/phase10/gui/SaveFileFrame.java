@@ -23,6 +23,7 @@ public class SaveFileFrame extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField filenameField;
 	private String filename;
+	private Language gameLang;
 
 	public String getFilename() {
 		return filename;
@@ -32,7 +33,10 @@ public class SaveFileFrame extends JDialog {
 	 * Create the dialog.
 	 */
 	public SaveFileFrame(GuiManager guiM) {
-		setTitle("Save Game");
+		
+		gameLang = guiM.getGameLang();
+		
+		setTitle(gameLang.getEntry("SAVE_GAME"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 
 		final GuiManager gManage = guiM;
@@ -44,15 +48,15 @@ public class SaveFileFrame extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			filenameField = new JTextField();
-			filenameField.setBounds(114, 204, 315, 20);
+			filenameField.setBounds(142, 204, 287, 20);
 			contentPanel.add(filenameField);
 			filenameField.setColumns(10);
 		}
 		{
 			JTextPane promptField = new JTextPane();
-			promptField.setBounds(5, 204, 101, 20);
+			promptField.setBounds(5, 204, 122, 20);
 			promptField.setEditable(false);
-			promptField.setText("Enter a filename:");
+			promptField.setText(gameLang.getEntry("ENTER_A_FILENAME"));
 			contentPanel.add(promptField);
 		}
 		{
@@ -60,7 +64,7 @@ public class SaveFileFrame extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton(gameLang.getEntry("OKAY"));
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -73,8 +77,8 @@ public class SaveFileFrame extends JDialog {
 							dispose();
 							SaveFileFrame tryAgain = new SaveFileFrame(gManage);
 							tryAgain.setVisible(true);
-							MessageFrame invalidMessage = new MessageFrame("That filename is invalid. Please input another filename", "Invalid filename");
-							invalidMessage.setVisible(true);
+							MessageFrame invalidFile = new MessageFrame(gameLang.getEntry("INVALID_FILE_MESSAGE"), gameLang.getEntry("INVALID_FILENAME"), gameLang);
+							invalidFile.setVisible(true);
 						}
 						else {
 							dispose();
@@ -86,7 +90,7 @@ public class SaveFileFrame extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton(gameLang.getEntry("CANCEL"));
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
