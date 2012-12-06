@@ -40,7 +40,7 @@ public class GameFrame extends JFrame {
 	private JPanel handPanel = new JPanel(); //displays all the cards in a player's hand
 	private JPanel playersPanel = new JPanel(); //displays all of the current player's opponents
 	private JPanel yourPhasesPanel = new JPanel(); //displays the current player's phases, or a button to add a phase if the current player has not yet laid down a phase in a round
-	
+
 	private JButton[] handButtons = new JButton[11]; //an array of buttons representing each card in the current player's hand
 	private JLabel lblPlayername; //Displays the current player's name in infoPanel
 	private JTextArea phaseNumber; //Displays the phase of the current player in infoPanel
@@ -58,7 +58,7 @@ public class GameFrame extends JFrame {
 	private JButton pg2End; //the first card of the current player's second phase group
 	private JButton pg2Start; //the last card of the current player's second phase group
 	private JTextArea playerScore; //displays the current player's score in infoPanel
-	private JLabel lblTurnMode;
+	private JLabel lblTurnMode; //displays right above the deck and the discard pile and tells the user if they are drawing or 
 	//end components
 
 
@@ -68,7 +68,7 @@ public class GameFrame extends JFrame {
 	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
-		
+
 		gameLang = gManage.getGameLang();
 
 		setResizable(false);
@@ -115,7 +115,7 @@ public class GameFrame extends JFrame {
 		}
 		phaseNumber.setEditable(false);
 		phaseNumber.setBounds(58, 120, 53, 53);
-		
+
 		infoPanel.add(phaseNumber);
 
 		JButton btnPhaseDescription = new JButton(gameLang.getEntry("PHASE_DESCRIPTIONS"));
@@ -159,13 +159,13 @@ public class GameFrame extends JFrame {
 		});
 		btnExit.setBounds(5, 392, 154, 25);
 		infoPanel.add(btnExit);
-		
+
 		JLabel lblScore = new JLabel(gameLang.getEntry("SCORE"));
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblScore.setBounds(20, 218, 111, 25);
 		infoPanel.add(lblScore);
-		
+
 		playerScore = new JTextArea();
 		playerScore.setText(Integer.toString(current.getScore()));
 		playerScore.setRows(1);
@@ -174,7 +174,7 @@ public class GameFrame extends JFrame {
 		playerScore.setColumns(1);
 		playerScore.setBounds(47, 240, 69, 49);
 		infoPanel.add(playerScore);
-		
+
 		lblTurnMode = new JLabel(gameLang.getEntry("YOU_MAY_DRAW"));
 		lblTurnMode.setBounds(28, 509, 118, 14);
 		infoPanel.add(lblTurnMode);
@@ -258,9 +258,13 @@ public class GameFrame extends JFrame {
 
 		oppPanels = new ArrayList<opponentPanel>();
 		try {
-			for(int x = 0; x < currentGame.getNumberOfPlayers() - 1; x++) {
-				oppPanels.add(new opponentPanel(currentGame.getPlayer(x), gManage.mainManager.getGame(), this));
-				playersPanel.add(oppPanels.get(x));
+			int i = 0;
+			for(int x = 0; x < currentGame.getNumberOfPlayers(); x++) {
+				if(currentGame.getPlayer(x) != currentGame.getCurrentPlayer()) {
+					oppPanels.add(new opponentPanel(currentGame.getPlayer(x), gManage.mainManager.getGame(), this));
+					playersPanel.add(oppPanels.get(i));
+					i++;
+				}
 			}
 		} catch (NullPointerException e) {
 			System.out.println("null pointer exception generated when trying to display opponent Panels");
@@ -350,7 +354,7 @@ public class GameFrame extends JFrame {
 				lblTo.setVisible(true);
 				pg1End.setVisible(true);
 				addToPG1.setVisible(true);
-				
+
 				lblTo.setToolTipText(current.getPhaseGroup(0).toString());
 
 				pg2Start.setVisible(false);
@@ -371,14 +375,14 @@ public class GameFrame extends JFrame {
 				lblTo.setVisible(true);
 				pg1End.setVisible(true);
 				addToPG1.setVisible(true);
-				
+
 				lblTo.setToolTipText(current.getPhaseGroup(0).toString());
 
 				pg2Start.setVisible(true);
 				lblTo2.setVisible(true);
 				pg2End.setVisible(true);
 				addToPG2.setVisible(true);
-				
+
 				lblTo2.setToolTipText(current.getPhaseGroup(1).toString());
 
 				btnNewPhase.setVisible(false);
@@ -511,7 +515,7 @@ public class GameFrame extends JFrame {
 		lblPlayername.setText(current.getName());
 		phaseNumber.setText(Integer.toString(current.getPhase()));
 		playerScore.setText(Integer.toString(current.getScore()));
-		
+
 		if(current.getHasDrawnCard())
 			lblTurnMode.setText(gameLang.getEntry("YOU_MAY_DISCARD"));
 		else {
@@ -530,7 +534,7 @@ public class GameFrame extends JFrame {
 	private void updateCardImages() {
 
 		Hand currentHand = current.getHand();
-		
+
 		//begin hand button update
 		int i = 0;
 		for(; i < currentHand.getNumberOfCards(); i++) {
@@ -600,13 +604,13 @@ public class GameFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			
+
+
 			if(isPhasing) {
 				if(isSecondPhaseGroup == false) {
 
 					newPhaseGroup = new PhaseGroup(gManage.mainManager.getGame());
-					
+
 					for(Card c : selectedCards) {
 						newPhaseGroup.addCard(c);
 					}
@@ -660,7 +664,7 @@ public class GameFrame extends JFrame {
 
 							isPhasing = false;
 							isSecondPhaseGroup = false;
-							
+
 							btnNewPhase.setText("Add a Phase!");
 						}
 						else { //the player played a valid phase with only one phase group in the phase
@@ -680,9 +684,9 @@ public class GameFrame extends JFrame {
 
 							btnNewPhase.setVisible(false);
 							btnNewPhase.setText("Add a Phase!");
-							
+
 							updateFrame(gManage.mainManager.getGame());
-							
+
 							isPhasing = false;
 							isSecondPhaseGroup = false;
 							break;
