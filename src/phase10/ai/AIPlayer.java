@@ -5,6 +5,8 @@
  */
 package phase10.ai;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
 
 import phase10.Phase10;
@@ -24,7 +26,7 @@ import phase10.util.Configuration;
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private final int difficulty;
-	private static final double BEST_CHOICE_AT_FIFTY = 0.0;
+	private static final double BEST_CHOICE_AT_FIFTY = 3.5;
 	transient private Groups group;
 	
 	public AIPlayer(Phase10 game, int difficulty, String name){
@@ -70,11 +72,11 @@ public class AIPlayer extends Player {
 		}
 		
 		try{
-			if(!hasLaidDownPhase()) // attempt to lay down phase groups
-				addPhaseGroups(getPhaseGroups()); // make sure to lay down on time & don't lay down before certain point varying by diff
+			if(!hasLaidDownPhase() && getPhaseGroups() != null) // attempt to lay down phase groups
+				addPhaseGroups(group.getCompletePhaseGroups()); // make sure to lay down on time & don't lay down before certain point varying by diff
 				// make sure it works if too many cards or groups in group
 		}catch(Exception e){
-			System.out.println("AIPlayer, laydown: " + e.toString());
+			System.out.println("AIPlayer, laydown: " + e.toString()); // laid down all my cards Hand92,AI90afterAI74
 		}
 		
 		try{
@@ -85,7 +87,7 @@ public class AIPlayer extends Player {
 		}
 		
 		try{
-			game.getRound().discard(discardCard());
+			game.getRound().discard(discardCard()); // discarded
 		}catch(Exception e){
 			game.getRound().discard(getHand().getCard(0));
 			System.out.println("AIPlayer, playoff: " + e.toString());
@@ -105,15 +107,17 @@ public class AIPlayer extends Player {
 			if(Configuration.getTypeRequired(getPhase(), x) == Configuration.SET_PHASE)
 				numNeed++;
 		}
-		
-		int[] need = new int[numNeed]; // fill the array with the size of the sets that are needed
-		numNeed = 0;
-		for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
-			if(Configuration.getTypeRequired(getPhase(), x) == Configuration.SET_PHASE)
-				need[numNeed++] = Configuration.getLengthRequired(getPhase(), x);
+		if(numNeed > 0){
+			int[] need = new int[numNeed]; // fill the array with the size of the sets that are needed
+			numNeed = 0;
+			for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
+				if(Configuration.getTypeRequired(getPhase(), x) == Configuration.SET_PHASE)
+					need[numNeed++] = Configuration.getLengthRequired(getPhase(), x);
+			}
+
+			return need;
 		}
-		
-		return need;
+		return null;
 	}
 	
 		
@@ -142,13 +146,17 @@ public class AIPlayer extends Player {
 	 * @return true if it is recommended to pick up a card, 
 	 * or false if it is recommended to draw a card 
 	 */
-	// TODO look to see if the card could be played off other phases
+	// TODO look to see if the card could be played off other phases, pick up card on run phase
+	// pick up cards that can be laid off phases
 	private boolean drawOrPickUp(){
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
 		if(cardOnTopOfPile.getValue() == Configuration.WILD_VALUE) // pick up a wild
 			return true;
 		if(cardOnTopOfPile.getValue() == Configuration.SKIP_VALUE) // don't pick up a skip
 			return false;
+		if(hasLaidDownPhase() && difficulty > 30 && bestChoice(BEST_CHOICE_AT_FIFTY)
+				&& cardsThatCanBeLaidDown().contains(cardOnTopOfPile))
+			return true;
 		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){ // if the card improves the score of the player's hand
 			if(difficulty < 30) // don't continue checking if an easy player
 				return true;
@@ -211,13 +219,26 @@ public class AIPlayer extends Player {
 	 */
 	private boolean playOffPhases(){
 		Player current;
+		ArrayList<Card> potentialCards = cardsThatCanBeLaidDown();
+		ArrayList<Card> cardsToBeLaidDown = new ArrayList<Card>();
+		
+		for(int x = 0; x < getHand().getNumberOfCards(); x++){
+			for(Card c: potentialCards){
+				if(c.getColor() == Color.BLACK){ 
+					if(c.getValue() == getHand().getCard(x).getValue())
+						cardsToBeLaidDown.add(getHand().getCard(x));
+				}else if(c.getColor() == getHand().getCard(x).getColor()){
+					cardsToBeLaidDown.add(getHand().getCard(x));
+				}
+			}
+		}
 		
 		for(int player = 0; player < game.getNumberOfPlayers(); player++){
 			current = game.getPlayer(player);
 			if(current.hasLaidDownPhase()){
 				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
-					for(int hand = 0; hand < getHand().getNumberOfCards(); hand++){
-						if(bestChoice(BEST_CHOICE_AT_FIFTY) && current.getPhaseGroup(group).addCard(getHand().getCard(hand))){
+					for(Card c: cardsToBeLaidDown){
+						if(bestChoice(BEST_CHOICE_AT_FIFTY) && current.getPhaseGroup(group).addCard(c)){
 							playOffPhases();
 							return true;
 						}
@@ -242,11 +263,14 @@ public class AIPlayer extends Player {
 		group = new Groups(this, getHand());
 		int x = 0;
 		Card[] c = group.recommendDiscard();
-		//while(!bestChoice(BEST_CHOICE_AT_FIFTY)){
-			//something else
-			//x++;
-		//}
-		//x %= c.length;
+		ArrayList<Card> layDownAble = cardsThatCanBeLaidDown();
+		
+		while(!bestChoice(BEST_CHOICE_AT_FIFTY) && layDownAble.contains(c[x])){
+			if(++x >= c.length){
+				return c[0];
+			}
+		}
+		
 		return c[x];
 	}
 	
@@ -340,5 +364,27 @@ public class AIPlayer extends Player {
 	 */
 	Phase10 getGame(){
 		return game;
+	}
+	
+	ArrayList<Card> cardsThatCanBeLaidDown(){
+		ArrayList<Card> layDownAble = new ArrayList<Card>(); 
+		for(int x = 0; x < getGame().getNumberOfPlayers(); x++){
+			Player current = getGame().getPlayer(x);
+			if(current.hasLaidDownPhase()){
+				for(int y = 0; y < current.getNumberOfPhaseGroups(); y++){
+					PhaseGroup temp = current.getPhaseGroup(y);
+					if(temp.getType() == Configuration.RUN_PHASE){
+						layDownAble.add(new Card(temp.getCard(0).getValue() - 1));
+						layDownAble.add(new Card(temp.getCard(temp.getNumberOfCards()-1).getValue() + 1));
+					}else if(temp.getType() == Configuration.SET_PHASE){
+						layDownAble.add(new Card(temp.getCard(0).getValue()));
+					}else{
+						layDownAble.add(new Card(temp.getCard(0).getColor(), Configuration.WILD_VALUE));
+					}
+				}
+			}
+		}
+		
+		return layDownAble;
 	}
 }

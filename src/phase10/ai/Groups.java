@@ -119,6 +119,7 @@ class Groups{
 		singleAndConflictingGroup();
 		validateCompleteGroups();
 		resolveConflicts();
+		connectRuns();
 		validateCompleteGroups();
 	}
 	
@@ -168,6 +169,32 @@ class Groups{
 		}
 	}*/
 	 
+	private void connectRuns() { //TODO connect 3 runs/single cards
+		if(player.lengthOfRunNeeded() > 0){
+			for(PhaseGroup p1: partial){
+				if(p1.getType() == Configuration.RUN_PHASE){
+					for(PhaseGroup p2: partial){
+						if(p2.getType() == Configuration.RUN_PHASE && p1 != p2){
+							PhaseGroup temp = new PhaseGroup(player.getGame());
+							for(int x = 0; x < p1.getNumberOfCards(); x++)
+								temp.addCard(p1.getCard(x));
+							for(int x = 0; x < p2.getNumberOfCards(); x++)
+								temp.addCard(p2.getCard(x));
+							if(PhaseGroup.validate(temp, Configuration.RUN_PHASE, player.lengthOfRunNeeded())){
+								partial.remove(p1);
+								partial.remove(p2);
+								temp.setType(Configuration.RUN_PHASE);
+								complete.add(temp);
+								connectRuns();
+								return;
+							}	
+						}
+					}
+				}
+			}
+		}
+	}
+
 	//TODO promote partials to complete on last sets, if you delete one with a wild
 	private void validateCompleteGroups(){ 
 		if(!player.colorPhase()){
@@ -182,9 +209,9 @@ class Groups{
 			}
 			
 			if(completeRuns.size() > 1){ 
-				double 	highestValue = -1,
+				double 	highestValue = Double.MAX_VALUE * -1,
 						tempValue = 0;
-				PhaseGroup highestGroup = completeRuns.get(0);
+				PhaseGroup highestGroup = null;
 				for(int x = 0; x < completeRuns.size(); x++){
 					tempValue = 0;
 					for(int y = 0; y < completeRuns.get(x).getNumberOfCards(); y++){
@@ -208,7 +235,8 @@ class Groups{
 					
 					if(tempValue > highestValue){
 						highestValue = tempValue;
-						complete.remove(highestGroup);
+						if(highestGroup != null)
+							complete.remove(highestGroup);
 						highestGroup = completeRuns.get(x);
 					}else{
 						complete.remove(completeRuns.get(x));
@@ -309,7 +337,7 @@ class Groups{
 	 * A partial phaseGroup does not meet the length requirements of the phase, while a complete one does
 	 */
 	private void completeAndPartialGroup(){ 
-		if(player.setsNeeded()[0] > 0){ // The hand will be sorted by value
+		if(player.setsNeeded() != null && player.setsNeeded()[0] > 0){ // The hand will be sorted by value
 			for(int index = 1; index < cards.length && cards[index].getValue() < Configuration.WILD_VALUE; index++){
 				if(cards[index].getValue() == cards[index-1].getValue()){ 
 					PhaseGroup setGroup = new PhaseGroup(player.getGame());
@@ -376,9 +404,6 @@ class Groups{
 			for(Iterator<PhaseGroup> iterator = conflictingGroups.get(0).iterator(); iterator.hasNext();){ // for each conflict:
 				PhaseGroup p = iterator.next();
 				p.removeCard(cardConflict.get(0));
-				if(partial.contains(p)){  
-					continue;
-				}
 				
 				tempPointValue = 0; //point value if the card is removed from the hand
 				if(!validGroup(p)){ // if it not still a complete group after removing the card
@@ -428,26 +453,19 @@ class Groups{
 			if(w.getValue() != Configuration.WILD_VALUE){
 				continue wildLoop;
 			}
-			for(PhaseGroup p: partial){
+			for(PhaseGroup c: complete){
+				c.addCard(w);
+			}
+			for(int x = 0; x < partial.size(); x++){
+				PhaseGroup p = partial.get(x);
 				p.addCard(w);
 				if(validGroup(p)){
 					complete.add(p);
 					partial.remove(p);
+					x--;
 				}
 			}
-			for(PhaseGroup c: complete){
-				c.addCard(w);
-			}
-			
 		}
-	}
-	
-	//TODO fill in, this method used for finding which cards are needed, use difficulty
-	/**
-	 * @return the cards needed in between partial runs
-	 */
-	private int[] cardsForConnectedGroups(){
-		return new int[1]; // change name
 	}
 	
 	/**
@@ -461,11 +479,11 @@ class Groups{
 				temp[x++] = c;
 			return temp;
 		}else{
-			return new PhaseGroup[1];
+			return null;
 		}
 	}
 	
-	public Card[] recommendDiscard(){
+	public Card[] recommendDiscard(){ // look at conflicts
 		double[] discardValue = new double[cards.length];
 		
 		bigLoop: // this loop assigns a "discard value" to each card, the higher the value more likely it will be discarded
