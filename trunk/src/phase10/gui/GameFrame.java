@@ -280,8 +280,10 @@ public class GameFrame extends JFrame {
 		yourPhasesPanel.setLayout(null);
 
 		btnNewPhase = new JButton(gameLang.getEntry("ADD_A_PHASE"));
+		btnNewPhase.setVisible(false);
+		btnNewPhase.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnNewPhase.addActionListener(new PhaseActionListener());
-		btnNewPhase.setBounds(413, 42, 146, 23);
+		btnNewPhase.setBounds(402, 42, 168, 23);
 		yourPhasesPanel.add(btnNewPhase);
 
 		pg1Start = new JButton("");
@@ -386,11 +388,24 @@ public class GameFrame extends JFrame {
 		lblTo2.setBounds(805, 27, 61, 53);
 		yourPhasesPanel.add(lblTo2);
 
-		updateCardImages();
+		updateFrame(gManage.mainManager.getGame());
 	}
 
 	protected void updateYourPhasesPanel() {
+
+		if(current.getHasDrawnCard()) {
+			btnNewPhase.setVisible(true);
+			addToPG1.setVisible(false);
+			addToPG2.setVisible(false);
+		}
+		else {
+			btnNewPhase.setVisible(false);
+		}
+
 		if(current.hasLaidDownPhase()) {
+
+			btnNewPhase.setVisible(false);
+
 			if(current.getNumberOfPhaseGroups() == 1) { //first phase group is visible
 				pg1Start.setVisible(true);
 				lblTo.setVisible(true);
@@ -404,8 +419,6 @@ public class GameFrame extends JFrame {
 				pg2End.setVisible(false);
 				addToPG2.setVisible(false);
 
-				btnNewPhase.setVisible(false);
-
 				pg1Start.setIcon(new ImageIcon(GameFrame.class.getResource(
 						getCardFile(current.getPhaseGroup(0).getCard(0)))));
 
@@ -413,6 +426,7 @@ public class GameFrame extends JFrame {
 						getCardFile(current.getPhaseGroup(0).getCard(current.getPhaseGroup(0).getNumberOfCards() - 1)))));
 			}
 			else { //first and second phase groups are visible
+
 				pg1Start.setVisible(true);
 				lblTo.setVisible(true);
 				pg1End.setVisible(true);
@@ -427,8 +441,6 @@ public class GameFrame extends JFrame {
 
 				lblTo2.setToolTipText(current.getPhaseGroup(1).toString());
 
-				btnNewPhase.setVisible(false);
-
 				pg1Start.setIcon(new ImageIcon(GameFrame.class.getResource(
 						getCardFile(current.getPhaseGroup(0).getCard(0)))));
 
@@ -442,7 +454,7 @@ public class GameFrame extends JFrame {
 						getCardFile(current.getPhaseGroup(1).getCard(current.getPhaseGroup(1).getNumberOfCards() - 1)))));
 			}
 		}
-		else { //no phase groups are visible
+		else { //player has not laid down phase
 			pg1Start.setVisible(false);
 			lblTo.setVisible(false);
 			pg1End.setVisible(false);
@@ -452,8 +464,6 @@ public class GameFrame extends JFrame {
 			lblTo2.setVisible(false);
 			pg2End.setVisible(false);
 			addToPG2.setVisible(false);
-
-			btnNewPhase.setVisible(true);
 		}
 	}
 
@@ -519,6 +529,8 @@ public class GameFrame extends JFrame {
 			}
 		}
 
+		updateCardImages();
+
 		//end update of opponent panels
 
 		updateYourPhasesPanel();
@@ -531,8 +543,6 @@ public class GameFrame extends JFrame {
 			handButtons[i].setSelected(false);
 
 		selectedCards.clear();
-
-		updateCardImages();
 
 		if(currentGame.getRound().getTopOfDiscardStack() == null) {
 			discardButton.setIcon(new ImageIcon(GameFrame.class.getResource("/images/cardImages/NoCardsLeft.png")));
@@ -846,21 +856,22 @@ public class GameFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			for(int x = 0; x < selectedCards.size(); x++) {
-				boolean isValid = current.getPhaseGroup(phaseGroupIndex).addCard(selectedCards.get(x));
-				if(!isValid) {
-					MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
-					invalidAdd.setVisible(true);
-					break;
+			if(current.getHasDrawnCard()) {
+				for(int x = 0; x < selectedCards.size(); x++) {
+					boolean isValid = current.getPhaseGroup(phaseGroupIndex).addCard(selectedCards.get(x));
+					if(!isValid) {
+						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
+						invalidAdd.setVisible(true);
+						break;
+					}
+					else {
+						hideAndClearSelectedCards();
+						updateFrame(gManage.mainManager.getGame());
+						updateYourPhasesPanel();
+					}
 				}
-				else {
-					hideAndClearSelectedCards();
-					updateFrame(gManage.mainManager.getGame());
-					updateYourPhasesPanel();
-				}
+
 			}
-
 		}
-
 	}
 }
