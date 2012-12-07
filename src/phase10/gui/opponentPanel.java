@@ -50,6 +50,7 @@ public class opponentPanel extends JPanel {
 	 * @param gameWindow the window in which this panel will reside
 	 */
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
+		setMinimumSize(new Dimension(100, 10));
 		this.opponent = opponent;
 		this.gameWindow = gameWindow;
 		this.currentGame = currentGame;
@@ -102,7 +103,7 @@ public class opponentPanel extends JPanel {
 		phaseGroup1Begin = new JButton("");
 		phaseGroup1Begin.addActionListener(new AddPhasesListener(0, true));
 
-		lblTo = new JLabel("to");
+		lblTo = new JLabel(gameLang.getEntry("TO"));
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -115,7 +116,7 @@ public class opponentPanel extends JPanel {
 		phaseGroup2Begin = new JButton("");
 		phaseGroup2Begin.addActionListener(new AddPhasesListener(1, true));
 
-		labelTo_2 = new JLabel("to");
+		labelTo_2 = new JLabel(gameLang.getEntry("TO"));
 		labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTo_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
