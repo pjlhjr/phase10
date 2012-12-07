@@ -144,6 +144,7 @@ public final class Phase10 implements Serializable {
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				log.addEntry(new LogEntry(0, null, "STARTING GAME"));
+				nextRound();			
 			} else
 				throw new Phase10Exception(
 						"Cannot start game with less than 2 players");
