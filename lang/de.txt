@@ -35,7 +35,7 @@ PHASE = Phase
 
 SCORES_AFTER_ROUND = Scores nach Runde
 PLACE = Stellung
-NAME = Name
+NAME = Benennung
 SCORE = Score
 
 PHASE_10 = Phase 10
