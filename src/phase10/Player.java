@@ -31,16 +31,13 @@ public class Player implements Serializable {
 	private ArrayList<PhaseGroup> phaseGroups;
 
 	private boolean hasDrawnCard;
-
+	
 	private boolean drewFromDiscard;
 
 	protected Phase10 game;
 
 	/**
-	 * Creates the default player object with a default name
-	 * 
-	 * @param g
-	 *            the phase 10 game
+	 * Creates the default player object with no name
 	 */
 	public Player(Phase10 g) {
 		this(g, "[Player]");
@@ -49,8 +46,6 @@ public class Player implements Serializable {
 	/**
 	 * Creates the player object with the given name
 	 * 
-	 * @param g
-	 *            the phase10 game
 	 * @param n
 	 *            the player's name
 	 */
@@ -146,7 +141,7 @@ public class Player implements Serializable {
 		boolean success = false;
 
 		pg[0].sortByValue();
-
+		
 		if (Configuration.getNumberRequired(phase) == 1) {
 
 			PhaseGroup phaseGroup = pg[0];
@@ -189,13 +184,14 @@ public class Player implements Serializable {
 			game.getDebugLog().addEntry(
 					new DebugLogEntry(game.getRound().getTurnNumber(), this,
 							"Laid down phase"));
-
-			game.getUserLog()
-					.add(name + " laid down phase " + getPhase() + ".");
-
+			
+			game.getUserLog().add(name+" laid down phase "+getPhase()+".");
+			
 			// Move on to the next round if laying down the phase group makes
 			// the player run out of cards
-			game.getRound().roundIsComplete();
+			if (getHand().getNumberOfCards() == 0) {
+				game.nextRound();
+			}
 			return true;
 		} else
 			return false;
@@ -273,8 +269,7 @@ public class Player implements Serializable {
 	}
 
 	/**
-	 * @param drewFromDiscard
-	 *            the drewFromDiscard to set
+	 * @param drewFromDiscard the drewFromDiscard to set
 	 */
 	void setDrewFromDiscard(boolean drewFromDiscard) {
 		this.drewFromDiscard = drewFromDiscard;
