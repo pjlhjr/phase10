@@ -54,6 +54,7 @@ public class SettingsFrame extends JFrame {
 	private JLabel opponentLabel_1;
 	private JLabel opponentLabel_2;
 	private JLabel opponentLabel_3;
+	private JTextArea txtrWelcomeToPhase;
 	/**
 	 * Launch the application.
 	 */
@@ -76,9 +77,9 @@ public class SettingsFrame extends JFrame {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SettingsFrame(final GuiManager gManage) {
 		setResizable(false);
-		
+
 		lang = gManage.getGameLang();
-		
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -181,7 +182,7 @@ public class SettingsFrame extends JFrame {
 		opponentLabel_3.setBounds(27, 247, 92, 14);
 		contentPane.add(opponentLabel_3);
 
-		JTextArea txtrWelcomeToPhase = new JTextArea();
+		txtrWelcomeToPhase = new JTextArea();
 		txtrWelcomeToPhase.setEditable(false);
 		txtrWelcomeToPhase.setWrapStyleWord(true);
 		txtrWelcomeToPhase.setText(lang.getEntry("SETTINGS_FRAME_MESSAGE"));
@@ -375,10 +376,12 @@ public class SettingsFrame extends JFrame {
 	public void invisibleSetter(Component comp, boolean isVisible) {
 		comp.setVisible(isVisible);
 	}
-	
+
 	private void updateLabelsForLanguage() {
-		
+
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
+
+		txtrWelcomeToPhase.setText(lang.getEntry("SETTINGS_FRAME_MESSAGE"));
 		nameLabel.setText(lang.getEntry("YOUR_NAME"));
 		languageLabel.setText(lang.getEntry("LANGUAGE"));
 		btnRemovePlayer.setText(lang.getEntry("REMOVE_LAST_OPPONENT"));
@@ -390,23 +393,23 @@ public class SettingsFrame extends JFrame {
 		computerRadio1.setText(lang.getEntry("COMPUTER"));
 		computerRadio2.setText(lang.getEntry("COMPUTER"));
 		computerRadio3.setText(lang.getEntry("COMPUTER"));
-		
-		
+
+
 		comboBox_1.removeAllItems();
 		comboBox_1.addItem(lang.getEntry("EASY"));
 		comboBox_1.addItem(lang.getEntry("MEDIUM"));
 		comboBox_1.addItem(lang.getEntry("HARD"));
-		
+
 		comboBox_2.removeAllItems();
 		comboBox_2.addItem(lang.getEntry("EASY"));
 		comboBox_2.addItem(lang.getEntry("MEDIUM"));
 		comboBox_2.addItem(lang.getEntry("HARD"));
-		
+
 		comboBox_3.removeAllItems();
 		comboBox_3.addItem(lang.getEntry("EASY"));
 		comboBox_3.addItem(lang.getEntry("MEDIUM"));
 		comboBox_3.addItem(lang.getEntry("HARD"));
-		
+
 		nameLabel.setText(lang.getEntry("YOUR_NAME"));
 		opponentLabel_1.setText(lang.getEntry("OPPONENT") + " 1:");
 		opponentLabel_2.setText(lang.getEntry("OPPONENT") + " 2:");
@@ -426,84 +429,81 @@ public class SettingsFrame extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
+
 			//main user
 			if(settingsFrm.getUserName().isEmpty()) {
 				MessageFrame noName = new MessageFrame(lang.getEntry("NO_NAME_MESSAGE"), lang.getEntry("PHASE_10"), lang);
 				noName.setVisible(true);
 				return;
 			}
-			else {
-				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
-			}
-			
-			//opponent 1
-			if(settingsFrm.getOpponent_1().isEmpty()) {
+			else if(settingsFrm.getOpponent_1().isEmpty()) {
 				MessageFrame noName1 = new MessageFrame(lang.getEntry("NO_NAME_1_MESSAGE"), lang.getEntry("PHASE_10"), lang);
 				noName1.setVisible(true);
 				return;
 			}
-			else {
-				if(computerRadio1.isSelected()) {
-					gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_1), settingsFrm.getOpponent_1()));
-				}
-				else
-					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_1()));
-			}
-			
-			//opponent 2
-			if(settingsFrm.opponentField_2.isVisible()) {
+			else if(settingsFrm.opponentField_2.isVisible()) {
 				if(settingsFrm.getOpponent_2().isEmpty()) {
 					MessageFrame noName2 = new MessageFrame(lang.getEntry("NO_NAME_2_MESSAGE"), lang.getEntry("PHASE_10"), lang);
 					noName2.setVisible(true);
 					return;
 				}
-				else {
-					if(computerRadio2.isSelected()) {
-						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
+				else if(settingsFrm.opponentField_3.isVisible()) {
+					if(settingsFrm.getOpponent_3().isEmpty()) {
+						MessageFrame noName3 = new MessageFrame(lang.getEntry("NO_NAME_3_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+						noName3.setVisible(true);
+						return;
 					}
-					else
-						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_2()));
 				}
+				else {
+					System.out.println("Error! Too many players!");
+				}
+
+				//main user
+				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
+
+				//opponent 1
+				if(computerRadio1.isSelected()) {
+					gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_1), settingsFrm.getOpponent_1()));
+				}
+				else
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_1()));
+
+				//opponent 2
+				if(computerRadio2.isSelected()) {
+					gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
+				}
+				else
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_2()));
 			}
-			
+
 			//opponent 3
-			if(settingsFrm.opponentField_3.isVisible()) {
-				if(settingsFrm.getOpponent_3().isEmpty()) {
-					MessageFrame noName3 = new MessageFrame(lang.getEntry("NO_NAME_3_MESSAGE"), lang.getEntry("PHASE_10"), lang);
-					noName3.setVisible(true);
-					return;
-				}
-				else {
-					if(computerRadio3.isSelected()) {
-						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_3), settingsFrm.getOpponent_3()));
-					}
-					else
-						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_3()));
-				}
+			if(computerRadio3.isSelected()) {
+				gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_3), settingsFrm.getOpponent_3()));
 			}
-
-			gManage.mainManager.getGame().startGame();
-			//gManage.mainManager.getGame().getRound().startRound();
-			gManage.initGameWindow();
-			gManage.displayGameFrame(); //displays the next window: the game window
-			
-			
-
-			settingsFrm.dispose();
+			else{
+				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_3()));
 		}
 
-		@Override
-		public void mousePressed(MouseEvent e) {}
+		gManage.mainManager.getGame().startGame();
+		gManage.initGameWindow();
+		gManage.displayGameFrame(); //displays the next window: the game window
 
-		@Override
-		public void mouseReleased(MouseEvent e) {}
 
-		@Override
-		public void mouseEntered(MouseEvent e) {}
 
-		@Override
-		public void mouseExited(MouseEvent e) {}
-
+		settingsFrm.dispose();
 	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+}
 }
