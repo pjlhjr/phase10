@@ -50,7 +50,7 @@ public class opponentPanel extends JPanel {
 	 * @param gameWindow the window in which this panel will reside
 	 */
 	public opponentPanel(final Player opponent, final Phase10 currentGame, final GameFrame gameWindow) {
-		setMinimumSize(new Dimension(100, 10));
+		setMinimumSize(new Dimension(80, 10));
 		this.opponent = opponent;
 		this.gameWindow = gameWindow;
 		this.currentGame = currentGame;
