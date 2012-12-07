@@ -98,6 +98,7 @@ public final class Round implements Serializable {
 		}
 
 		player.setHasDrawnCard(true);
+		player.setDrewFromDiscard(true);
 		return true;
 	}
 
@@ -130,6 +131,8 @@ public final class Round implements Serializable {
 
 		game.getLog().addEntry(
 				new LogEntry(turnNumber, player, "Draw from deck: " + card));
+		
+		player.setDrewFromDiscard(false);
 
 		if (deck.size() == 0) {
 			Card topDiscard = discardStack.pop();

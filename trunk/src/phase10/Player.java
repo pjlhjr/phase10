@@ -31,6 +31,8 @@ public class Player implements Serializable {
 	private ArrayList<PhaseGroup> phaseGroups;
 
 	private boolean hasDrawnCard;
+	
+	private boolean drewFromDiscard;
 
 	protected Phase10 game;
 
@@ -253,5 +255,19 @@ public class Player implements Serializable {
 	 */
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * @return the drewFromDiscard
+	 */
+	public boolean drewFromDiscard() {
+		return drewFromDiscard;
+	}
+
+	/**
+	 * @param drewFromDiscard the drewFromDiscard to set
+	 */
+	void setDrewFromDiscard(boolean drewFromDiscard) {
+		this.drewFromDiscard = drewFromDiscard;
 	}
 }
