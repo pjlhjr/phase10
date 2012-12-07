@@ -78,7 +78,7 @@ public final class PhaseGroup implements Serializable {
 
 				if (c.getValue() == Configuration.WILD_VALUE) {
 					WildCard wc = (WildCard) c;
-					if (wc.isChangeable()) {
+					if (wc.isChangeable() && type != Configuration.RUN_PHASE) {
 						wc.setHiddenValue(Configuration.WILD_VALUE);
 						wc.setChangeable(false);
 					}
