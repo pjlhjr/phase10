@@ -35,6 +35,10 @@ public class MessageFrame extends JFrame {
 			}
 		});
 	}
+	
+	public MessageFrame(String message, String title) {
+		this(message, title, new Language());
+	}
 
 	/**
 	 * Create the frame.
