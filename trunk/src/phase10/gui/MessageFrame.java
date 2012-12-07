@@ -1,47 +1,44 @@
 package phase10.gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextPane;
 import javax.swing.JButton;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 
-
+/**
+ * A simple JFrame class that will display a message to the user. The message displays in a JTextField.
+ * The frame also includes a JButton titled "okay". Clicking that button will dispose the frame.
+ * 
+ * @author Matthew Hruz
+ */
 public class MessageFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MessageFrame frame = new MessageFrame("This is a test!", "test frame", new Language());
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
+	/**
+	 * Simple constructor for MessageFrame. Creates a simple frame using the specified
+	 * parameters. The Okay button will always display "Okay", as the gameLang will
+	 * be assumed to be English.
+	 * 
+	 * @param message the text that will be displayed to the user
+	 * @param title the title of the frame
+	 */
 	public MessageFrame(String message, String title) {
 		this(message, title, new Language());
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructor for MessageFrame. Creates a simple frame using the specified parameters
+	 * 
+	 * @param message The text that will be displayed to the user.
+	 * @param title The title of the frame
+	 * @param gameLang the language the current game is using
 	 */
 	public MessageFrame(String message, String title, Language gameLang) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MessageFrame.class.getResource("/images/GameIcon.png")));
@@ -65,36 +62,25 @@ public class MessageFrame extends JFrame {
 		JButton okayButton = new JButton(gameLang.getEntry("OKAY"));
 		okayButton.setBounds(158, 209, 107, 35);
 		contentPane.add(okayButton);
-		okayButton.addMouseListener(new OkayClicked(this));
+		okayButton.addActionListener(new OkayClicked());
 
 	}
 	
-	private class OkayClicked implements MouseListener {
+	/**
+	 * ActionListener for the Okay button.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
+	private class OkayClicked implements ActionListener {
 		
-		JFrame msgFrame;
-		
-
-		public OkayClicked(JFrame msgFrame) {
-			super();
-			this.msgFrame = msgFrame;
+		/**
+		 * called when the Okay button is clicked. Disposes the message frame.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dispose();
 		}
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			msgFrame.dispose();
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {}
 
 	}
 }

@@ -67,26 +67,25 @@ public class GameFrame extends JFrame {
 
 	/**
 	 * Creates the GameFrame at the constructor
+	 * 
+	 * @param gManage a reference to the GuiManager
 	 */
 	public GameFrame(final GuiManager gManage) {
-		setResizable(false);
 
 		gameLang = gManage.getGameLang();
-		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
-
 		this.gManage = gManage;
-
 		current = gManage.mainManager.getGame().getCurrentPlayer();
-
 		Phase10 currentGame = gManage.mainManager.getGame(); //added for simplicity of access
-
-
+		
+		//basic settings for the Game Frame
+		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
+		setResizable(false);
 		setTitle(current.getName() + " - " + gameLang.getEntry("PHASE_10"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
 		getContentPane().setLayout(null);
-		infoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
+		infoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		infoPanel.setBounds(982, 0, 169, 534);
 		getContentPane().add(infoPanel);
 		infoPanel.setLayout(null);
@@ -102,13 +101,13 @@ public class GameFrame extends JFrame {
 		lblPhase.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblPhase.setBounds(20, 91, 126, 25);
 		infoPanel.add(lblPhase);
-
-
+		
 		phaseNumber = new JTextArea();
 		phaseNumber.setRows(1);
 		phaseNumber.setColumns(1);
 		phaseNumber.setFont(new Font("Century Gothic", Font.BOLD, 36));
 
+		//sets the phase number area with the current player's phase. Will display "null" if any error occurs
 		try {
 			phaseNumber.setText(Integer.toString(currentGame.getCurrentPlayer().getPhase()));
 		} catch (NullPointerException e) {
@@ -116,9 +115,9 @@ public class GameFrame extends JFrame {
 		}
 		phaseNumber.setEditable(false);
 		phaseNumber.setBounds(58, 120, 53, 53);
-
 		infoPanel.add(phaseNumber);
 
+		//the phase description button with it's button listener
 		JButton btnPhaseDescription = new JButton(gameLang.getEntry("PHASE_DESCRIPTIONS"));
 		btnPhaseDescription.addMouseListener(new MouseAdapter() {
 			@Override
@@ -129,6 +128,7 @@ public class GameFrame extends JFrame {
 		btnPhaseDescription.setBounds(5, 184, 154, 23);
 		infoPanel.add(btnPhaseDescription);
 
+		
 		JButton btnScoreboard = new JButton(gameLang.getEntry("SCOREBOARD"));
 		btnScoreboard.addMouseListener(new MouseAdapter() {
 			@Override
@@ -289,7 +289,6 @@ public class GameFrame extends JFrame {
 		pg1Start = new JButton("");
 		pg1Start.addMouseListener(new MouseAdapter() {
 			@Override
-			//TODO fix
 			public void mouseClicked(MouseEvent e) {
 				for(int x = 0; x < selectedCards.size(); x++) {
 					boolean isValid = current.getPhaseGroup(0).addCardToBeginning(selectedCards.get(x));
@@ -327,7 +326,6 @@ public class GameFrame extends JFrame {
 		pg2Start.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO fix
 				for(int x = 0; x < selectedCards.size(); x++) {
 					boolean isValid = current.getPhaseGroup(1).addCard(selectedCards.get(x));
 					if(!isValid) {
@@ -391,6 +389,9 @@ public class GameFrame extends JFrame {
 		updateFrame(gManage.mainManager.getGame());
 	}
 
+	/**
+	 * Updates the "yourPhases" sub-panel
+	 */
 	protected void updateYourPhasesPanel() {
 
 		if(current.getHasDrawnCard()) {
@@ -467,6 +468,9 @@ public class GameFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * goes through every selected card in selectedCards, unselects them and makes them invisible.
+	 */
 	protected void hideAndClearSelectedCards() {
 		for(int i = 0; i < handButtons.length; i++) {
 			handButtons[i].setVisible(true);
@@ -507,6 +511,13 @@ public class GameFrame extends JFrame {
 		return filename;
 	}
 
+	/**
+	 * Will read information from a Card object and return the path to the correct
+	 * SelectedCard image for that Card.
+	 * 
+	 * @param the card object
+	 * @return the filename of the specified card's card image
+	 */
 	private String getSelectedCardFile(Card aCard) {
 		String filename = getCardFile(aCard);
 		filename = filename.substring(0, filename.length() - 4);
@@ -515,7 +526,11 @@ public class GameFrame extends JFrame {
 		return filename;
 	}
 
-
+	/**
+	 * updates everything in GameFrame
+	 * 
+	 * @param currentGame a reference to the current game object
+	 */
 	public void updateFrame(Phase10 currentGame) {
 
 		current = currentGame.getCurrentPlayer();
@@ -617,14 +632,31 @@ public class GameFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * 
+	 * actionListener for all of the hand buttons in handPanel.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class HandActionListener implements ActionListener {
 
 		int i;
 
+		/**
+		 * constructor for HandActionListener
+		 * 
+		 * @param index of the handButton in the handButtons array
+		 */
 		public HandActionListener(int index) {
 			i = index;
 		}
 
+		/**
+		 * called when a hand button is clicked. The hand button will retrieve it's selected card image, or it's unselected
+		 * card image if the card is already selected. It will also update the discard button's enabled setting as apropriate
+		 */
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if(handButtons[i].isSelected()) {
 				selectedCards.remove(gManage.mainManager.getGame().getCurrentPlayer().getHand().getCard(i));
@@ -642,10 +674,17 @@ public class GameFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * 
+	 * ActionListener to the "Add to Phase!" button.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class PhaseActionListener implements ActionListener {
 
-		boolean isPhasing;
-		boolean isSecondPhaseGroup;
+		private boolean isPhasing;
+		private boolean isSecondPhaseGroup;
 		private PhaseGroup newPhaseGroup;
 		private PhaseGroup newPhaseGroup2;
 
@@ -654,9 +693,13 @@ public class GameFrame extends JFrame {
 			isSecondPhaseGroup = false;
 		}
 
+		/**
+		 * called when the "Add to Phase!" button is clicked. The button will display what cards need to be selected
+		 * to add the first phase group and the second phase group if necessary. This method is also in charge of displaying
+		 * an error message if the phase groups laid down are not valid.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 
 			if(isPhasing) {
 				if(isSecondPhaseGroup == false) {
@@ -846,14 +889,30 @@ public class GameFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * The action listener for both of the "Add to phase" buttons in yourPhasesPanel.
+	 * 
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class AddToPhaseListener implements ActionListener {
 
 		private int phaseGroupIndex;
 
+		/**
+		 * The constructor for AddToPhaseListener
+		 * 
+		 * @param phaseGroup the group of cards the player wishes to add to an already existing phase group.
+		 */
 		public AddToPhaseListener(int phaseGroup) {
 			this.phaseGroupIndex = phaseGroup;
 		}
-
+		/**
+		 * called when the "add to phase" button is clicked. Will add the cards one by one to a phase group and will
+		 * display a message if a card that is being added is not valid, in which case it will not add the remaining cards
+		 * or the card that caused the error
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(current.getHasDrawnCard()) {

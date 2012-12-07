@@ -8,6 +8,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -338,7 +340,7 @@ public class SettingsFrame extends JFrame {
 		});
 		btnRemovePlayer.setBounds(181, 288, 191, 23);
 		contentPane.add(btnRemovePlayer);
-		beginButton.addMouseListener(new BeginListener(this, gManage));
+		beginButton.addActionListener(new BeginListener(this, gManage));
 	}
 
 	int getDifficulty(JComboBox<String> menu) {
@@ -416,7 +418,7 @@ public class SettingsFrame extends JFrame {
 		opponentLabel_3.setText(lang.getEntry("OPPONENT") + " 3:");
 	}
 
-	private class BeginListener implements MouseListener {
+	private class BeginListener implements ActionListener {
 
 		SettingsFrame settingsFrm;
 		GuiManager gManage;
@@ -428,7 +430,7 @@ public class SettingsFrame extends JFrame {
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
+		public void actionPerformed(ActionEvent e) {
 
 			//main user
 			if(settingsFrm.getUserName().isEmpty()) {
@@ -493,18 +495,6 @@ public class SettingsFrame extends JFrame {
 
 			settingsFrm.dispose();
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {}
-
-		@Override
-		public void mouseExited(MouseEvent e) {}
 
 	}
 }
