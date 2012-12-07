@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
 import phase10.Phase10;
 import phase10.Player;
 import javax.swing.ImageIcon;
@@ -31,20 +30,20 @@ public class opponentPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton addToPhase_1; //a button that allows a user to add to an opponent's first phase group
 	private Player opponent; //the opponent who's information is displayed in the panel
-	private JTextField txtPhase;
-	private JTextField numCardsPane;
-	private JTextField txtpnScore;
-	private JButton phaseGroup1Begin;
-	private JButton addToPhase_2;
-	private JTextField namePane;
-	private JLabel lblTo;
-	private JLabel labelTo_2;
-	private JButton phaseGroup2Begin;
-	private JButton phaseGroup2End;
-	private JButton phaseGroup1End;
-	private GameFrame gameWindow;
-	private Phase10 currentGame;
-	private Language gameLang;
+	private JTextField txtPhase; //displays an opponent's current phase
+	private JTextField numCardsPane; //displays the number of cards an opponent has in their hand
+	private JTextField txtpnScore; //displays the opponent's score
+	private JButton phaseGroup1Begin; //displays the first card in an opponent's first phase group and allows the current player to add to the beginning of the opponent's first phase group
+	private JButton phaseGroup1End; //displays the last card in an opponent's first phase group
+	private JButton addToPhase_2; //button that allows a user to add cards to an opponent's first phase group
+	private JTextField namePane; //displays the opponent's name
+	private JLabel lblTo; //displays the word "to" in between the first and last card of an opponent's first phase. Hovering over the label will allow the user to see all the cards in the phase group
+	private JLabel labelTo_2; //displays the word "to" in between the first and last card of an opponent's second phase. Hovering over the label will allow the user to see all the cards in the phase group
+	private JButton phaseGroup2Begin; //displays the first card in an opponent's second phase group and allows the current player to add to the beginning of the opponent's second phase group
+	private JButton phaseGroup2End; //displays the last card in an opponent's second phase group
+	private GameFrame gameWindow; //reference to the GameFrame object that the panel resides in
+	private Phase10 currentGame; //reference to the current game
+	private Language gameLang; //the language that the current game is using
 
 	/**
 	 * Constructs a panel to display information about an opponent to the current player.
