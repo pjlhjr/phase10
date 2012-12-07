@@ -1,8 +1,3 @@
-/*
- * Difficulty Ranges:
- * drawOrPickUp(): 0-29, 30-69, 70-100
- * LosingAfterTwo.p10, Impressed.p10
- */
 package phase10.ai;
 
 import java.awt.Color;
@@ -26,34 +21,45 @@ import phase10.util.Configuration;
  */
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
-	private final int difficulty;
-	private static final double BEST_CHOICE_AT_FIFTY = 5.5;
-	transient private Groups group;
-	
+	private final int difficulty; // Easy: 0-29, Medium: 30-69, Hard:70-100
+	private static final double BEST_CHOICE_AT_FIFTY = 5.5; // The AI will make a bad move BEST_CHOICE_AT_FIFTY % of the time at difficulty of 50
+	private ArrayList<Card> pickedUpCards; // The cards the nextPlayer has picked up from the discard pile this round
+	private Card lastCardDiscarded; // The last card the AIPlayer discarded
+	private int latestRound; // The round the player was on the last time playTurn() was called
+	private Player nextPlayer; // the player that comes after the AIPlayer
+	private String oldName; // a surprise :)
+	transient private Groups group; // the most recent grouping
+
+	/**
+	 * @param game The Phase10 game the AIPlayer is playing
+	 * @param difficulty The difficulty of AIPlayer, from 0-100. (Easy: 0-29, Medium: 30-69, Hard:70-100) 
+	 * @param name The name of the AIPlayer
+	 */
 	public AIPlayer(Phase10 game, int difficulty, String name){
 		super(game, name);
 		this.difficulty = difficulty;
+		pickedUpCards = new ArrayList<Card>();
+		latestRound = game.getRoundNumber();
+		oldName = name;
 	}
-	
+
 	public static void main(String[] args){
 		new AITester();
 	}
-	
+
 	/**
 	 * This method is called by the game manager for the AIPlayer to complete a turn.
 	 * This method draws or picks up a card from the top of the discard pile, 
 	 * lays down the AIPlayers card, plays off other peoples' laid down phases, and discards.
 	 */
-	/* TODO test difficulty levels
-	* adjust difficulty levels based on how far ahead/behind
-	* look for patterns in other player's style, if lower cards are being laid down, closer to the end
-	* "safe" cards to discard
-	* old lay down phase if past a certain point, based off difficulty
-	* add difficulty stratification
-	*/
 	public void playTurn(){
 		// all exceptions in this method are caught, because if this method throws an exception
 		// the AIPlayer will not draw/discard a card and the program will freeze
+		try{
+			updateLastCardDiscarded();
+		}catch(Exception e){
+			System.out.println("AIPlayer, lastCard: " + e.toString());
+		}
 		try{
 			if(!(drawOrPickUp()^bestChoice(BEST_CHOICE_AT_FIFTY))){ // choose whether to draw from the deck or pick up from the stack
 				if(!game.getRound().drawFromDiscard()) // If picking up from the discard is not possible,
@@ -65,38 +71,41 @@ public class AIPlayer extends Player {
 			System.out.println("AIPlayer, draw: " + e.toString());
 			game.getRound().drawFromDeck(); // if something goes wrong, draw
 		}
-		
+
 		try{
-			if(!hasLaidDownPhase() && getPhaseGroups() != null) // attempt to lay down phase groups
-				addPhaseGroups(group.getCompletePhaseGroups()); // make sure to lay down on time & don't lay down before certain point varying by diff
-				// make sure it works if too many cards or groups in group
+			group = new Groups(this, getHand());
+			if(!hasLaidDownPhase() && group.getCompletePhaseGroups() != null && // if the AI player, hasn't laid down PhaseGroups
+					group.getCompletePhaseGroups().length == Configuration.getNumberRequired(getPhase()) && // will lay down the right number of phasesGroups
+					getGame().getRound().getTurnNumber() >= 8 - (difficulty/10)) // is past a certain turn number based off difficulty
+				addPhaseGroups(group.getCompletePhaseGroups()); 
 		}catch(Exception e){
 			System.out.println("AIPlayer, laydown: " + e.toString()); // laid down all my cards Hand92,AI90afterAI74
 		}
-		
+
 		try{
 			if(hasLaidDownPhase())
 				playOffPhases();
 		}catch(Exception e){
 			System.out.println("AIPlayer, playoff: " + e.toString());
 		}
-		
+
 		try{
-			game.getRound().discard(discardCard()); // discarded
+			lastCardDiscarded = discardCard();
+			game.getRound().discard(lastCardDiscarded); // discard
 		}catch(Phase10Exception e){	
 		}catch(Exception e){
-			game.getRound().discard(getHand().getCard(0));
-			System.out.println("AIPlayer, playoff: " + e.toString());
+			lastCardDiscarded = getHand().getCard(0);
+			game.getRound().discard(lastCardDiscarded);
+			System.out.println("AIPlayer, discard: " + e.toString());
 		}
 	}
-	
+
 	/**
 	 * @return an array with the sets that are needed on this phase.
 	 * If there is only one set needed it will return an array length 1 with size of the set needed in [0]
 	 * If there are two sets needed the array will be length two. The first element will be the bigger set needed.
 	 * If there are no sets needed it will return null 
 	 */
-	//TODO use evan's array in config.
 	int[] setsNeeded(){
 		int numNeed = 0; // figure out the size of the array needed
 		for(int x = 0; x < Configuration.getNumberRequired(getPhase()); x++){
@@ -115,10 +124,36 @@ public class AIPlayer extends Player {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * If the nextPlayer picked up the last discard, add it to pickedUpCards
+	 */
+	private void updateLastCardDiscarded(){
+		int x = 0;
+		while(this != game.getPlayer(x++)){} // find the nextPlayer
+		x = x % game.getNumberOfPlayers();
+		nextPlayer = game.getPlayer(x);
 		
-	
-/**
+		if(latestRound != game.getRoundNumber()){ // if it's a new Round, reset
+			pickedUpCards = new ArrayList<Card>();
+			lastCardDiscarded = null;
+			latestRound = game.getRoundNumber();
+			
+			for(int y = 0; y < game.getNumberOfPlayers(); y++){ // ?????
+				if(game.getPlayer(y) != this && 
+						(getScore() >= game.getPlayer(y).getScore() || getPhase() > game.getPlayer(y).getPhase())){//????
+					setName(oldName);
+					return;
+				}
+			}
+			setName(oldName + "is#WINNING"); // ?????
+		}else if(lastCardDiscarded != null && Configuration.getTypeRequired(nextPlayer.getPhase(), 0) == Configuration.SET_PHASE){
+			if(nextPlayer.drewFromDiscard())
+				pickedUpCards.add(lastCardDiscarded); // add the card to picked up card if it was picked up 
+		}
+	}
+
+	/**
 	 * @return the length of the run needed on this phase. Or 0 if there is no run needed.
 	 */
 	int lengthOfRunNeeded(){
@@ -128,7 +163,7 @@ public class AIPlayer extends Player {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * @return true if it is the color phase, or false if it is not 
 	 */
@@ -137,15 +172,15 @@ public class AIPlayer extends Player {
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * @return true if it is recommended to pick up a card, 
 	 * or false if it is recommended to draw a card 
 	 */
-	// TODO  pick up card on run phase
 	private boolean drawOrPickUp(){
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
-		if(hasLaidDownPhase() && difficulty > 30 && bestChoice(BEST_CHOICE_AT_FIFTY)){ // TODO partial groups, contains is WRONG
+		
+		if(hasLaidDownPhase() && difficulty > 30 && bestChoice(BEST_CHOICE_AT_FIFTY)){ // pick up cards that can be played off laid down PhaseGroups
 			for(Card c: cardsThatCanBeLaidDown()){
 				if(c.getColor() == cardOnTopOfPile.getColor()){
 					return true;
@@ -154,63 +189,41 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){ // if the card improves the score of the player's hand
-			if(difficulty < 30) // don't continue checking if an easy player
+		
+		if(difficulty > 30 && addedPointValue(cardOnTopOfPile) < currentPointValue()){ // if the card improves the score of the player's hand
+			if(difficulty < 70) // don't continue checking if an easy player
 				return true;
-			
-			int[] values = possiblePointValues();
-			int avgValue = 0;
-			for(int value : values)
-				avgValue += value;
-			avgValue /= values.length;
-			
-			if(values[cardOnTopOfPile.getValue()] < avgValue){ // if the card improves the score of the player's better than avg
-				if (difficulty < 70) // don't continue checking if a medium player
-					return true;
-				
-				group = new Groups(this, getHand(), cardOnTopOfPile);
-				if(group.cardInCompleteGroup(cardOnTopOfPile)) // if the card would be put in a complete group
-					return true;
-			}
+
+			group = new Groups(this, getHand(), cardOnTopOfPile);
+			if(group.cardInCompleteGroup(cardOnTopOfPile)) // if the card would be put in a complete group
+				return true;
 		}
 		return false; // if any of the tests fail, draw from the deck
 	}
 
-	/*
-	 * 
-	 * incorp diff, only allow to lay down phase after a certain point, varing by difficulty
-	 * @deprecated never used, unnessessary
+	/** 
 	 * @return whether to laydown a phase or not
+	 */
+	@SuppressWarnings("unused")
 	private boolean layDownPhase(){ 
-		group = new Groups(getHand());
+		group = new Groups(this, getHand());
 		if(colorPhase()){
 			return PhaseGroup.validate(group.getCompletePhaseGroups()[0], Configuration.COLOR_PHASE, 7);
 		}else{
 			int sets = setsNeeded().length,
-					run = numLengthRun()/(numLengthRun()+1);
+					run = lengthOfRunNeeded()/(lengthOfRunNeeded()+1);
 			for(PhaseGroup g: group.getCompletePhaseGroups()){
 				if(sets > 0 && PhaseGroup.validate(g, Configuration.SET_PHASE, setsNeeded()[setsNeeded().length-1]))
 					sets--;
-				if(run > 0 && PhaseGroup.validate(g, Configuration.RUN_PHASE, numLengthRun()))
+				if(run > 0 && PhaseGroup.validate(g, Configuration.RUN_PHASE, lengthOfRunNeeded()))
 					run--;
 			}
 			if(sets == 0 && run == 0)
 				return true;
 		}
 		return false;
-	}*/
-	
-	
-	/* * TODO finish basic algorithm, figure out how to incorporate difficulty
-	 * use it in a run if possible, but remember if a person has picked up a card that would be advantagious
-	 * take difficulty into account, a less difficult player takes the first opportunity,
-	 * get rid of return statement
-	 
-	TODO make diff. at higher diff look further than first card
-	 on easier difficultlies pace how often the AI lays down phases
-	 Wild cards, have to have a certain hiddenValue
-	 make it smarter
-*/
+	};
+
 	/**
 	 * @return true if it played off other phases
 	 */
@@ -218,8 +231,8 @@ public class AIPlayer extends Player {
 		Player current;
 		ArrayList<Card> potentialCards = cardsThatCanBeLaidDown();
 		ArrayList<Card> cardsToBeLaidDown = new ArrayList<Card>();
-		
-		for(int x = 0; x < getHand().getNumberOfCards(); x++){
+
+		for(int x = 0; x < getHand().getNumberOfCards(); x++){ // get the cards that need to be added to the phases
 			for(Card c: potentialCards){
 				if(c.getColor() == Color.BLACK){ 
 					if(c.getValue() == getHand().getCard(x).getValue())
@@ -229,8 +242,8 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		
-		for(int player = 0; player < game.getNumberOfPlayers(); player++){
+
+		for(int player = 0; player < game.getNumberOfPlayers(); player++){ // add them to the phases
 			current = game.getPlayer(player);
 			if(current.hasLaidDownPhase()){
 				for(int group = 0; group < current.getNumberOfPhaseGroups(); group++){
@@ -243,36 +256,63 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	/*TODO use the log. incorporate difficulty. get rid of higher point value cards later in the round
-	help out player on occasion?
-	do a genetic algorithm selection based off score rank, etc
-	not part of a group that is unnecessary 
-	get rid of higher cards if on later turns, easier player more likely to keep cards
-	 */	
+
 	/**
 	 * @return the card that is recommended to discard
 	 */
 	private Card discardCard(){
 		group = new Groups(this, getHand());
-		int x = 0;
-		Card[] c = group.recommendDiscard();
-		ArrayList<Card> layDownAble = cardsThatCanBeLaidDown();
-		
-		while(!bestChoice(BEST_CHOICE_AT_FIFTY) && layDownAble.contains(c[x])){
-			if(++x >= c.length){
-				return c[0];
-			}
-		}
-		
-		return c[x];
+		int index = -1;
+		Card[] discard = group.recommendDiscard();
+		boolean search;
+
+		do{
+			search = true;
+			index++;
+
+			searching: // continue searching looks at the next card, until a good one is found
+				while(search){
+					if(index >= discard.length){ // if it has looked through every card
+						return discard[0];
+					}
+					if(discard[index].getValue() == Configuration.SKIP_VALUE) // automatically return a skip
+						return discard[index];
+					if(difficulty > 70){ // don't lay down cards the opponent has picked up
+						for(Card p: pickedUpCards){
+							if(discard[index].getValue() == p.getValue()){
+								index++;
+								continue searching;
+							}
+						}
+					}
+					if(difficulty > 30 && nextPlayer.hasLaidDownPhase()){ // don't give an opponent something they can lay down
+						for(Card l: cardsThatCanBeLaidDown()){
+							if(discard[index].getValue() == l.getValue()){
+								index++;
+								continue searching;
+							}
+						}
+					}
+					if(difficulty > 30 && group.getCompletePhaseGroups() != null){ // don't lay down a card part of a completed phaseGroup
+						for(PhaseGroup g: group.getCompletePhaseGroups()){
+							for(int x = 0; x < g.getNumberOfCards(); x++){
+								if(g.getCard(x) == discard[index]){
+									index++;
+									continue searching;
+								}
+							}
+						}
+					}
+					search = false; // if the card has passed all these test, it can exit the search
+				}
+		}while(!bestChoice(BEST_CHOICE_AT_FIFTY));
+
+		return discard[index];
 	}
-	
-	
-	
+
 	/**
 	 * @return gets the current point value of the hand
 	 */
@@ -280,15 +320,14 @@ public class AIPlayer extends Player {
 		group = new Groups(this, getHand());
 		return group.getPointValue();
 	}
-	
-	
-	// TODO look to see if the card would be able to be laid down
+
 	/**
 	 * @return an array with the point value of the cards if they were added to the hand
 	 * the value of an given card is given for the value of the card minus one
 	 * wilds are stored in Configuration.WILD_VALUE - 1 (=12)
 	 * For the color phase, the colors are stored in there index in Configuration.COLORS
 	 */
+	@SuppressWarnings("unused")
 	private int[] possiblePointValues(){
 		int[] totalPointValues;
 		if(!colorPhase()){
@@ -306,8 +345,7 @@ public class AIPlayer extends Player {
 		}
 		return totalPointValues;
 	}
-		
-	
+
 	/**
 	 * @param c a card to be added to a theoretical hand
 	 * @return the point value of the current hand, plus the additional Card c
@@ -316,8 +354,6 @@ public class AIPlayer extends Player {
 		group = new Groups(this, getHand(), c);
 		return group.getPointValue();
 	}
-	
-	
 
 	/**
 	 * @return the difficulty level of the player
@@ -325,8 +361,7 @@ public class AIPlayer extends Player {
 	public int getDifficulty(){
 		return difficulty;
 	}
-	
-	
+
 	/**
 	 * @param shape the percentage of time best choice would return false at a difficulty of 50.
 	 * Based off this value this method creates a second order curve, assuming a 50% error false rate
@@ -339,50 +374,63 @@ public class AIPlayer extends Player {
 		final double c = 50.0;
 		double 	a = (c-(2*shape))/5000.0,
 				b = ((4*shape)-(3*c))/100.0,
-				threshold = (a*difficulty*difficulty) + (b*difficulty) + c;
+				threshold = (a*difficulty*difficulty) + (b*difficulty) + c; // make a point on a 2nd order curve
 		if(g.nextDouble() * 100 >threshold)
 			return true;
 		else
 			return false;
 	}
-	
-	
+
 	/**
 	 * @return the best complete grouping of the cards in the AIPlayer's hand
 	 */
-	// TODO look at the length, only give the right types
 	private PhaseGroup[] getPhaseGroups(){
 		group = new Groups(this, getHand());
 		return group.getCompletePhaseGroups();
 	}
-	
+
 	/**
 	 * @return the Phase10 object that contains this AIPlayer
 	 */
 	Phase10 getGame(){
 		return game;
 	}
-	
+
+	/**
+	 * @return an ArrayList of all the type of the cards that can be laid down.
+	 * If it's the number that's important the card will be black.
+	 * If it's the color that's important the card will have a value of Configuration.WILD_VALUE
+	 */
 	ArrayList<Card> cardsThatCanBeLaidDown(){
 		ArrayList<Card> layDownAble = new ArrayList<Card>(); 
-		layDownAble.add(new WildCard());
+		layDownAble.add(new WildCard()); // a wild can always be laid down
 		for(int x = 0; x < getGame().getNumberOfPlayers(); x++){
 			Player current = getGame().getPlayer(x);
 			if(current.hasLaidDownPhase()){
-				for(int y = 0; y < current.getNumberOfPhaseGroups(); y++){
+				for(int y = 0; y < current.getNumberOfPhaseGroups(); y++){ // go through each person's phase groups who has laid down their phase
 					PhaseGroup temp = current.getPhaseGroup(y);
-					if(temp.getType() == Configuration.RUN_PHASE){
-						layDownAble.add(new Card(temp.getCard(0).getValue() - 1));
-						layDownAble.add(new Card(temp.getCard(temp.getNumberOfCards()-1).getValue() + 1));
-					}else if(temp.getType() == Configuration.SET_PHASE){
-						layDownAble.add(new Card(temp.getCard(0).getValue()));
+
+					if(temp.getType() == Configuration.RUN_PHASE){ // for a run, add one less than the first card's value and one more than the last
+						if(temp.getCard(0).getValue() == Configuration.WILD_VALUE) // look at the hidden value if its wild
+							layDownAble.add(new Card(((WildCard)temp.getCard(0)).getHiddenValue() - 1));
+						else
+							layDownAble.add(new Card(temp.getCard(0).getValue() - 1));
+						if(temp.getCard(temp.getNumberOfCards() -1).getValue() == Configuration.WILD_VALUE)
+							layDownAble.add(new Card(((WildCard)temp.getCard(temp.getNumberOfCards() -1)).getHiddenValue() + 1));
+						else
+							layDownAble.add(new Card(temp.getCard(temp.getNumberOfCards()-1).getValue() + 1));
+					}else if(temp.getType() == Configuration.SET_PHASE){ // for set, add a card equal to the card value
+						if(temp.getCard(0).getValue() != Configuration.WILD_VALUE)
+							layDownAble.add(new Card(temp.getCard(0).getValue()));
+						else
+							layDownAble.add(new Card(((WildCard)temp.getCard(0)).getHiddenValue()));
 					}else{
 						layDownAble.add(new Card(temp.getCard(0).getColor(), Configuration.WILD_VALUE));
 					}
 				}
 			}
 		}
-		
+
 		return layDownAble;
 	}
 }
