@@ -29,6 +29,8 @@ public final class Phase10 implements Serializable {
 	private int dealer;
 	private boolean started;
 	private Log log;
+	
+	ArrayList<Player> winners;
 
 	private transient GameManager gameManager;
 
@@ -135,14 +137,13 @@ public final class Phase10 implements Serializable {
 	 *             if the game has already started or there are less than 2
 	 *             players added.
 	 */
-	public ArrayList<Player> startGame() {
+	public void startGame() {
 		if (!started) {
 			dealer = getNumberOfPlayers() - 1;
 			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
 				log.addEntry(new LogEntry(0, null, "STARTING GAME"));
-				return nextRound();
 			} else
 				throw new Phase10Exception(
 						"Cannot start game with less than 2 players");
@@ -154,10 +155,10 @@ public final class Phase10 implements Serializable {
 	/**
 	 * Resets the necessary player data and checks to see if there is a winner
 	 */
-	ArrayList<Player> nextRound() {
+	void nextRound() {
 		if (roundNumber != 0)
 			finishRound();
-		ArrayList<Player> winners = checkWinners();
+		winners = checkWinners();
 		if (winners.size() == 0) {
 			roundNumber++;
 			nextDealer();
@@ -176,9 +177,7 @@ public final class Phase10 implements Serializable {
 				log.printLog();
 			}
 			gameManager.getGui().endGame(winners);
-			return winners;
 		}
-		return winners;
 	}
 
 	/**
@@ -262,6 +261,20 @@ public final class Phase10 implements Serializable {
 	 */
 	public Log getLog() {
 		return log;
+	}
+
+	/**
+	 * @return the winners
+	 */
+	public ArrayList<Player> getWinners() {
+		return winners;
+	}
+
+	/**
+	 * @param winners the winners to set
+	 */
+	void setWinners(ArrayList<Player> winners) {
+		this.winners = winners;
 	}
 
 }
