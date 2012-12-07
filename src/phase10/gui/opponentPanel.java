@@ -53,199 +53,199 @@ public class opponentPanel extends JPanel {
 		this.opponent = opponent;
 		this.gameWindow = gameWindow;
 		this.currentGame = currentGame;
-		
+
 		gameLang = gameWindow.gameLang;
-		
+
 		//begin panel setup
 		setLayout(new BorderLayout(0, 0));
-		
-		 JPanel oppInfoPanel = new JPanel();
-         oppInfoPanel.setPreferredSize(new Dimension(10, 70));
-         oppInfoPanel.setSize(new Dimension(0, 25));
-         add(oppInfoPanel, BorderLayout.NORTH);
-         oppInfoPanel.setLayout(new BorderLayout(0, 0));
-         
-         namePane = new JTextField();
-         namePane.setHorizontalAlignment(SwingConstants.CENTER);
-         namePane.setEditable(false);
-         namePane.setPreferredSize(new Dimension(6, 30));
-         namePane.setText(opponent.getName());
-         oppInfoPanel.add(namePane, BorderLayout.NORTH);
-         
-         txtPhase = new JTextField();
-         txtPhase.setHorizontalAlignment(SwingConstants.CENTER);
-         txtPhase.setEditable(false);
-         txtPhase.setPreferredSize(new Dimension(100, 20));
-         txtPhase.setText("Phase: " + opponent.getPhase());
-         oppInfoPanel.add(txtPhase, BorderLayout.WEST);
-         
-         numCardsPane = new JTextField();
-         numCardsPane.setHorizontalAlignment(SwingConstants.CENTER);
-         numCardsPane.setEditable(false);
-         numCardsPane.setPreferredSize(new Dimension(13, 10));
-         numCardsPane.setText("Cards in hand: " + opponent.getHand().getNumberOfCards());
-         oppInfoPanel.add(numCardsPane, BorderLayout.CENTER);
-         
-         txtpnScore = new JTextField();
-         txtpnScore.setHorizontalAlignment(SwingConstants.CENTER);
-         txtpnScore.setEditable(false);
-         txtpnScore.setPreferredSize(new Dimension(100, 20));
-         txtpnScore.setText("Score: " + opponent.getScore());
-         oppInfoPanel.add(txtpnScore, BorderLayout.EAST);
-         
-         JPanel panel = new JPanel();
-         add(panel, BorderLayout.CENTER);
-         
-         addToPhase_1 = new JButton("Add to Phase");
-         addToPhase_1.addActionListener(new AddPhasesListener(0));
-         
-         phaseGroup1Begin = new JButton("");
-         phaseGroup1Begin.addActionListener(new AddPhasesListener(0, true));
-         
-         lblTo = new JLabel("to");
-         lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-         lblTo.setHorizontalAlignment(SwingConstants.CENTER);
-         
-         phaseGroup1End = new JButton("");
-         phaseGroup1End.addActionListener(new ActionListener() {
-                 public void actionPerformed(ActionEvent e) {
-                 }
-         });
-         
-         phaseGroup2Begin = new JButton("");
-         phaseGroup2Begin.addActionListener(new AddPhasesListener(1, true));
-         
-         labelTo_2 = new JLabel("to");
-         labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
-         labelTo_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-         
-         phaseGroup2End = new JButton("");
-         
-         addToPhase_2 = new JButton("Add to Phase");
-         addToPhase_2.addActionListener(new AddPhasesListener(1));
-         
-         GroupLayout gl_panel = new GroupLayout(panel);
-         gl_panel.setHorizontalGroup(
-                 gl_panel.createParallelGroup(Alignment.LEADING)
-                         .addGroup(gl_panel.createSequentialGroup()
-                                 .addGap(26)
-                                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                                         .addGroup(gl_panel.createSequentialGroup()
-                                                 .addGap(32)
-                                                 .addComponent(lblTo, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-                                         .addGroup(gl_panel.createSequentialGroup()
-                                                 .addGap(12)
-                                                 .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-                                                         .addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                         .addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-                                         .addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE))
-                                 .addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                                 .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-                                         .addGroup(gl_panel.createSequentialGroup()
-                                                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                                                         .addGroup(gl_panel.createSequentialGroup()
-                                                                 .addGap(10)
-                                                                 .addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-                                                         .addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-                                                 .addGap(2))
-                                         .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-                                                 .addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
-                                                 .addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
-                                 .addGap(25))
-         );
-         gl_panel.setVerticalGroup(
-                 gl_panel.createParallelGroup(Alignment.TRAILING)
-                         .addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
-                                 .addContainerGap()
-                                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-                                         .addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-                                         .addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-                                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                                 .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-                                         .addComponent(lblTo, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                                         .addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-                                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                                 .addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-                                         .addGroup(gl_panel.createSequentialGroup()
-                                                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-                                                         .addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-                                                         .addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-                                                 .addGap(64))
-                                         .addGroup(gl_panel.createSequentialGroup()
-                                                 .addGap(125)
-                                                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-                                                         .addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                                                         .addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
-                                 .addGap(114))
-         );
-         panel.setLayout(gl_panel);
-		
+
+		JPanel oppInfoPanel = new JPanel();
+		oppInfoPanel.setPreferredSize(new Dimension(10, 70));
+		oppInfoPanel.setSize(new Dimension(0, 25));
+		add(oppInfoPanel, BorderLayout.NORTH);
+		oppInfoPanel.setLayout(new BorderLayout(0, 0));
+
+		namePane = new JTextField();
+		namePane.setHorizontalAlignment(SwingConstants.CENTER);
+		namePane.setEditable(false);
+		namePane.setPreferredSize(new Dimension(6, 30));
+		namePane.setText(opponent.getName());
+		oppInfoPanel.add(namePane, BorderLayout.NORTH);
+
+		txtPhase = new JTextField();
+		txtPhase.setHorizontalAlignment(SwingConstants.CENTER);
+		txtPhase.setEditable(false);
+		txtPhase.setPreferredSize(new Dimension(100, 20));
+		txtPhase.setText("Phase: " + opponent.getPhase());
+		oppInfoPanel.add(txtPhase, BorderLayout.WEST);
+
+		numCardsPane = new JTextField();
+		numCardsPane.setHorizontalAlignment(SwingConstants.CENTER);
+		numCardsPane.setEditable(false);
+		numCardsPane.setPreferredSize(new Dimension(13, 10));
+		numCardsPane.setText("Cards in hand: " + opponent.getHand().getNumberOfCards());
+		oppInfoPanel.add(numCardsPane, BorderLayout.CENTER);
+
+		txtpnScore = new JTextField();
+		txtpnScore.setHorizontalAlignment(SwingConstants.CENTER);
+		txtpnScore.setEditable(false);
+		txtpnScore.setPreferredSize(new Dimension(100, 20));
+		txtpnScore.setText("Score: " + opponent.getScore());
+		oppInfoPanel.add(txtpnScore, BorderLayout.EAST);
+
+		JPanel panel = new JPanel();
+		add(panel, BorderLayout.CENTER);
+
+		addToPhase_1 = new JButton("Add to Phase");
+		addToPhase_1.addActionListener(new AddPhasesListener(0));
+
+		phaseGroup1Begin = new JButton("");
+		phaseGroup1Begin.addActionListener(new AddPhasesListener(0, true));
+
+		lblTo = new JLabel("to");
+		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTo.setHorizontalAlignment(SwingConstants.CENTER);
+
+		phaseGroup1End = new JButton("");
+		phaseGroup1End.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+
+		phaseGroup2Begin = new JButton("");
+		phaseGroup2Begin.addActionListener(new AddPhasesListener(1, true));
+
+		labelTo_2 = new JLabel("to");
+		labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTo_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+		phaseGroup2End = new JButton("");
+
+		addToPhase_2 = new JButton("Add to Phase");
+		addToPhase_2.addActionListener(new AddPhasesListener(1));
+
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+				gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+						.addGap(26)
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+										.addGap(32)
+										.addComponent(lblTo, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panel.createSequentialGroup()
+												.addGap(12)
+												.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+														.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+														.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
+														.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE))
+														.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+														.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+																.addGroup(gl_panel.createSequentialGroup()
+																		.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+																				.addGroup(gl_panel.createSequentialGroup()
+																						.addGap(10)
+																						.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+																						.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+																						.addGap(2))
+																						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+																								.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
+																								.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
+																								.addGap(25))
+				);
+		gl_panel.setVerticalGroup(
+				gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(phaseGroup1Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+								.addComponent(phaseGroup2Begin, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+										.addComponent(lblTo, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+										.addComponent(labelTo_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+												.addGroup(gl_panel.createSequentialGroup()
+														.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+																.addComponent(phaseGroup1End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+																.addComponent(phaseGroup2End, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+																.addGap(64))
+																.addGroup(gl_panel.createSequentialGroup()
+																		.addGap(125)
+																		.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+																				.addComponent(addToPhase_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+																				.addComponent(addToPhase_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
+																				.addGap(114))
+				);
+		panel.setLayout(gl_panel);
+
 		phaseAreaUpdate();
 		//end panel setup
 	}
-	
-	
+
+
 	void updatePanel(Player nextOpponent) {
-	
+
 		opponent = nextOpponent;
-		
+
 		this.namePane.setText(opponent.getName());
 		this.txtPhase.setText(gameLang.getEntry("PHASE") + ": " + opponent.getPhase());
 		this.txtpnScore.setText(gameLang.getEntry("SCORE") + ": " + opponent.getScore());
 		this.numCardsPane.setText(gameLang.getEntry("CARDS_IN_HAND") + ": " + opponent.getHand().getNumberOfCards());
-		
+
 		phaseAreaUpdate();
 	}
 
 	Player getOpponent() {
 		return opponent;
 	}
-	
+
 	private void phaseAreaUpdate() {
 		if(opponent.hasLaidDownPhase()) {
 			if(opponent.getNumberOfPhaseGroups() == 1) {
-				
+
 				phaseGroup1Begin.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(0)))));
 				phaseGroup1End.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(
-						opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
-				
+								opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
+
 				phaseGroup1Begin.setVisible(true);
 				lblTo.setVisible(true);
 				phaseGroup1End.setVisible(true);
 				addToPhase_1.setVisible(true);
-				
+
 				lblTo.setToolTipText(opponent.getPhaseGroup(0).toString());
-				
+
 				phaseGroup2Begin.setVisible(false);
 				labelTo_2.setVisible(false);
 				phaseGroup2End.setVisible(false);
 				addToPhase_2.setVisible(false);
-				
+
 			}
 			else if(opponent.getNumberOfPhaseGroups() == 2) {
-				
+
 				phaseGroup1Begin.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(0)))));
 				phaseGroup1End.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(0).getCard(
-						opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
-				
+								opponent.getPhaseGroup(0).getNumberOfCards()-1)))));
+
 				phaseGroup2Begin.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(1).getCard(0)))));
 				phaseGroup2End.setIcon(new ImageIcon(
 						GameFrame.class.getResource(gameWindow.getCardFile(opponent.getPhaseGroup(1).getCard(
-						opponent.getPhaseGroup(1).getNumberOfCards()-1)))));
-				
+								opponent.getPhaseGroup(1).getNumberOfCards()-1)))));
+
 				phaseGroup1Begin.setVisible(true);
 				lblTo.setVisible(true);
 				phaseGroup1End.setVisible(true);
 				addToPhase_1.setVisible(true);
-				
+
 				lblTo.setToolTipText(opponent.getPhaseGroup(0).toString());
 				labelTo_2.setToolTipText(opponent.getPhaseGroup(1).toString());
-				
+
 				phaseGroup2Begin.setVisible(true);
 				labelTo_2.setVisible(true);
 				phaseGroup2End.setVisible(true);
@@ -259,14 +259,14 @@ public class opponentPanel extends JPanel {
 			lblTo.setVisible(false);
 			phaseGroup1End.setVisible(false);
 			addToPhase_1.setVisible(false);
-			
+
 			phaseGroup2Begin.setVisible(false);
 			labelTo_2.setVisible(false);
 			phaseGroup2End.setVisible(false);
 			addToPhase_2.setVisible(false);
 		}
 	}
-	
+
 	private class AddPhasesListener implements ActionListener {
 
 		private int phaseGroupIndex;
@@ -276,7 +276,7 @@ public class opponentPanel extends JPanel {
 			this.phaseGroupIndex = phaseGroup;
 			this.isAtBeginning = false;
 		}
-		
+
 		public AddPhasesListener(int phaseGroup, boolean atBeginning) {
 			this.phaseGroupIndex = phaseGroup;
 			this.isAtBeginning = atBeginning;
@@ -285,27 +285,29 @@ public class opponentPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//TODO new listener
-			for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
-				
-				boolean isValid;
-				
-				if(isAtBeginning)
-					isValid = opponent.getPhaseGroup(phaseGroupIndex).addCardToBeginning(gameWindow.selectedCards.get(0));
-				else
-					isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
-				
-				if(!isValid) {
-					MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
-					invalidAdd.setVisible(true);
-					break;
-				}
-				else {
-					gameWindow.hideAndClearSelectedCards();
-					gameWindow.updateFrame(currentGame);
-					gameWindow.updateYourPhasesPanel();
-				}
-			}
+			if(currentGame.getCurrentPlayer().getHasDrawnCard()) {
+				for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
 
+					boolean isValid;
+
+					if(isAtBeginning)
+						isValid = opponent.getPhaseGroup(phaseGroupIndex).addCardToBeginning(gameWindow.selectedCards.get(0));
+					else
+						isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
+
+					if(!isValid) {
+						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
+						invalidAdd.setVisible(true);
+						break;
+					}
+					else {
+						gameWindow.hideAndClearSelectedCards();
+						gameWindow.updateFrame(currentGame);
+						gameWindow.updateYourPhasesPanel();
+					}
+				}
+
+			}
 		}
 
 	}
