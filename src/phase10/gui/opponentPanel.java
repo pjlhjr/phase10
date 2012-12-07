@@ -7,10 +7,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import phase10.Phase10;
-import phase10.PhaseGroup;
 import phase10.Player;
-import phase10.card.Card;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.GroupLayout;
@@ -20,13 +17,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.SpringLayout;
 public class opponentPanel extends JPanel {
 
 	/**
@@ -108,6 +100,7 @@ public class opponentPanel extends JPanel {
          addToPhase_1.addActionListener(new AddPhasesListener(0));
          
          phaseGroup1Begin = new JButton("");
+         phaseGroup1Begin.addActionListener(new AddPhasesListener(0, true));
          
          lblTo = new JLabel("to");
          lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -120,6 +113,7 @@ public class opponentPanel extends JPanel {
          });
          
          phaseGroup2Begin = new JButton("");
+         phaseGroup2Begin.addActionListener(new AddPhasesListener(1, true));
          
          labelTo_2 = new JLabel("to");
          labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -192,8 +186,6 @@ public class opponentPanel extends JPanel {
 	
 	
 	void updatePanel(Player nextOpponent) {
-		
-		//TODO get this to work!!!!!
 	
 		opponent = nextOpponent;
 		
@@ -202,7 +194,6 @@ public class opponentPanel extends JPanel {
 		this.txtpnScore.setText(gameLang.getEntry("SCORE") + ": " + opponent.getScore());
 		this.numCardsPane.setText(gameLang.getEntry("CARDS_IN_HAND") + ": " + opponent.getHand().getNumberOfCards());
 		
-		//TODO add update for the phases area
 		phaseAreaUpdate();
 	}
 
@@ -279,16 +270,30 @@ public class opponentPanel extends JPanel {
 	private class AddPhasesListener implements ActionListener {
 
 		private int phaseGroupIndex;
+		private boolean isAtBeginning;
 
 		public AddPhasesListener(int phaseGroup) {
 			this.phaseGroupIndex = phaseGroup;
+			this.isAtBeginning = false;
+		}
+		
+		public AddPhasesListener(int phaseGroup, boolean atBeginning) {
+			this.phaseGroupIndex = phaseGroup;
+			this.isAtBeginning = atBeginning;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//TODO new listener
 			for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
-				boolean isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
+				
+				boolean isValid;
+				
+				if(isAtBeginning)
+					isValid = opponent.getPhaseGroup(phaseGroupIndex).addCardToBeginning(gameWindow.selectedCards.get(0));
+				else
+					isValid = opponent.getPhaseGroup(phaseGroupIndex).addCard(gameWindow.selectedCards.get(x));
+				
 				if(!isValid) {
 					MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 					invalidAdd.setVisible(true);

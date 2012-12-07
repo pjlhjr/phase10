@@ -69,6 +69,7 @@ public class GameFrame extends JFrame {
 	 * Creates the GameFrame at the constructor
 	 */
 	public GameFrame(final GuiManager gManage) {
+		setResizable(false);
 
 		gameLang = gManage.getGameLang();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
@@ -288,8 +289,8 @@ public class GameFrame extends JFrame {
 			@Override
 			//TODO fix
 			public void mouseClicked(MouseEvent e) {
-				for(Card x : selectedCards) {
-					boolean isValid = current.getPhaseGroup(0).addCardToBeginning(x);
+				for(int x = 0; x < selectedCards.size(); x++) {
+					boolean isValid = current.getPhaseGroup(0).addCardToBeginning(selectedCards.get(x));
 					if(!isValid) {
 						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 						invalidAdd.setVisible(true);
@@ -325,8 +326,8 @@ public class GameFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//TODO fix
-				for(Card x : selectedCards) {
-					boolean isValid = current.getPhaseGroup(1).addCard(x);
+				for(int x = 0; x < selectedCards.size(); x++) {
+					boolean isValid = current.getPhaseGroup(1).addCard(selectedCards.get(x));
 					if(!isValid) {
 						MessageFrame invalidAdd = new MessageFrame(gameLang.getEntry("INVALID_ADD_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 						invalidAdd.setVisible(true);
@@ -746,14 +747,14 @@ public class GameFrame extends JFrame {
 					boolean isValid = current.addPhaseGroups(newPhaseGroup, newPhaseGroup2);
 					System.out.println("Phase Group Type: " + newPhaseGroup.getType());
 					if(!isValid) {
-						MessageFrame notAGoodPhase = new MessageFrame("The phase you are trying to add is not valid for your phase", "Invalid move", gameLang);
+						MessageFrame notAGoodPhase = new MessageFrame(gameLang.getEntry("NOT_A_GOOD_PHASE_MESSAGE"), gameLang.getEntry("INVALID_MOVE"), gameLang);
 						notAGoodPhase.setVisible(true);
 
 						//set all buttons to visible and clear all selections
 						hideAndClearSelectedCards();
 						isPhasing = false;
 						isSecondPhaseGroup = false;
-						btnNewPhase.setText("Add a Phase!");
+						btnNewPhase.setText(gameLang.getEntry("ADD_A_PHASE"));
 					}
 					else { //the player played a valid phase
 						pg1Start.setVisible(true);
