@@ -14,11 +14,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 
+/**
+ * 
+ * A JDialog box that allows a player to load a game by inputing the 
+ * name of a previously saved game into the JTextField.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class LoadFileFrame extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField filenameField;
@@ -26,12 +31,17 @@ public class LoadFileFrame extends JDialog {
 	private GuiManager gManage;
 	private Language gameLang;
 
+	/**
+	 * Retrieves the filename entered in the JTextField
+	 * 
+	 * @return the filename in the JTextField
+	 */
 	public String getFilename() {
 		return filename;
 	}
 
 	/**
-	 * Create the dialog.
+	 * Creates the dialog box.
 	 */
 	public LoadFileFrame(GuiManager guiM) {
 		gameLang = guiM.getGameLang();
@@ -79,8 +89,20 @@ public class LoadFileFrame extends JDialog {
 		}
 	}
 	
+	/**
+	 * ActionListener class for the OK button
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class OKListener implements ActionListener {
 
+		/**
+		 * called when the OK button is clicked. When the button is clicked, the
+		 * ActionListener tries to load the file entered into the JTextField. If
+		 * it fails to do so, an error message will be displayed and the user can 
+		 * go back and try again.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
@@ -105,8 +127,18 @@ public class LoadFileFrame extends JDialog {
 		
 	}
 	
+	/**
+	 * ActionListener for the cancel button.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class CancelListener implements ActionListener {
 
+		/**
+		 * Called when the cancel button is clicked. ActionListener will dispose the current instance
+		 * of LoadFileFrame and will bring the user back to WelcomeFrame.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			gManage.initGui();
