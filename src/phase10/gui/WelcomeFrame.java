@@ -10,6 +10,8 @@ import javax.swing.JTextPane;
 
 import java.awt.Font;
 import java.awt.Toolkit;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class WelcomeFrame extends JFrame {
 
@@ -84,11 +86,9 @@ public class WelcomeFrame extends JFrame {
 		btnCancel.setBounds(324, 224, 120, 52);
 		contentPane.add(btnCancel);
 		
-		JTextPane txtpnWelcomeToPhase = new JTextPane();
-		txtpnWelcomeToPhase.setEditable(false);
-		txtpnWelcomeToPhase.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		txtpnWelcomeToPhase.setText("Welcome to Phase 10!");
-		txtpnWelcomeToPhase.setBounds(95, 55, 285, 93);
-		contentPane.add(txtpnWelcomeToPhase);
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(WelcomeFrame.class.getResource("/images/WelcomeBanner.png")));
+		lblNewLabel.setBounds(32, 27, 426, 143);
+		contentPane.add(lblNewLabel);
 	}
 }
