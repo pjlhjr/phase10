@@ -112,14 +112,10 @@ public class GuiManager {
 				endMessage += x.getName() + ", ";
 		}
 			
-		
-		displayMessageFrame(endMessage, "End Game");
-		
+		displayWelcomeWindow();
 		gameWindow.dispose();
-		
 		displayScoreFrame();
-		
-		
+		displayMessageFrame(endMessage, "End Game");
 	}
 	
 	/*

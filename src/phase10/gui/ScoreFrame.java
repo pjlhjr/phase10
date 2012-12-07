@@ -31,7 +31,7 @@ public class ScoreFrame extends JFrame {
 		//Create a variable to access the game's language
 		Language gameLang = gManage.getGameLang();
 		
-		setLocation(new Point(15, 15));
+		setLocation(new Point(200, 200));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ScoreFrame.class.getResource("/images/GameIcon.png")));
 		setResizable(false);
 		setTitle(gameLang.getEntry("SCORES_AFTER_ROUND") + " " + gManage.mainManager.getGame().getRoundNumber());
