@@ -9,33 +9,40 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 
+/**
+ * 
+ * SaveFileFrame is a JDialog object that allows the user to save a game while playing.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class SaveFileFrame extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField filenameField;
 	private String filename;
 	private Language gameLang;
 
+	/**
+	 * Returns the filename that was typed into the JTextField
+	 * @return the filename that was typed into the JTextField
+	 */
 	public String getFilename() {
 		return filename;
 	}
 
 	/**
-	 * Create the dialog.
+	 * Creates the window.
 	 */
 	public SaveFileFrame(GuiManager guiM) {
-		
+
 		gameLang = guiM.getGameLang();
-		
+
 		setTitle(gameLang.getEntry("SAVE_GAME"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 

@@ -6,39 +6,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JTextPane;
-
-import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
+/**
+ * WelcomeFrame is a JFrame object that is displayed when Phase 10 first initializes GUI and at the end of the game if the
+ * user would like to play another game. WelcomeFrame displays a "Welcome to Phase 10!" welcome banner image and gives the
+ * user 3 options: New Game, Load Game, and Cancel.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class WelcomeFrame extends JFrame {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					WelcomeFrame frame = new WelcomeFrame(new GuiManager(new GameManager()));
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
+	 * Constructs and initializes the welcome frame.
 	 */
 	public WelcomeFrame(final GuiManager gManage) {
 		setResizable(false);
@@ -86,7 +72,7 @@ public class WelcomeFrame extends JFrame {
 		btnCancel.setBounds(324, 224, 120, 52);
 		contentPane.add(btnCancel);
 		
-		JLabel lblNewLabel = new JLabel("New label");
+		JLabel lblNewLabel = new JLabel();
 		lblNewLabel.setIcon(new ImageIcon(WelcomeFrame.class.getResource("/images/WelcomeBanner.png")));
 		lblNewLabel.setBounds(32, 27, 426, 143);
 		contentPane.add(lblNewLabel);

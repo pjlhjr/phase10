@@ -903,7 +903,7 @@ public class GameFrame extends JFrame {
 		/**
 		 * The constructor for AddToPhaseListener
 		 * 
-		 * @param phaseGroup the group of cards the player wishes to add to an already existing phase group.
+		 * @param phaseGroup the phase group that the cards will be added to.
 		 */
 		public AddToPhaseListener(int phaseGroup) {
 			this.phaseGroupIndex = phaseGroup;
