@@ -88,12 +88,7 @@ public final class Round implements Serializable {
 
 		Card card = discardStack.pop();
 		game.getDebugLog().addEntry(
-				new DebugLogEntry(turnNumber, player, "Draw from discard: "
-						+ card));
-		game.getUserLog().add(
-				player.getName() + " drew a " + card
-						+ " from the discard stack.");
-
+				new DebugLogEntry(turnNumber, player, "Draw from discard: " + card));
 		player.getHand().addCard(card);
 
 		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
@@ -134,11 +129,9 @@ public final class Round implements Serializable {
 			player.getHand().sortByValue();
 		}
 
-		game.getDebugLog()
-				.addEntry(
-						new DebugLogEntry(turnNumber, player,
-								"Draw from deck: " + card));
-
+		game.getDebugLog().addEntry(
+				new DebugLogEntry(turnNumber, player, "Draw from deck: " + card));
+		
 		player.setDrewFromDiscard(false);
 
 		if (deck.size() == 0) {
@@ -180,19 +173,10 @@ public final class Round implements Serializable {
 		} else {
 			player.getHand().sortByValue();
 		}
-
-		/*
-		 * if ((player instanceof AIPlayer) && game.getUserLog().getSize() > 0)
-		 * { new MessageFrame(game.getUserLog().get(), player.getName() +
-		 * " made a move", game.getGameManager().getGui()
-		 * .getGameLang()).setVisible(true); }
-		 */
-
+		
 		game.getDebugLog().addEntry(
 				new DebugLogEntry(turnNumber, player, "Current Hand: "
 						+ player.getHand()));
-
-		game.getUserLog().add(player.getName() + " discarded a " + card + ".");
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
 			int nextPlayer = curPlayerNum + 1;
@@ -296,25 +280,20 @@ public final class Round implements Serializable {
 	 * invoked.
 	 */
 	private void nextTurn() {
-		if (!roundIsComplete()) {
+		if (roundIsComplete()) {
+			game.nextRound();
+		} else {
 			advanceTurn();
-			Player p = game.getPlayer(curPlayerNum);
-			if (p.getSkip()) {
-				p.setSkip(false);
+			if (game.getPlayer(curPlayerNum).getSkip()) {
+				// System.out.println("skip");
+				game.getPlayer(curPlayerNum).setSkip(false);
 				advanceTurn();
 			}
-			if (p instanceof AIPlayer) {
-				AIPlayer ai = (AIPlayer) p;
-
-				game.getUserLog().deleteAll();
-
-				ai.playTurn();
-
-				// try {
-				// Thread.sleep(600);
-				// } catch (InterruptedException e) {
-				//
-				// }
+			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
+				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
+				// TODO call gui?
+				System.out.println("PLAYING");
+				p.playTurn();
 
 			}
 
@@ -343,12 +322,10 @@ public final class Round implements Serializable {
 	 * 
 	 * @return true if the round is over
 	 */
-	boolean roundIsComplete() {
+	private boolean roundIsComplete() {
 		for (int p = 0; p < game.getNumberOfPlayers(); p++) {
-			if (game.getPlayer(p).getHand().getNumberOfCards() == 0) {
-				game.nextRound();
+			if (game.getPlayer(p).getHand().getNumberOfCards() == 0)
 				return true;
-			}
 		}
 		return false;
 	}
