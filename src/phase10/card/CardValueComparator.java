@@ -28,38 +28,40 @@ public class CardValueComparator implements Comparator<Card> {
 	public int compare(Card c1, Card c2) {
 		int value1 = -1;
 		int value2 = -1;
-		if (c1 instanceof WildCard){
+		if (c1 instanceof WildCard) {
 			WildCard wc = (WildCard) c1;
-			if (!wc.isChangeable()){
+			if (!wc.isChangeable()) {
 				value1 = wc.getHiddenValue();
 			}
 		}
-		if (c2 instanceof WildCard){
+		if (c2 instanceof WildCard) {
 			WildCard wc = (WildCard) c2;
-			if (!wc.isChangeable()){
+			if (!wc.isChangeable()) {
 				value2 = wc.getHiddenValue();
 			}
 		}
-		if (value1<0){
+		if (value1 < 0) {
 			value1 = c1.getValue();
 		}
-		if (value2<0){
+		if (value2 < 0) {
 			value2 = c2.getValue();
 		}
 		int comp = value1 - value2;
 		if (comp != 0)
 			return comp;
-		else{
-			int val1=-1;
-			int val2=-1;
-			for (int i=0;i<Configuration.COLORS.length;i++){
-				if (c1.getColor().equals(Configuration.COLORS[i])) val1 = i;
-				if (c2.getColor().equals(Configuration.COLORS[i])) val2 = i;
+		else {
+			int val1 = -1;
+			int val2 = -1;
+			for (int i = 0; i < Configuration.COLORS.length; i++) {
+				if (c1.getColor().equals(Configuration.COLORS[i]))
+					val1 = i;
+				if (c2.getColor().equals(Configuration.COLORS[i]))
+					val2 = i;
 			}
-			if (c1.getColor().equals(Color.BLACK)){
+			if (c1.getColor().equals(Color.BLACK)) {
 				val1 = 5;
 			}
-			if (c2.getColor().equals(Color.BLACK)){
+			if (c2.getColor().equals(Color.BLACK)) {
 				val2 = 5;
 			}
 			return val1 - val2;
