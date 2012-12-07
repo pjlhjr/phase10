@@ -86,10 +86,14 @@ public final class Hand implements Serializable {
 	 * @param cardIndex
 	 *            the index to get the card at
 	 * @return the card, if it exists (null otherwise)
-	 * @throws Phase10Exception if you try to get cards when it isn't the player's turn.
+	 * @throws Phase10Exception
+	 *             if you try to get cards when it isn't the player's turn.
 	 */
 	public Card getCard(int cardIndex) {
-		if (owner!=game.getCurrentPlayer()) throw new Phase10Exception("Cannot get cards from player who's turn it currently isn't: player "+owner);
+		if (owner != game.getCurrentPlayer())
+			throw new Phase10Exception(
+					"Cannot get cards from player who's turn it currently isn't: player "
+							+ owner);
 		Card out = null;
 		try {
 			out = cards.get(cardIndex);
@@ -114,8 +118,8 @@ public final class Hand implements Serializable {
 			System.out.println("Invalid hand index: " + cardIndex);
 		}
 		return out;
-	}	
-	
+	}
+
 	/**
 	 * Sorts the hand by color, then value
 	 */
@@ -132,13 +136,16 @@ public final class Hand implements Serializable {
 		Collections.sort(cards, valueComp);
 	}
 
+	/**
+	 * Returns a string representation of the hand
+	 */
 	public String toString() {
-		StringBuilder out = new StringBuilder("Length: "
-				+ cards.size() + " Hand: ");
+		StringBuilder out = new StringBuilder("Length: " + cards.size()
+				+ " Hand: ");
 		for (Card e : cards) {
 			out.append(e + ", ");
 		}
 		return out.toString();
-	}	
-	
+	}
+
 }

@@ -24,11 +24,11 @@ public class Card implements Serializable {
 	private int value;
 
 	/**
-	 * 
+	 * Creates a card with the given color and value
 	 * @param c
-	 *            the color (0 through 3)
+	 *            the color
 	 * @param v
-	 *            the value (1 through 12, wild = 13, skip = 14)
+	 *            the value
 	 */
 	public Card(Color c, int v) {
 		color = c;
@@ -36,7 +36,7 @@ public class Card implements Serializable {
 	}
 
 	/**
-	 * 
+	 * Creates a card with the default color (Black)
 	 * @param v
 	 *            the value (1 through 12, wild = 13, skip = 14)
 	 */
@@ -66,7 +66,7 @@ public class Card implements Serializable {
 	 * @return true if they have the same color and value, otherwise false
 	 */
 	public boolean equals(Card other) {
-		return (color == other.getColor() && value == other.getValue());
+		return (color.equals(other.getColor()) && value == other.getValue());
 	}
 
 	/**
@@ -77,13 +77,13 @@ public class Card implements Serializable {
 	 */
 	public final int getPointValue() {
 		if (value >= 1 && value <= 9)
-			return 5;
+			return Configuration.LOW_POINTS_VALUE;
 		if (value >= 10 && value <= 12)
-			return 10;
+			return Configuration.HIGH_POINTS_VALUE;
 		if (value == Configuration.SKIP_VALUE)
-			return 15;
+			return Configuration.SKIP_POINTS_VALUE;
 		if (value == Configuration.WILD_VALUE)
-			return 25;
+			return Configuration.WILD_POINTS_VALUE;
 
 		return 0;
 	}

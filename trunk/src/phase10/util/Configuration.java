@@ -25,12 +25,17 @@ public class Configuration {
 	public static final int RUN_PHASE = 1;
 	public static final int COLOR_PHASE = 2;
 	
+	public static final int LOW_POINTS_VALUE = 5;
+	public static final int HIGH_POINTS_VALUE = 10;
+	public static final int SKIP_POINTS_VALUE = 15;
+	public static final int WILD_POINTS_VALUE = 25;
+	
 	public static final Color[] COLORS = {Color.RED, Color.BLUE, Color.GREEN,
 		Color.YELLOW};
 
 	// Set these to false when not testing
-	public static final boolean PRINT_DEBUG_LOG = true;
-	public static final boolean SAVE_DEBUG_LOG = true;
+	public static final boolean PRINT_DEBUG_LOG = false;
+	public static final boolean SAVE_DEBUG_LOG = false;
 	public static final String DEBUG_LOG_FILE = "log.txt";
 
 	// For logging

@@ -24,6 +24,10 @@ public class GameManager {
 	private Phase10 game;
 	private GuiManager gui;
 
+	/**
+	 * Creates a new game manager object and starts the program
+	 * @param args system arguments (none required)
+	 */
 	public static void main(String[] args) {
 		new GameManager();
 	}
