@@ -15,7 +15,7 @@ import phase10.card.CardValueComparator;
 import phase10.card.WildCard;
 import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
-import phase10.util.LogEntry;
+import phase10.util.DebugLogEntry;
 
 /**
  * This class contains all of the information for each phase group that is laid
@@ -67,8 +67,8 @@ public final class PhaseGroup implements Serializable {
 			for (int i = 0; i < getNumberOfCards(); i++) {
 				temp.addCard(getCard(i));
 			}
-			game.getLog().addEntry(
-					new LogEntry(game.getRound().getTurnNumber(), p,
+			game.getDebugLog().addEntry(
+					new DebugLogEntry(game.getRound().getTurnNumber(), p,
 							"Attempting to add card (" + c
 									+ ") to a laid down phase group: " + temp));
 
@@ -89,8 +89,8 @@ public final class PhaseGroup implements Serializable {
 
 				p.getHand().removeCard(c);
 
-				game.getLog().addEntry(
-						new LogEntry(game.getRound().getTurnNumber(), p,
+				game.getDebugLog().addEntry(
+						new DebugLogEntry(game.getRound().getTurnNumber(), p,
 								"Added card to a laid down phase group: "
 										+ this));
 

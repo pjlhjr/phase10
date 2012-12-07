@@ -15,8 +15,9 @@ import phase10.ai.AIPlayer;
 import phase10.card.Card;
 import phase10.card.WildCard;
 import phase10.exceptions.Phase10Exception;
+import phase10.gui.MessageFrame;
 import phase10.util.Configuration;
-import phase10.util.LogEntry;
+import phase10.util.DebugLogEntry;
 
 /**
  * This class contains and manages the information for each round
@@ -87,8 +88,13 @@ public final class Round implements Serializable {
 			return false;
 
 		Card card = discardStack.pop();
-		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Draw from discard: " + card));
+		game.getDebugLog().addEntry(
+				new DebugLogEntry(turnNumber, player, "Draw from discard: "
+						+ card));
+		game.getUserLog().add(
+				player.getName() + " drew a " + card
+						+ " from the discard stack.");
+
 		player.getHand().addCard(card);
 
 		if (Configuration.getTypeRequired(player.getPhase(), 0) == Configuration.COLOR_PHASE) {
@@ -129,9 +135,11 @@ public final class Round implements Serializable {
 			player.getHand().sortByValue();
 		}
 
-		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Draw from deck: " + card));
-		
+		game.getDebugLog()
+				.addEntry(
+						new DebugLogEntry(turnNumber, player,
+								"Draw from deck: " + card));
+
 		player.setDrewFromDiscard(false);
 
 		if (deck.size() == 0) {
@@ -160,8 +168,8 @@ public final class Round implements Serializable {
 		if (!player.getHasDrawnCard())
 			throw new Phase10Exception("Cannot discard: has not yet drawn");
 
-		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Discard: " + card));
+		game.getDebugLog().addEntry(
+				new DebugLogEntry(turnNumber, player, "Discard: " + card));
 
 		discardStack.push(card);
 		player.getHand().removeCard(card);
@@ -174,8 +182,14 @@ public final class Round implements Serializable {
 			player.getHand().sortByValue();
 		}
 
-		game.getLog().addEntry(
-				new LogEntry(turnNumber, player, "Current Hand: "
+		if ((player instanceof AIPlayer) && game.getUserLog().getSize() > 0) {
+			new MessageFrame(game.getUserLog().get(), player.getName()
+					+ " made a move", game.getGameManager().getGui()
+					.getGameLang()).setVisible(true);
+		}
+
+		game.getDebugLog().addEntry(
+				new DebugLogEntry(turnNumber, player, "Current Hand: "
 						+ player.getHand()));
 
 		if (card.getValue() == Configuration.SKIP_VALUE) {
@@ -184,8 +198,8 @@ public final class Round implements Serializable {
 				nextPlayer = 0;
 			}
 			game.getPlayer(nextPlayer).setSkip(true);
-			game.getLog().addEntry(
-					new LogEntry(turnNumber, player, "Skipping player: "
+			game.getDebugLog().addEntry(
+					new DebugLogEntry(turnNumber, player, "Skipping player: "
 							+ game.getPlayer(nextPlayer)));
 		}
 
@@ -291,8 +305,16 @@ public final class Round implements Serializable {
 			}
 			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
 				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
-				// TODO call gui?
+
+				game.getUserLog().deleteAll();
+
 				p.playTurn();
+
+				try {
+					Thread.sleep(600);
+				} catch (InterruptedException e) {
+
+				}
 
 			}
 

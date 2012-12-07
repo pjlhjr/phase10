@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import phase10.util.Configuration;
-import phase10.util.LogEntry;
+import phase10.util.DebugLogEntry;
 
 /**
  * This class contains all of the information for each player for the Phase 10
@@ -122,8 +122,8 @@ public class Player implements Serializable {
 	public boolean addPhaseGroups(PhaseGroup... pg) {
 
 		for (int i = 0; i < pg.length; i++)
-			game.getLog().addEntry(
-					new LogEntry(game.getRound().getTurnNumber(), this,
+			game.getDebugLog().addEntry(
+					new DebugLogEntry(game.getRound().getTurnNumber(), this,
 							"Attempt to lay down phase group " + pg[i]));
 
 		// cannot lay down phases if player already has
@@ -131,8 +131,8 @@ public class Player implements Serializable {
 			return false;
 
 		if (!(pg.length == Configuration.getNumberRequired(phase))) {
-			game.getLog().addEntry(
-					new LogEntry(game.getRound().getTurnNumber(), this,
+			game.getDebugLog().addEntry(
+					new DebugLogEntry(game.getRound().getTurnNumber(), this,
 							"Attempted to lay down an incorrect number of phase groups: "
 									+ pg.length));
 			return false;
@@ -181,9 +181,11 @@ public class Player implements Serializable {
 
 		if (success) {
 			setLaidDownPhase(true);
-			game.getLog().addEntry(
-					new LogEntry(game.getRound().getTurnNumber(), this,
+			game.getDebugLog().addEntry(
+					new DebugLogEntry(game.getRound().getTurnNumber(), this,
 							"Laid down phase"));
+			
+			game.getUserLog().add(name+" laid down phase "+getPhase()+".");
 			
 			// Move on to the next round if laying down the phase group makes
 			// the player run out of cards

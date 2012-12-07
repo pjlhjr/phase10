@@ -16,7 +16,7 @@ import phase10.Player;
  * @author Evan Forbes
  *
  */
-public class LogEntry implements Serializable {
+public class DebugLogEntry implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 
@@ -24,7 +24,7 @@ public class LogEntry implements Serializable {
 	private Player player;
 	private String event;
 
-	public LogEntry(int turn, Player p, String event) {
+	public DebugLogEntry(int turn, Player p, String event) {
 		turnNumber = turn;
 		player = p;
 		this.event = event;

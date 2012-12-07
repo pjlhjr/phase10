@@ -17,29 +17,29 @@ import java.util.ArrayList;
  * @author Evan Forbes
  * 
  */
-public class Log implements Serializable {
+public class DebugLog implements Serializable {
 
 	private static final long serialVersionUID = 20121L;
 	
-	ArrayList<LogEntry> log;
+	ArrayList<DebugLogEntry> log;
 
-	public Log() {
-		log = new ArrayList<LogEntry>();
+	public DebugLog() {
+		log = new ArrayList<DebugLogEntry>();
 	}
 
-	public void addEntry(LogEntry entry) {
+	public void addEntry(DebugLogEntry entry) {
 		log.add(entry);
-		if (Configuration.PRINT_LOG) {
+		if (Configuration.PRINT_DEBUG_LOG) {
 			System.out.println(entry);
 		}
-		if (Configuration.SAVE_LOG) {
+		if (Configuration.SAVE_DEBUG_LOG) {
 			saveLog();
 		}
 	}
 
 	public void printLog() {
 		System.out.println("==LOG==");
-		for (LogEntry e : log) {
+		for (DebugLogEntry e : log) {
 			System.out.println(e);
 		}
 		System.out.println("==END LOG==");
@@ -47,10 +47,10 @@ public class Log implements Serializable {
 
 	public void saveLog() {
 		try {
-			FileWriter fstream = new FileWriter(Configuration.LOG_FILE);
+			FileWriter fstream = new FileWriter(Configuration.DEBUG_LOG_FILE);
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write("==PHASE 10 LOG==\r\n");
-			for (LogEntry e : log) {
+			for (DebugLogEntry e : log) {
 				out.write(e + "\r\n");
 			}
 			out.write("==END PHASE 10 LOG==");
