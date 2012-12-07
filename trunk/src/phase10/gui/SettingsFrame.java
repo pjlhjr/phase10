@@ -75,11 +75,11 @@ public class SettingsFrame extends JFrame {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SettingsFrame(final GuiManager gManage) {
+		setResizable(false);
 		
 		lang = gManage.getGameLang();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SettingsFrame.class.getResource("/images/GameIcon.png")));
-		setResizable(false);
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 570, 414);

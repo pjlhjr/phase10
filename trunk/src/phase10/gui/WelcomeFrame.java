@@ -39,6 +39,7 @@ public class WelcomeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public WelcomeFrame(final GuiManager gManage) {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WelcomeFrame.class.getResource("/images/GameIcon.png")));
 		setTitle("Welcome");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
