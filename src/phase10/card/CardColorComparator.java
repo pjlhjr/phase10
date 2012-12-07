@@ -31,6 +31,7 @@ public class CardColorComparator implements Comparator<Card> {
 			if (c1.getColor().equals(Configuration.COLORS[i])) val1 = i;
 			if (c2.getColor().equals(Configuration.COLORS[i])) val2 = i;
 		}
+		//Sort blacks in the rightmost location
 		if (c1.getColor().equals(Color.BLACK)){
 			val1 = 5;
 		}

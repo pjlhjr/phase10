@@ -50,21 +50,22 @@ public class CardValueComparator implements Comparator<Card> {
 		if (comp != 0)
 			return comp;
 		else {
-			int val1 = -1;
-			int val2 = -1;
+			int colorVal1 = -1;
+			int colorVal2 = -1;
 			for (int i = 0; i < Configuration.COLORS.length; i++) {
 				if (c1.getColor().equals(Configuration.COLORS[i]))
-					val1 = i;
+					colorVal1 = i;
 				if (c2.getColor().equals(Configuration.COLORS[i]))
-					val2 = i;
+					colorVal2 = i;
 			}
+			//Sort blacks in the rightmost location
 			if (c1.getColor().equals(Color.BLACK)) {
-				val1 = 5;
+				colorVal1 = 5;
 			}
 			if (c2.getColor().equals(Color.BLACK)) {
-				val2 = 5;
+				colorVal2 = 5;
 			}
-			return val1 - val2;
+			return colorVal1 - colorVal2;
 		}
 	}
 }

@@ -15,6 +15,7 @@ import phase10.util.Configuration;
 public class WildCard extends Card {
 
 	private static final long serialVersionUID = 20121L;
+	
 	private int hiddenValue;
 	private boolean changeable;
 	

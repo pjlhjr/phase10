@@ -32,7 +32,7 @@ public final class Phase10 implements Serializable {
 	
 	private UserLog userLog;
 	
-	ArrayList<Player> winners;
+	private ArrayList<Player> winners;
 
 	private transient GameManager gameManager;
 

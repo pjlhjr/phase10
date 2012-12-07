@@ -23,10 +23,17 @@ public class DebugLog implements Serializable {
 	
 	ArrayList<DebugLogEntry> log;
 
+	/**
+	 * Instantiates the debug log
+	 */
 	public DebugLog() {
 		log = new ArrayList<DebugLogEntry>();
 	}
 
+	/**
+	 * Adds a new entry to the debug log
+	 * @param entry the entry to add
+	 */
 	public void addEntry(DebugLogEntry entry) {
 		log.add(entry);
 		if (Configuration.PRINT_DEBUG_LOG) {
@@ -37,6 +44,9 @@ public class DebugLog implements Serializable {
 		}
 	}
 
+	/**
+	 * Prints the entire log to standard out
+	 */
 	public void printLog() {
 		System.out.println("==LOG==");
 		for (DebugLogEntry e : log) {
@@ -45,6 +55,9 @@ public class DebugLog implements Serializable {
 		System.out.println("==END LOG==");
 	}
 
+	/**
+	 * Saves the entire log to the file specified in Config
+	 */
 	public void saveLog() {
 		try {
 			FileWriter fstream = new FileWriter(Configuration.DEBUG_LOG_FILE);
