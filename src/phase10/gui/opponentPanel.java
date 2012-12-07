@@ -15,16 +15,22 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+/**
+ * OpponentPanel is a JPanel object that displays information about an opponent in Phase10. OpponentPanel displays the opponent's
+ * name, current phase, the number of cards in his/her hand, and his/her score on the top of the panel. Phase groups are laid
+ * down on the bottom of the panel with buttons that allow a user to add to an opponent's phase group if they are able to.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class opponentPanel extends JPanel {
 
-	
 	private static final long serialVersionUID = 1L;
-	private JButton addToPhase_1;
-	private Player opponent;
+	private JButton addToPhase_1; //a button that allows a user to add to an opponent's first phase group
+	private Player opponent; //the opponent who's information is displayed in the panel
 	private JTextField txtPhase;
 	private JTextField numCardsPane;
 	private JTextField txtpnScore;
@@ -96,10 +102,10 @@ public class opponentPanel extends JPanel {
 		add(panel, BorderLayout.CENTER);
 
 		addToPhase_1 = new JButton("Add to Phase");
-		addToPhase_1.addActionListener(new AddPhasesListener(0));
+		addToPhase_1.addActionListener(new AddToPhaseListener(0));
 
 		phaseGroup1Begin = new JButton("");
-		phaseGroup1Begin.addActionListener(new AddPhasesListener(0, true));
+		phaseGroup1Begin.addActionListener(new AddToPhaseListener(0, true));
 
 		lblTo = new JLabel(gameLang.getEntry("TO"));
 		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -112,7 +118,7 @@ public class opponentPanel extends JPanel {
 		});
 
 		phaseGroup2Begin = new JButton("");
-		phaseGroup2Begin.addActionListener(new AddPhasesListener(1, true));
+		phaseGroup2Begin.addActionListener(new AddToPhaseListener(1, true));
 
 		labelTo_2 = new JLabel(gameLang.getEntry("TO"));
 		labelTo_2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -121,7 +127,7 @@ public class opponentPanel extends JPanel {
 		phaseGroup2End = new JButton("");
 
 		addToPhase_2 = new JButton("Add to Phase");
-		addToPhase_2.addActionListener(new AddPhasesListener(1));
+		addToPhase_2.addActionListener(new AddToPhaseListener(1));
 
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
@@ -183,7 +189,11 @@ public class opponentPanel extends JPanel {
 		//end panel setup
 	}
 
-
+/**
+ * updates this instance of opponentPanel
+ * 
+ * @param nextOpponent the next opponent who's information will be displayed in this instance of opponentPanel
+ */
 	void updatePanel(Player nextOpponent) {
 
 		opponent = nextOpponent;
@@ -196,10 +206,18 @@ public class opponentPanel extends JPanel {
 		phaseAreaUpdate();
 	}
 
+	/**
+	 * Returns the player represented in the panel.
+	 * 
+	 * @return the opponent represented in the panel.
+	 */
 	Player getOpponent() {
 		return opponent;
 	}
 
+	/**
+	 * only updates the area of the panel dedicated to the player's phase groups
+	 */
 	private void phaseAreaUpdate() {
 		if(opponent.hasLaidDownPhase()) {
 			if(opponent.getNumberOfPhaseGroups() == 1) {
@@ -265,25 +283,45 @@ public class opponentPanel extends JPanel {
 			addToPhase_2.setVisible(false);
 		}
 	}
-
-	private class AddPhasesListener implements ActionListener {
+	
+	/**
+	 * Action listener for the "add to phase" button in opponentPanel. Allows players to add to the beginning
+	 * of a phase as well as the end of a phase.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
+	private class AddToPhaseListener implements ActionListener {
 
 		private int phaseGroupIndex;
 		private boolean isAtBeginning;
 
-		public AddPhasesListener(int phaseGroup) {
+		/**
+		 * Constructor for AddToPhaseListener
+		 * @param phaseGroup the phase group that the cards will be added to.
+		 */
+		public AddToPhaseListener(int phaseGroup) {
 			this.phaseGroupIndex = phaseGroup;
 			this.isAtBeginning = false;
 		}
 
-		public AddPhasesListener(int phaseGroup, boolean atBeginning) {
+		/**
+		 * Constructor for AddToPhaseListener that specifies which end of a Phase Group a player 
+		 * would like to add their cards to
+		 * @param phaseGroup the phase group that the cards will be added to.
+		 * @param atBeginning if true ActionPerformed will add cards to the beginning of a PhaseGroup. If false the cards will be added to the end of a Phase Group
+		 */
+		public AddToPhaseListener(int phaseGroup, boolean atBeginning) {
 			this.phaseGroupIndex = phaseGroup;
 			this.isAtBeginning = atBeginning;
 		}
 
+		/**
+		 * called when a button with an AddToPhaseListener is clicked. Adds cards to the phase group specified
+		 * in the constructor at the end of the phase group specified in the constructor.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//TODO new listener
 			if(currentGame.getCurrentPlayer().getHasDrawnCard()) {
 				for(int x = 0; x < gameWindow.selectedCards.size(); x++) {
 

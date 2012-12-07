@@ -10,27 +10,28 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
+/**
+ * PhaseDescriptionFrame is a JFrame object that displays the descriptions for all ten phases in Phase 10
+ * and displays which phase each player in a game is on in a grid format. 
+ * 
+ * The frame will be displayed in the game's language.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class PhaseDescriptionFrame extends JFrame {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/*
-	 * All the Strings that will be displayed in this window.
-	 */
-	private String title;
-	private String okayButtonLabel;
 	GuiManager gManage;
 	Language gameLang;
 	private JTable table;
 	
 	/**
-	 * Create the frame.
+	 * Constructs and initializes the frame.
+	 * 
+	 * @param gm A reference to the game's GUI Manager object.
 	 */
 	public PhaseDescriptionFrame(GuiManager gm) {
 		setResizable(false);
@@ -106,7 +107,12 @@ public class PhaseDescriptionFrame extends JFrame {
 		contentPane.add(table);
 	}
 	
-
+	/**
+	 * Sets the description for each phase in the grid from the language specified in GuiManager
+	 * 
+	 * @param phaseNum a number for the phase in the range of 1 to 10 inclusive
+	 * @return a String representing the description for the Phase phaseNum
+	 */
 	private String setPhaseDescriptionString(int phaseNum) {
 		switch (phaseNum) {
 		case 1:

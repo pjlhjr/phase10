@@ -11,8 +11,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -21,17 +19,23 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import phase10.Player;
 import phase10.ai.AIPlayer;
-
 import java.awt.event.MouseAdapter;
 import java.awt.Toolkit;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
+/**
+ * 
+ * SettingsFrame is a JFrame object that allows a user to set up a new game. SettingsFrame allows a user to
+ * create a game with 1 to 4 players and to specify if the players are computer players or AI players. If they
+ * are AI players, SettingsFrame will also allow the user to specify the difficulty as either "EASY", "MEDIUM",
+ * or "HARD". The user may also select from a variety of languages.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class SettingsFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nameField;
@@ -57,23 +61,11 @@ public class SettingsFrame extends JFrame {
 	private JLabel opponentLabel_2;
 	private JLabel opponentLabel_3;
 	private JTextArea txtrWelcomeToPhase;
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SettingsFrame frame = new SettingsFrame(new GuiManager(new GameManager()));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
 
 	/**
-	 * Create the frame.
+	 * constructs the SettingFrame.
+	 * 
+	 * @param a reference to the game's GuiManager
 	 */
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -343,6 +335,15 @@ public class SettingsFrame extends JFrame {
 		beginButton.addActionListener(new BeginListener(this, gManage));
 	}
 
+	/**
+	 * returns the selected difficulty from a menu as a difficulty value.
+	 * EASY = 25
+	 * MEDIUM = 50
+	 * HARD = 75
+	 * 
+	 * @param menu the specific menu component that the value will be extracted from
+	 * @return a value indicating the difficulty of the AI player.
+	 */
 	int getDifficulty(JComboBox<String> menu) {
 		if(menu.getSelectedItem() == lang.getEntry("EASY")) {
 			return 25;
@@ -359,26 +360,50 @@ public class SettingsFrame extends JFrame {
 		}	
 	}
 
+	/**
+	 * returns the main user's name from the first name field
+	 * @return the user's name
+	 */
 	public String getUserName() {
 		return nameField.getText();
 	}
 
+	/**
+	 * returns the first opponent's name from the second name field
+	 * @return the first opponent's name
+	 */
 	public String getOpponent_1() {
 		return opponentField_1.getText();
 	}
-
+	
+	/**
+	 * returns the second opponnent's name from the third name field
+	 * @return the second opponent's name
+	 */
 	public String getOpponent_2() {
 		return opponentField_2.getText();
 	}
 
+	/**
+	 * returns the third opponent's name from the fourth name field
+	 * @return the third opponent's name
+	 */
 	public String getOpponent_3() {
 		return opponentField_3.getText();
 	}
 
+	/**
+	 * sets a specified component as visible or invisible
+	 * @param comp the component
+	 * @param isVisible if true the component will be set as visible. If false the component will be set as invisible
+	 */
 	public void invisibleSetter(Component comp, boolean isVisible) {
 		comp.setVisible(isVisible);
 	}
-
+	
+	/**
+	 * updates all text-displaying components of SettingsFrame to the latest language
+	 */
 	private void updateLabelsForLanguage() {
 
 		setTitle(lang.getEntry("SETTINGS_FRAME_TITLE"));
@@ -417,18 +442,35 @@ public class SettingsFrame extends JFrame {
 		opponentLabel_2.setText(lang.getEntry("OPPONENT") + " 2:");
 		opponentLabel_3.setText(lang.getEntry("OPPONENT") + " 3:");
 	}
-
+	
+	/**
+	 * ActionListener for the "Begin" button.
+	 * 
+	 * @author Matthew Hruz
+	 *
+	 */
 	private class BeginListener implements ActionListener {
 
 		SettingsFrame settingsFrm;
 		GuiManager gManage;
 
+		/**
+		 * Constructor for BeginListener
+		 * 
+		 * @param settingsFrm a SettingsFrame object
+		 * @param gManage a reference to the GuiManager
+		 */
 		public BeginListener(SettingsFrame settingsFrm, GuiManager gManage) {
 			super();
 			this.gManage = gManage;
 			this.settingsFrm = settingsFrm;
 		}
 
+		/**
+		 * Clicking the begin button will call this method. This method is in charge of validating all of the input and
+		 * sending the data entered in settings frame to the GuiManager and the current game so that a game can begin. If
+		 * everything is valid, a new game will begin and a GameFrame will appear after this button is clicked.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -450,33 +492,33 @@ public class SettingsFrame extends JFrame {
 					return;
 				}
 			}
-				else if(settingsFrm.opponentField_3.isVisible()) {
-					if(settingsFrm.getOpponent_3().isEmpty()) {
-						MessageFrame noName3 = new MessageFrame(lang.getEntry("NO_NAME_3_MESSAGE"), lang.getEntry("PHASE_10"), lang);
-						noName3.setVisible(true);
-						return;
-					}
+			else if(settingsFrm.opponentField_3.isVisible()) {
+				if(settingsFrm.getOpponent_3().isEmpty()) {
+					MessageFrame noName3 = new MessageFrame(lang.getEntry("NO_NAME_3_MESSAGE"), lang.getEntry("PHASE_10"), lang);
+					noName3.setVisible(true);
+					return;
 				}
+			}
 
-				//main user
-				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
+			//main user
+			gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(),settingsFrm.getUserName()));
 
-				//opponent 1
-					if(computerRadio1.isSelected()) {
-						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_1), settingsFrm.getOpponent_1()));
-					}
-					else {
-						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_1()));
-					}
+			//opponent 1
+			if(computerRadio1.isSelected()) {
+				gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_1), settingsFrm.getOpponent_1()));
+			}
+			else {
+				gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_1()));
+			}
 
-				//opponent 2
-				if(!settingsFrm.getOpponent_2().isEmpty()) {
-					if(computerRadio2.isSelected()) {
-						gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
-					}
-					else
-						gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_2()));
+			//opponent 2
+			if(!settingsFrm.getOpponent_2().isEmpty()) {
+				if(computerRadio2.isSelected()) {
+					gManage.mainManager.getGame().addPlayer(new AIPlayer(gManage.mainManager.getGame(), getDifficulty(comboBox_2), settingsFrm.getOpponent_2()));
 				}
+				else
+					gManage.mainManager.getGame().addPlayer(new Player(gManage.mainManager.getGame(), settingsFrm.getOpponent_2()));
+			}
 			//opponent 3
 			if(!settingsFrm.getOpponent_3().isEmpty()) {
 				if(computerRadio3.isSelected()) {
@@ -490,8 +532,6 @@ public class SettingsFrame extends JFrame {
 			gManage.mainManager.getGame().startGame();
 			gManage.initGameWindow();
 			gManage.displayGameFrame(); //displays the next window: the game window
-
-
 
 			settingsFrm.dispose();
 		}

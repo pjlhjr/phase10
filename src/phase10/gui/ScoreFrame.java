@@ -14,17 +14,21 @@ import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 import java.awt.Point;
 
+/**
+ * ScoreFrame is a JFrame object that displays a table of all the players and sorts them by what place they are in.
+ * In Phase 10, the players are first sorted in descending order based on what phase they are on. Ties are sorted by score in ascending order.
+ * 
+ * @author Matthew Hruz
+ *
+ */
 public class ScoreFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
 
 	/**
-	 * Create the frame.
+	 * Creates the frame.
 	 */
 	public ScoreFrame(GuiManager gManage) {
 		
@@ -67,9 +71,6 @@ public class ScoreFrame extends JFrame {
 				gameLang.getEntry("PLACE"), gameLang.getEntry("NAME"), gameLang.getEntry("CURRENT_PHASE"), gameLang.getEntry("SCORE")
 			}
 		) {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 			@SuppressWarnings("rawtypes")
 			Class[] columnTypes = new Class[] {
@@ -121,6 +122,11 @@ public class ScoreFrame extends JFrame {
 		contentPane.add(btnOkay);
 	}
 	
+	/**
+	 * Sorts the players based on their place.
+	 * @param thePlayers the array of players to be sorted.
+	 * @return a sorted Player[] array.
+	 */
 	private Player[] sortPlayers(Player[] thePlayers) {
 
 		for(int j = thePlayers.length-1; j > 0; j--){
