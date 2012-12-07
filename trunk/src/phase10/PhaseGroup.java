@@ -51,6 +51,7 @@ public final class PhaseGroup implements Serializable {
 		if (!laidDown) {
 			if (!beginning) {
 				cards.add(c);
+				
 			} else {
 				cards.add(0, c);
 			}
@@ -372,6 +373,10 @@ public final class PhaseGroup implements Serializable {
 
 		return out.length() > 3 ? out.substring(0, out.length() - 2) : out
 				.toString();
+	}
+	
+	public void sortByValue() {
+		Collections.sort(cards, new CardValueComparator());
 	}
 
 	// public static void main(String[] args) {

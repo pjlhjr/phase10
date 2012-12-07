@@ -140,6 +140,8 @@ public class Player implements Serializable {
 
 		boolean success = false;
 
+		pg[0].sortByValue();
+		
 		if (Configuration.getNumberRequired(phase) == 1) {
 
 			PhaseGroup phaseGroup = pg[0];
@@ -152,7 +154,7 @@ public class Player implements Serializable {
 				success = true;
 			}
 		} else {
-
+			pg[1].sortByValue();
 			PhaseGroup phaseGroup1 = pg[0];
 			PhaseGroup phaseGroup2 = pg[1];
 			int typeA = Configuration.getTypeRequired(phase, 0);
