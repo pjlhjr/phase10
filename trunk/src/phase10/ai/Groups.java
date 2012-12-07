@@ -379,6 +379,7 @@ class Groups{
 						index < cards.length && cards[index].getValue() < Configuration.WILD_VALUE){
 					colorGroup.addCard(cards[index++]);
 				}
+				index--;
 				colorGroup.setType(Configuration.COLOR_PHASE);
 				if(PhaseGroup.validate(colorGroup, Configuration.COLOR_PHASE, 7))
 					complete.add(colorGroup);

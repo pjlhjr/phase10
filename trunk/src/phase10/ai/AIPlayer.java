@@ -14,6 +14,7 @@ import phase10.PhaseGroup;
 import phase10.Player;
 import phase10.card.Card;
 import phase10.card.WildCard;
+import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
 
 /**
@@ -26,7 +27,7 @@ import phase10.util.Configuration;
 public class AIPlayer extends Player {
 	private static final long serialVersionUID = 20121L;
 	private final int difficulty;
-	private static final double BEST_CHOICE_AT_FIFTY = 3.5;
+	private static final double BEST_CHOICE_AT_FIFTY = 5.5;
 	transient private Groups group;
 	
 	public AIPlayer(Phase10 game, int difficulty, String name){
@@ -45,20 +46,14 @@ public class AIPlayer extends Player {
 	 */
 	/* TODO test difficulty levels
 	* adjust difficulty levels based on how far ahead/behind
-	* should I worry about what other players do next turn?
-	* if an opposing player only has one card left, etc
-	* other special cases
 	* look for patterns in other player's style, if lower cards are being laid down, closer to the end
-	* better if -34- than 3-5, for partial run (partial over connected)
-	* make sure that things aren't being done that are for Rummy in general and not application specific
 	* "safe" cards to discard
-	* don't discard cards that will be immediately picked up and laid down
 	* old lay down phase if past a certain point, based off difficulty
 	* add difficulty stratification
 	*/
 	public void playTurn(){
 		// all exceptions in this method are caught, because if this method throws an exception
-		// the AIPlayer will not draw a card and the program will freeze
+		// the AIPlayer will not draw/discard a card and the program will freeze
 		try{
 			if(!(drawOrPickUp()^bestChoice(BEST_CHOICE_AT_FIFTY))){ // choose whether to draw from the deck or pick up from the stack
 				if(!game.getRound().drawFromDiscard()) // If picking up from the discard is not possible,
@@ -88,6 +83,7 @@ public class AIPlayer extends Player {
 		
 		try{
 			game.getRound().discard(discardCard()); // discarded
+		}catch(Phase10Exception e){	
 		}catch(Exception e){
 			game.getRound().discard(getHand().getCard(0));
 			System.out.println("AIPlayer, playoff: " + e.toString());
@@ -146,17 +142,18 @@ public class AIPlayer extends Player {
 	 * @return true if it is recommended to pick up a card, 
 	 * or false if it is recommended to draw a card 
 	 */
-	// TODO look to see if the card could be played off other phases, pick up card on run phase
-	// pick up cards that can be laid off phases
+	// TODO  pick up card on run phase
 	private boolean drawOrPickUp(){
 		Card cardOnTopOfPile = game.getRound().getTopOfDiscardStack();
-		if(cardOnTopOfPile.getValue() == Configuration.WILD_VALUE) // pick up a wild
-			return true;
-		if(cardOnTopOfPile.getValue() == Configuration.SKIP_VALUE) // don't pick up a skip
-			return false;
-		if(hasLaidDownPhase() && difficulty > 30 && bestChoice(BEST_CHOICE_AT_FIFTY)
-				&& cardsThatCanBeLaidDown().contains(cardOnTopOfPile))
-			return true;
+		if(hasLaidDownPhase() && difficulty > 30 && bestChoice(BEST_CHOICE_AT_FIFTY)){ // TODO partial groups, contains is WRONG
+			for(Card c: cardsThatCanBeLaidDown()){
+				if(c.getColor() == cardOnTopOfPile.getColor()){
+					return true;
+				}else if(c.getValue() == cardOnTopOfPile.getValue()){
+					return true;
+				}
+			}
+		}
 		if(addedPointValue(cardOnTopOfPile) < currentPointValue()){ // if the card improves the score of the player's hand
 			if(difficulty < 30) // don't continue checking if an easy player
 				return true;
