@@ -29,9 +29,9 @@ public class Configuration {
 		Color.YELLOW};
 
 	// Set these to false when not testing
-	public static final boolean PRINT_LOG = true;
-	public static final boolean SAVE_LOG = true;
-	public static final String LOG_FILE = "log.txt";
+	public static final boolean PRINT_DEBUG_LOG = true;
+	public static final boolean SAVE_DEBUG_LOG = true;
+	public static final String DEBUG_LOG_FILE = "log.txt";
 
 	// For logging
 	public static final String[] COLOR_NAMES = {"Red", "Blue", "Green",

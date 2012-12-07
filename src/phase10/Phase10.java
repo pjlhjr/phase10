@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import phase10.ai.AIPlayer;
 import phase10.exceptions.Phase10Exception;
 import phase10.util.Configuration;
-import phase10.util.Log;
-import phase10.util.LogEntry;
+import phase10.util.DebugLog;
+import phase10.util.DebugLogEntry;
 
 /**
  * This class contains and manages the information for each Phase 10 game
@@ -28,7 +28,9 @@ public final class Phase10 implements Serializable {
 	private int roundNumber;
 	private int dealer;
 	private boolean started;
-	private Log log;
+	private DebugLog debugLog;
+	
+	private UserLog userLog;
 	
 	ArrayList<Player> winners;
 
@@ -41,7 +43,8 @@ public final class Phase10 implements Serializable {
 		started = false;
 		gameManager = gm;
 
-		log = new Log();
+		debugLog = new DebugLog();
+		userLog = new UserLog();
 	}
 
 	/**
@@ -106,11 +109,11 @@ public final class Phase10 implements Serializable {
 			players.add(p);
 			if (p instanceof AIPlayer) {
 				AIPlayer ap = (AIPlayer) p;
-				log.addEntry(new LogEntry(0, p,
+				debugLog.addEntry(new DebugLogEntry(0, p,
 						"New AI player added. Difficulty: "
 								+ ap.getDifficulty()));
 			} else {
-				log.addEntry(new LogEntry(0, p, "New human player added"));
+				debugLog.addEntry(new DebugLogEntry(0, p, "New human player added"));
 			}
 
 		} else
@@ -143,7 +146,7 @@ public final class Phase10 implements Serializable {
 			// System.out.println("dealer0: "+dealer);
 			if (getNumberOfPlayers() >= 2) {
 				started = true;
-				log.addEntry(new LogEntry(0, null, "STARTING GAME"));
+				debugLog.addEntry(new DebugLogEntry(0, null, "STARTING GAME"));
 				nextRound();			
 			} else
 				throw new Phase10Exception(
@@ -164,18 +167,18 @@ public final class Phase10 implements Serializable {
 			roundNumber++;
 			nextDealer();
 
-			log.addEntry(new LogEntry(0, null, "Now on round #" + roundNumber));
+			debugLog.addEntry(new DebugLogEntry(0, null, "Now on round #" + roundNumber));
 
 			round = new Round(this);
 			round.startRound();
 
 		} else {
 			for (Player e : winners) {
-				log.addEntry(new LogEntry(0, e, "Won the game with "
+				debugLog.addEntry(new DebugLogEntry(0, e, "Won the game with "
 						+ e.getScore() + " points"));
 			}
-			if (Configuration.PRINT_LOG) {
-				log.printLog();
+			if (Configuration.PRINT_DEBUG_LOG) {
+				debugLog.printLog();
 			}
 			gameManager.getGui().endGame(winners);
 		}
@@ -221,17 +224,17 @@ public final class Phase10 implements Serializable {
 	 * score.
 	 */
 	private void finishRound() {
-		log.addEntry(new LogEntry(0, null, "Finishing round#" + roundNumber));
+		debugLog.addEntry(new DebugLogEntry(0, null, "Finishing round#" + roundNumber));
 		for (Player p : players) {
 			// add points for remaining cards, and remove them from the hand
 			Hand hand = p.getHand();
-			log.addEntry(new LogEntry(0, p, "Cards in hand: " + hand));
+			debugLog.addEntry(new DebugLogEntry(0, p, "Cards in hand: " + hand));
 
 			while (hand.getNumberOfCards() > 0) {
 				p.addToScore(hand.getAnyCard(0).getPointValue());
 				hand.removeCard(0);
 			}
-			log.addEntry(new LogEntry(0, p, "New score: " + p.getScore()));
+			debugLog.addEntry(new DebugLogEntry(0, p, "New score: " + p.getScore()));
 
 			// clear phasegroups
 			while (p.getNumberOfPhaseGroups() != 0) {
@@ -241,9 +244,9 @@ public final class Phase10 implements Serializable {
 			if (p.hasLaidDownPhase()) {
 				p.setLaidDownPhase(false);
 				p.incrementPhase();
-				log.addEntry(new LogEntry(0, p, "Now on phase #" + p.getPhase()));
+				debugLog.addEntry(new DebugLogEntry(0, p, "Now on phase #" + p.getPhase()));
 			} else {
-				log.addEntry(new LogEntry(0, p, "Still on phase #"
+				debugLog.addEntry(new DebugLogEntry(0, p, "Still on phase #"
 						+ p.getPhase()));
 			}
 
@@ -260,8 +263,8 @@ public final class Phase10 implements Serializable {
 	 * @return the log
 	 * 
 	 */
-	public Log getLog() {
-		return log;
+	public DebugLog getDebugLog() {
+		return debugLog;
 	}
 
 	/**
@@ -276,6 +279,13 @@ public final class Phase10 implements Serializable {
 	 */
 	void setWinners(ArrayList<Player> winners) {
 		this.winners = winners;
+	}
+
+	/**
+	 * @return the userLog
+	 */
+	UserLog getUserLog() {
+		return userLog;
 	}
 
 }
