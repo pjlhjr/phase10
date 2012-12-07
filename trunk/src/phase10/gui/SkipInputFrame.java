@@ -1,3 +1,9 @@
+/* *************************
+ *                         *
+ * UNUSED IN FINAL PROJECT *
+ *                         *
+ ***************************/
+
 package phase10.gui;
 
 
@@ -14,7 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 
 /**
- * 
+ * SkipInputFrame is a small dialog window that allows a user to select a player to select another player to skip 
+ * when a Skip card is discarded.
  * 
  * @author Matthew Hruz
  *
@@ -26,7 +33,7 @@ public class SkipInputFrame extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	/**
-	 * Create the frame.
+	 * Creates the frame.
 	 */
 	public SkipInputFrame() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SkipInputFrame.class.getResource("/images/GameIcon.png")));
