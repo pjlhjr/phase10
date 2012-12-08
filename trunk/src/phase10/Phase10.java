@@ -30,13 +30,11 @@ public final class Phase10 implements Serializable {
 	private boolean started;
 	private DebugLog debugLog;
 	
-	private UserLog userLog;
-	
 	private ArrayList<Player> winners;
 
 	private transient GameManager gameManager;
 
-	Phase10(GameManager gm) {
+	public Phase10(GameManager gm) {
 		players = new ArrayList<Player>();
 		dealer = -1;
 		roundNumber = 0;
@@ -44,7 +42,6 @@ public final class Phase10 implements Serializable {
 		gameManager = gm;
 
 		debugLog = new DebugLog();
-		userLog = new UserLog();
 	}
 
 	/**
@@ -279,13 +276,6 @@ public final class Phase10 implements Serializable {
 	 */
 	void setWinners(ArrayList<Player> winners) {
 		this.winners = winners;
-	}
-
-	/**
-	 * @return the userLog
-	 */
-	UserLog getUserLog() {
-		return userLog;
 	}
 
 }

@@ -292,7 +292,7 @@ public final class Round implements Serializable {
 			if (game.getPlayer(curPlayerNum) instanceof AIPlayer) {
 				AIPlayer p = (AIPlayer) game.getPlayer(curPlayerNum);
 				// TODO call gui?
-				System.out.println("PLAYING");
+				
 				p.playTurn();
 
 			}
