@@ -185,8 +185,6 @@ public class Player implements Serializable {
 					new DebugLogEntry(game.getRound().getTurnNumber(), this,
 							"Laid down phase"));
 			
-			game.getUserLog().add(name+" laid down phase "+getPhase()+".");
-			
 			// Move on to the next round if laying down the phase group makes
 			// the player run out of cards
 			if (getHand().getNumberOfCards() == 0) {
