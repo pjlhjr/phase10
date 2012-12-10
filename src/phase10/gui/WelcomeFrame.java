@@ -54,9 +54,8 @@ public class WelcomeFrame extends JFrame {
 		btnLoadGame.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				LoadFileFrame loader = new LoadFileFrame(gManage);
-				loader.setVisible(true);
 				dispose();
+				FileLoaderFrame loader = new FileLoaderFrame(gManage);
 			}
 		});
 		btnLoadGame.setBounds(176, 224, 120, 52);

@@ -273,7 +273,7 @@ public class SettingsFrame extends JFrame {
 
 
 		beginButton = new JButton(lang.getEntry("BEGIN"));
-		beginButton.setBounds(227, 333, 109, 42);
+		beginButton.setBounds(276, 333, 109, 42);
 		contentPane.add(beginButton);
 
 		btnAddPlayer = new JButton(lang.getEntry("ADD_PLAYER"));
@@ -332,6 +332,18 @@ public class SettingsFrame extends JFrame {
 		});
 		btnRemovePlayer.setBounds(181, 288, 191, 23);
 		contentPane.add(btnRemovePlayer);
+		
+		JButton cancelButton = new JButton(lang.getEntry("CANCEL"));
+		cancelButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				WelcomeFrame newWelcome = new WelcomeFrame(gManage);
+				newWelcome.setVisible(true);
+			}
+		});
+		cancelButton.setBounds(127, 333, 109, 42);
+		contentPane.add(cancelButton);
 		beginButton.addActionListener(new BeginListener(this, gManage));
 	}
 
