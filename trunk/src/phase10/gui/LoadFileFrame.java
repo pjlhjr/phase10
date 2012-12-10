@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.Toolkit;
 
 /**
+ * @deprecated
  * 
  * A JDialog box that allows a player to load a game by inputing the 
  * name of a previously saved game into the JTextField.
@@ -46,28 +47,27 @@ public class LoadFileFrame extends JDialog {
 	public LoadFileFrame(GuiManager guiM) {
 		gameLang = guiM.getGameLang();
 		
+		
 		setTitle(gameLang.getEntry("LOAD_GAME"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(SaveFileFrame.class.getResource("/images/GameIcon.png")));
 
 		gManage = guiM;
 
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 451, 170);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
-		{
-			filenameField = new JTextField();
-			filenameField.setBounds(142, 204, 287, 20);
-			contentPanel.add(filenameField);
-			filenameField.setColumns(10);
-		}
+		contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
 			JTextPane promptField = new JTextPane();
-			promptField.setBounds(5, 204, 122, 20);
+			contentPanel.add(promptField);
 			promptField.setEditable(false);
 			promptField.setText(gameLang.getEntry("ENTER_A_FILENAME"));
-			contentPanel.add(promptField);
+		}
+		{
+			filenameField = new JTextField();
+			contentPanel.add(filenameField);
+			filenameField.setColumns(10);
 		}
 		{
 			JPanel buttonPane = new JPanel();
