@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.Component;
+import javax.swing.SpringLayout;
 
 
 public class GameFrame extends JFrame {
@@ -79,14 +80,34 @@ public class GameFrame extends JFrame {
 		
 		//basic settings for the Game Frame
 		setIconImage(Toolkit.getDefaultToolkit().getImage(GameFrame.class.getResource("/images/GameIcon.png")));
-		setResizable(false);
 		setTitle(current.getName() + " - " + gameLang.getEntry("PHASE_10"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
-		getContentPane().setLayout(null);
+		SpringLayout springLayout = new SpringLayout();
+		springLayout.putConstraint(SpringLayout.NORTH, yourPhasesPanel, 0, SpringLayout.SOUTH, playersPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, yourPhasesPanel, 0, SpringLayout.NORTH, handPanel);
+		springLayout.putConstraint(SpringLayout.WEST, deckPanel, 0, SpringLayout.EAST, handPanel);
+		springLayout.putConstraint(SpringLayout.EAST, deckPanel, 0, SpringLayout.EAST, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, handPanel, -162, SpringLayout.EAST, getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, yourPhasesPanel, 0, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, yourPhasesPanel, 0, SpringLayout.WEST, infoPanel);
+		springLayout.putConstraint(SpringLayout.WEST, infoPanel, -162, SpringLayout.EAST, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, infoPanel, 0, SpringLayout.EAST, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, infoPanel, 0, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, infoPanel, 0, SpringLayout.NORTH, deckPanel);
+		springLayout.putConstraint(SpringLayout.NORTH, deckPanel, 533, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, handPanel, 0, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, deckPanel, 0, SpringLayout.SOUTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, handPanel, 0, SpringLayout.SOUTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, playersPanel, 11, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, playersPanel, 10, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, playersPanel, 427, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, playersPanel, 972, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, handPanel, 533, SpringLayout.NORTH, getContentPane());
+		getContentPane().setLayout(springLayout);
+		infoPanel.setMaximumSize(new Dimension(160, 32767));
 
 		infoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		infoPanel.setBounds(982, 0, 169, 534);
 		getContentPane().add(infoPanel);
 		infoPanel.setLayout(null);
 
@@ -179,27 +200,20 @@ public class GameFrame extends JFrame {
 		lblTurnMode = new JLabel(gameLang.getEntry("YOU_MAY_DRAW"));
 		lblTurnMode.setBounds(28, 509, 118, 14);
 		infoPanel.add(lblTurnMode);
-		handPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-
-		handPanel.setBounds(0, 533, 976, 107);
+		handPanel.setMaximumSize(new Dimension(32767, 100));
 		getContentPane().add(handPanel);
 		handPanel.setLayout(new GridLayout(0, 11, 0, 0));
 
-
 		for(int i = 0; i < handButtons.length; i++) {
 			handButtons[i] = new JButton();
-
+			
 			//add an action listener
 			handButtons[i].addActionListener(new HandActionListener(i));
 			handPanel.add(handButtons[i]);
 		}
+		deckPanel.setMaximumSize(new Dimension(160, 100));
 		deckPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		deckPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-
-		//begin deck panel
-
-		deckPanel.setBounds(982, 533, 169, 107);
 		getContentPane().add(deckPanel);
 		deckPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -253,10 +267,6 @@ public class GameFrame extends JFrame {
 			}
 		});
 		deckPanel.add(discardButton);
-
-		//end deck panel
-
-		playersPanel.setBounds(10, 11, 962, 416);
 		getContentPane().add(playersPanel);
 		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 
@@ -274,8 +284,7 @@ public class GameFrame extends JFrame {
 			System.out.println("null pointer exception generated when trying to display opponent Panels");
 			playersPanel.add(new JLabel("Null"));
 		}
-
-		yourPhasesPanel.setBounds(0, 427, 972, 107);
+		yourPhasesPanel.setMaximumSize(new Dimension(32767, 100));
 		getContentPane().add(yourPhasesPanel);
 		yourPhasesPanel.setLayout(null);
 
