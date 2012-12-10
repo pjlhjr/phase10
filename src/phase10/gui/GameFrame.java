@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.awt.event.MouseAdapter;
 import java.awt.Component;
 import javax.swing.SpringLayout;
+import javax.swing.Box;
+import javax.swing.JScrollPane;
 
 
 public class GameFrame extends JFrame {
@@ -72,6 +74,7 @@ public class GameFrame extends JFrame {
 	 * @param gManage a reference to the GuiManager
 	 */
 	public GameFrame(final GuiManager gManage) {
+		setMinimumSize(new Dimension(600, 550));
 
 		gameLang = gManage.getGameLang();
 		this.gManage = gManage;
@@ -84,46 +87,58 @@ public class GameFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1150, 668);
 		SpringLayout springLayout = new SpringLayout();
-		springLayout.putConstraint(SpringLayout.NORTH, yourPhasesPanel, 0, SpringLayout.SOUTH, playersPanel);
+		springLayout.putConstraint(SpringLayout.NORTH, playersPanel, 11, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, playersPanel, 10, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, playersPanel, -6, SpringLayout.NORTH, yourPhasesPanel);
+		springLayout.putConstraint(SpringLayout.EAST, playersPanel, -6, SpringLayout.WEST, infoPanel);
+		springLayout.putConstraint(SpringLayout.WEST, yourPhasesPanel, 0, SpringLayout.WEST, getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, yourPhasesPanel, 0, SpringLayout.WEST, infoPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, infoPanel, -6, SpringLayout.NORTH, deckPanel);
+		springLayout.putConstraint(SpringLayout.NORTH, infoPanel, 0, SpringLayout.NORTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, deckPanel, -97, SpringLayout.SOUTH, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, yourPhasesPanel, -106, SpringLayout.NORTH, handPanel);
 		springLayout.putConstraint(SpringLayout.SOUTH, yourPhasesPanel, 0, SpringLayout.NORTH, handPanel);
 		springLayout.putConstraint(SpringLayout.WEST, deckPanel, 0, SpringLayout.EAST, handPanel);
 		springLayout.putConstraint(SpringLayout.EAST, deckPanel, 0, SpringLayout.EAST, getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, handPanel, -97, SpringLayout.SOUTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, handPanel, -162, SpringLayout.EAST, getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, yourPhasesPanel, 0, SpringLayout.WEST, getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, yourPhasesPanel, 0, SpringLayout.WEST, infoPanel);
 		springLayout.putConstraint(SpringLayout.WEST, infoPanel, -162, SpringLayout.EAST, getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, infoPanel, 0, SpringLayout.EAST, getContentPane());
-		springLayout.putConstraint(SpringLayout.NORTH, infoPanel, 0, SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, infoPanel, 0, SpringLayout.NORTH, deckPanel);
-		springLayout.putConstraint(SpringLayout.NORTH, deckPanel, 533, SpringLayout.NORTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, handPanel, 0, SpringLayout.WEST, getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, deckPanel, 0, SpringLayout.SOUTH, getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, handPanel, 0, SpringLayout.SOUTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.NORTH, playersPanel, 11, SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, playersPanel, 10, SpringLayout.WEST, getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, playersPanel, 427, SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, playersPanel, 972, SpringLayout.WEST, getContentPane());
-		springLayout.putConstraint(SpringLayout.NORTH, handPanel, 533, SpringLayout.NORTH, getContentPane());
 		getContentPane().setLayout(springLayout);
+		infoPanel.setMinimumSize(new Dimension(10, 600));
 		infoPanel.setMaximumSize(new Dimension(160, 32767));
 
 		infoPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		getContentPane().add(infoPanel);
-		infoPanel.setLayout(null);
+		SpringLayout sl_infoPanel = new SpringLayout();
+		infoPanel.setLayout(sl_infoPanel);
 
 		lblPlayername = new JLabel(current.getName());
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, lblPlayername, 20, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, lblPlayername, 156, SpringLayout.WEST, infoPanel);
 		lblPlayername.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlayername.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblPlayername.setBounds(10, 37, 149, 38);
 		infoPanel.add(lblPlayername);
 
 		JLabel lblPhase = new JLabel(gameLang.getEntry("PHASE"));
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, lblPhase, 61, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, lblPlayername, -6, SpringLayout.NORTH, lblPhase);
+		lblPhase.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, lblPhase, 21, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, lblPhase, 147, SpringLayout.WEST, infoPanel);
 		lblPhase.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhase.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPhase.setBounds(20, 91, 126, 25);
 		infoPanel.add(lblPhase);
 		
 		phaseNumber = new JTextArea();
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, phaseNumber, 94, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, phaseNumber, 50, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, phaseNumber, -59, SpringLayout.EAST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, lblPhase, -8, SpringLayout.NORTH, phaseNumber);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, phaseNumber, 147, SpringLayout.NORTH, infoPanel);
 		phaseNumber.setRows(1);
 		phaseNumber.setColumns(1);
 		phaseNumber.setFont(new Font("Century Gothic", Font.BOLD, 36));
@@ -135,32 +150,44 @@ public class GameFrame extends JFrame {
 			phaseNumber.setText("null");
 		}
 		phaseNumber.setEditable(false);
-		phaseNumber.setBounds(58, 120, 53, 53);
 		infoPanel.add(phaseNumber);
 
 		//the phase description button with it's button listener
 		JButton btnPhaseDescription = new JButton(gameLang.getEntry("PHASE_DESCRIPTIONS"));
+		btnPhaseDescription.setAlignmentY(Component.TOP_ALIGNMENT);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, btnPhaseDescription, 7, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, btnPhaseDescription, -1, SpringLayout.EAST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, lblPlayername, 0, SpringLayout.WEST, btnPhaseDescription);
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, btnPhaseDescription, 27, SpringLayout.SOUTH, phaseNumber);
 		btnPhaseDescription.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				gManage.displayPhaseDescriptionFrame();
 			}
 		});
-		btnPhaseDescription.setBounds(5, 184, 154, 23);
 		infoPanel.add(btnPhaseDescription);
 
 		
 		JButton btnScoreboard = new JButton(gameLang.getEntry("SCOREBOARD"));
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, btnScoreboard, 285, SpringLayout.NORTH, infoPanel);
+		btnScoreboard.setAlignmentY(Component.TOP_ALIGNMENT);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, btnScoreboard, 29, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, btnScoreboard, -15, SpringLayout.EAST, infoPanel);
 		btnScoreboard.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				gManage.displayScoreFrame();
 			}
 		});
-		btnScoreboard.setBounds(28, 300, 118, 23);
 		infoPanel.add(btnScoreboard);
 
 		JButton btnSave = new JButton(gameLang.getEntry("SAVE"));
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, btnScoreboard, -13, SpringLayout.NORTH, btnSave);
+		btnSave.setAlignmentY(Component.TOP_ALIGNMENT);
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, btnSave, 318, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, btnSave, 23, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, btnSave, 341, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, btnSave, -15, SpringLayout.EAST, infoPanel);
 		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -169,37 +196,50 @@ public class GameFrame extends JFrame {
 
 			}
 		});
-		btnSave.setBounds(22, 347, 124, 23);
 		infoPanel.add(btnSave);
 
 		JButton btnExit = new JButton(gameLang.getEntry("EXIT"));
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, btnExit, 6, SpringLayout.SOUTH, btnSave);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, btnExit, 0, SpringLayout.WEST, lblPlayername);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, btnExit, 161, SpringLayout.WEST, infoPanel);
+		btnExit.setAlignmentY(Component.TOP_ALIGNMENT);
 		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
 			}
 		});
-		btnExit.setBounds(5, 392, 154, 25);
 		infoPanel.add(btnExit);
 
 		JLabel lblScore = new JLabel(gameLang.getEntry("SCORE"));
+		lblScore.setAlignmentY(Component.TOP_ALIGNMENT);
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, lblScore, 203, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, btnPhaseDescription, -6, SpringLayout.NORTH, lblScore);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, lblScore, 15, SpringLayout.WEST, lblPhase);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, lblScore, 0, SpringLayout.EAST, lblPhase);
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		lblScore.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblScore.setBounds(20, 218, 111, 25);
 		infoPanel.add(lblScore);
 
 		playerScore = new JTextArea();
+		sl_infoPanel.putConstraint(SpringLayout.NORTH, playerScore, 230, SpringLayout.NORTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, playerScore, 50, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, playerScore, -43, SpringLayout.EAST, infoPanel);
 		playerScore.setText(Integer.toString(current.getScore()));
 		playerScore.setRows(1);
 		playerScore.setFont(new Font("Century Gothic", Font.BOLD, 36));
 		playerScore.setEditable(false);
 		playerScore.setColumns(1);
-		playerScore.setBounds(47, 240, 69, 49);
 		infoPanel.add(playerScore);
 
 		lblTurnMode = new JLabel(gameLang.getEntry("YOU_MAY_DRAW"));
-		lblTurnMode.setBounds(28, 509, 118, 14);
+		sl_infoPanel.putConstraint(SpringLayout.WEST, lblTurnMode, 25, SpringLayout.WEST, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.SOUTH, lblTurnMode, -8, SpringLayout.SOUTH, infoPanel);
+		sl_infoPanel.putConstraint(SpringLayout.EAST, lblTurnMode, 143, SpringLayout.WEST, infoPanel);
+		lblTurnMode.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTurnMode.setAlignmentY(Component.TOP_ALIGNMENT);
 		infoPanel.add(lblTurnMode);
+		handPanel.setMinimumSize(new Dimension(10, 100));
 		handPanel.setMaximumSize(new Dimension(32767, 100));
 		getContentPane().add(handPanel);
 		handPanel.setLayout(new GridLayout(0, 11, 0, 0));
@@ -211,6 +251,8 @@ public class GameFrame extends JFrame {
 			handButtons[i].addActionListener(new HandActionListener(i));
 			handPanel.add(handButtons[i]);
 		}
+		getContentPane().add(playersPanel);
+		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 		deckPanel.setMaximumSize(new Dimension(160, 100));
 		deckPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		deckPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -267,8 +309,6 @@ public class GameFrame extends JFrame {
 			}
 		});
 		deckPanel.add(discardButton);
-		getContentPane().add(playersPanel);
-		playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.X_AXIS));
 
 		oppPanels = new ArrayList<opponentPanel>();
 		try {
